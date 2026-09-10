@@ -57,9 +57,9 @@ setiap perubahan tercatat atas namamu.
 | Bagian | Isinya |
 |---|---|
 | **Ringkasan** | jumlah per status, yang urgent, yang telat tenggat, yang menunggu klien, yang belum ada PIC, beban tiap orang |
-| **Siapa mengerjakan apa** | dropdown nama → daftar pekerjaan orang itu, dikelompokkan (urgent, perlu diperbaiki, revisi klien, menunggu klien, dikerjakan, belum mulai, pending review, selesai) |
+| **Siapa mengerjakan apa** | dropdown nama → daftar pekerjaan orang itu, dikelompokkan per keadaan |
 | **List pending slab** | tabel seperti catatan aslinya, **dikelompokkan per hari diterima** (10 Sep, 9 Sep, 7 Sep); klik judul harinya untuk menutup/membuka kelompok itu |
-| **Papan alur kerja** | kolom per tahap: Belum mulai → Dikerjakan → Menunggu klien → Revisi → Final/apply → Pending review → Selesai |
+| **Papan alur kerja** | kolom per tahap: Antrean → Pengerjaan → Menunggu klien → Perlu revisi → Disetujui & diterapkan → Menunggu persetujuan → Selesai |
 
 Tombol di bar atas hanya melompat ke bagiannya, halamannya tetap satu.
 
@@ -69,12 +69,12 @@ Tombol di bar atas hanya melompat ke bagiannya, halamannya tetap satu.
 
 Tiga cara, tergantung banyaknya:
 
-- **Satu project** — di kolom PIC klik kotak biru **"+ Tugaskan…"** lalu pilih nama.
+- **Satu project** — di kolom PIC klik **"Tetapkan PIC"** lalu pilih nama.
 - **Beberapa project** — centang barisnya (atau centang judul harinya untuk sehari
   penuh), lalu di bar bawah pilih orangnya. Bar yang sama juga bisa mengubah
   prioritas dan menandai urgent sekaligus.
-- **Satu batch penuh** — di atas tabel: "Siapa yang mengerjakan batch ini?" → pilih
-  nama → "Tugaskan N project yang tampil". Yang ditugaskan adalah yang sedang
+- **Satu batch penuh** — di atas tabel: "Penanggung jawab batch ini" → pilih
+  nama → "Tetapkan untuk N project yang tampil". Yang ditugaskan adalah yang sedang
   tampil, jadi saring dulu (misal batch tertentu) kalau tidak mau semuanya.
 
 **Menambah orang baru:** tombol **+ Orang** di bagian "Siapa mengerjakan apa",
@@ -84,16 +84,22 @@ atau lewat ⚙. Centang *reviewer* kalau orang itu boleh menyetujui hasil.
 
 ## Alur kerja yang dipakai
 
+Status dikelompokkan jadi **empat tahap** supaya daftar pilihannya pendek:
+**Antrean** (Dalam antrean, Ditunda) · **Pengerjaan** (Sedang dikerjakan,
+Penyiapan sample, Penyempurnaan) · **Dengan klien** (Menunggu tanggapan klien,
+Permintaan revisi klien, Disetujui klien, Penerapan ke seluruh slab) ·
+**Penyelesaian** (Menunggu persetujuan, Selesai).
+
 **Tanpa sample**
-`Belum mulai → Dikerjakan → (taruh di Edited) Pending review → Baldy/Indra setuju → SELESAI`
+`Dalam antrean → Sedang dikerjakan → Menunggu persetujuan → Baldy/Indra setuju → Selesai`
 
 **Pakai sample klien**
 `Buat sample → Kirim ke klien → jawaban klien`
 → **revisi**: brief klien tercatat, buat sample ronde berikutnya
 → **final**: apply warna ke semua slab → Pending review → setuju → SELESAI
 
-Reviewer (Baldy & Indra) yang melihat tombol **"Review OK → SELESAI"** dan
-**"Minta perbaikan"**. Kalau minta perbaikan, catatannya jadi brief baru dan
+Reviewer (Baldy & Indra) yang melihat tombol **"Setujui & selesaikan"** dan
+**"Kembalikan untuk penyempurnaan"**. Kalau minta perbaikan, catatannya jadi brief baru dan
 project balik ke pengerjaan. Orang lain hanya melihat tulisan "Menunggu review".
 
 **Tenggat otomatis:** tiap tugas yang masuk langsung diberi target selesai
@@ -191,7 +197,7 @@ dua orang mengubah bersamaan, dan apa yang terjadi kalau kuncinya salah).
 |---|---|
 | `index.html` | seluruh aplikasi: tampilan, logika, dan salinan data awal |
 | `data/db.json` | data hidup yang dipakai bersama (project, tim, batch) |
-| `tools/uji.js` | 117 uji tanpa browser: `node tools/uji.js` |
+| `tools/uji.js` | 130 uji tanpa browser: `node tools/uji.js` |
 | `tools/uji_supabase.js` | 34 uji lapisan Supabase lewat server tiruan |
 | `supabase/skema.sql` | tabel + aturan keamanan untuk Supabase |
 | `.github/workflows/jaga-nyala.yml` | jaga Supabase tetap nyala + cadangan harian |

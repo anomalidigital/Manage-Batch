@@ -5,7 +5,7 @@ const path = require('path');
 
 const akar = path.join(__dirname, '..');
 const src = fs.readFileSync(path.join(akar, 'index.html'), 'utf8');
-const a = src.indexOf('var STATUS = {');
+const a = src.indexOf('/* =================== LOGIKA MURNI: MULAI');
 const b = src.indexOf('/* =================== LOGIKA MURNI: SELESAI');
 if (a < 0 || b < 0) { console.error('GAGAL: blok logika murni tidak ketemu di index.html'); process.exit(1); }
 const mod = { exports: {} };
@@ -183,7 +183,7 @@ const wajib = ['isi', 'tabs', 'barAksi', 'barJml', 'barPic', 'barPri', 'barUrgen
   'fSelesai', 'fUrgent', 'fSaya', 'fHari', 'pilihBatch', 'pilihSaya', 'sink', 'btnMuat'];
 cek('elemen inti ada di HTML', wajib.every(id => idStatis.has(id)), wajib.filter(id => !idStatis.has(id)));
 cek("kolom tabel konsisten (colspan 6)", (src.match(/colspan="6"/g) || []).length >= 2);
-cek('sel PIC kosong berbunyi "+ Tugaskan"', src.indexOf('+ tugaskan') >= 0);
+cek('sel PIC kosong berbunyi "Tetapkan PIC"', src.indexOf('Tetapkan PIC') >= 0);
 cek('tugas massal per centang tersedia', src.indexOf('data-pilih=') >= 0 && src.indexOf('aksiMassal') >= 0);
 cek('tugaskan seluruh batch tersedia', src.indexOf('btnTugasSemua') >= 0);
 
@@ -248,6 +248,36 @@ cek('tombol Simpan sudah tidak ada', src.indexOf('id="btnSimpan"') < 0);
 cek('perubahan dijadwalkan terkirim sendiri', /function simpanNanti\(\)/.test(src) && /1200/.test(src));
 cek('gagal kirim dicoba ulang otomatis', /jamSimpan = setTimeout\(function\(\)\{ simpanKeGitHub\(true\); \}, 20000\)/.test(src));
 cek('kelompok hari bisa ditutup', src.indexOf('data-tutup=') >= 0 && src.indexOf('mb_tutup') >= 0);
+
+
+judul('Kata-kata: empat tahap, istilah profesional');
+cek('tepat empat tahap', L.TAHAP.length === 4, L.TAHAP.map(t => t.label));
+cek('urutan tahap masuk akal',
+  L.TAHAP.map(t => t.id).join(',') === 'antrean,kerja,klien,tutup');
+cek('semua status punya tahap yang dikenal',
+  Object.keys(L.STATUS).every(k => L.TAHAP.some(t => t.id === L.STATUS[k].tahap)),
+  Object.keys(L.STATUS).filter(k => !L.TAHAP.some(t => t.id === L.STATUS[k].tahap)));
+cek('tiap tahap ada isinya',
+  L.TAHAP.every(t => Object.keys(L.STATUS).some(k => L.STATUS[k].tahap === t.id)));
+const opsi = L.opsiStatus('review');
+cek('daftar pilihan dikelompokkan empat', (opsi.match(/<optgroup/g) || []).length === 4);
+cek('status terpilih ikut ditandai', /value="review" selected/.test(opsi), opsi.slice(0, 80));
+cek('semua status muncul di daftar',
+  Object.keys(L.STATUS).every(k => opsi.indexOf('value="' + k + '"') >= 0));
+cek('kepala tambahan ditaruh paling depan',
+  L.opsiStatus('', '<option value="">Semua status</option>')
+    .indexOf('<option value="">Semua status</option>') === 0);
+const kasar = ['Belum mulai', 'Pending review', 'Apply ke semua', 'Ditahan', 'Perbaikan (review)'];
+cek('istilah lama yang kaku sudah tidak dipakai',
+  !Object.keys(L.STATUS).some(k => kasar.includes(L.STATUS[k].label)),
+  Object.keys(L.STATUS).map(k => L.STATUS[k].label));
+cek('antrean tidak lagi berbunyi "belum mulai"', L.STATUS.todo.label === 'Dalam antrean', L.STATUS.todo.label);
+cek('review berbunyi menunggu persetujuan', L.STATUS.review.label === 'Menunggu persetujuan');
+cek('kata "tugaskan" sudah tidak ada di tampilan',
+  !/\+ tugaskan|Tugaskan '/.test(src), (src.match(/[Tt]ugaskan[^<']{0,20}/g) || []).slice(0, 4));
+cek('tombol aksi memakai kata baku',
+  /Ajukan untuk persetujuan/.test(src) && /Setujui & selesaikan/.test(src)
+  && /Kembalikan untuk penyempurnaan/.test(src));
 
 console.log('\n' + (gagal ? 'GAGAL: ' + gagal + ' dari ' + jumlah + ' uji' : 'LULUS semua ' + jumlah + ' uji'));
 process.exit(gagal ? 1 : 0);

@@ -332,7 +332,7 @@ td.kodesel:hover{color:var(--ac)}
 
 <div id="barAksi">
   <b id="barJml">0 dipilih</b>
-  <span class="samar mini">tugaskan ke</span>
+  <span class="samar mini">tetapkan ke</span>
   <select class="inp" id="barPic" style="width:auto"></select>
   <span class="samar mini">prioritas</span>
   <select class="inp" id="barPri" style="width:auto"><option value="">—</option><option>P1</option><option>P2</option><option>P3</option></select>
@@ -1022,30 +1022,54 @@ td.kodesel:hover{color:var(--ac)}
 </script>
 <script>
 /* =================== LOGIKA MURNI: MULAI (diuji lewat node) =================== */
+/* Empat TAHAP besar; status rinci di dalamnya. Daftar pilihan status
+   dikelompokkan per tahap supaya yang terlihat cuma empat kepala, bukan
+   sebelas baris sekaligus. Istilahnya sengaja netral: pekerjaan yang belum
+   disentuh berbunyi "Dalam antrean", bukan "Belum mulai". */
+var TAHAP = [
+  {id:'antrean', label:'Antrean'},
+  {id:'kerja',   label:'Pengerjaan'},
+  {id:'klien',   label:'Dengan klien'},
+  {id:'tutup',   label:'Penyelesaian'}
+];
 var STATUS = {
-  todo:           {label:'Belum mulai',        warna:'#64748b', kolom:'todo'},
-  dikerjakan:     {label:'Dikerjakan',         warna:'#3b82f6', kolom:'kerja'},
-  sample_buat:    {label:'Buat sample',        warna:'#8b5cf6', kolom:'kerja'},
-  sample_kirim:   {label:'Menunggu klien',     warna:'#f59e0b', kolom:'klien'},
-  revisi:         {label:'Revisi dari klien',  warna:'#ef4444', kolom:'revisi'},
-  revisi_internal:{label:'Perbaikan (review)', warna:'#f97316', kolom:'revisi'},
-  disetujui:      {label:'Disetujui klien',    warna:'#10b981', kolom:'final'},
-  apply:          {label:'Apply ke semua',     warna:'#14b8a6', kolom:'final'},
-  review:         {label:'Pending review',     warna:'#0ea5e9', kolom:'review'},
-  done:           {label:'Selesai',            warna:'#22c55e', kolom:'done'},
-  hold:           {label:'Ditahan',            warna:'#6b7280', kolom:'todo'}
+  todo:           {label:'Dalam antrean',            warna:'#64748b', kolom:'todo',   tahap:'antrean'},
+  hold:           {label:'Ditunda',                  warna:'#6b7280', kolom:'todo',   tahap:'antrean'},
+  dikerjakan:     {label:'Sedang dikerjakan',        warna:'#3b82f6', kolom:'kerja',  tahap:'kerja'},
+  sample_buat:    {label:'Penyiapan sample',         warna:'#8b5cf6', kolom:'kerja',  tahap:'kerja'},
+  revisi_internal:{label:'Penyempurnaan',            warna:'#f97316', kolom:'revisi', tahap:'kerja'},
+  sample_kirim:   {label:'Menunggu tanggapan klien', warna:'#f59e0b', kolom:'klien',  tahap:'klien'},
+  revisi:         {label:'Permintaan revisi klien',  warna:'#ef4444', kolom:'revisi', tahap:'klien'},
+  disetujui:      {label:'Disetujui klien',          warna:'#10b981', kolom:'final',  tahap:'klien'},
+  apply:          {label:'Penerapan ke seluruh slab',warna:'#14b8a6', kolom:'final',  tahap:'klien'},
+  review:         {label:'Menunggu persetujuan',     warna:'#0ea5e9', kolom:'review', tahap:'tutup'},
+  done:           {label:'Selesai',                  warna:'#22c55e', kolom:'done',   tahap:'tutup'}
 };
 var KOLOM = [
-  {id:'todo',   label:'Belum mulai'},
-  {id:'kerja',  label:'Dikerjakan'},
+  {id:'todo',   label:'Antrean'},
+  {id:'kerja',  label:'Pengerjaan'},
   {id:'klien',  label:'Menunggu klien'},
-  {id:'revisi', label:'Revisi / perbaikan'},
-  {id:'final',  label:'Final → apply'},
-  {id:'review', label:'Pending review'},
+  {id:'revisi', label:'Perlu revisi'},
+  {id:'final',  label:'Disetujui & diterapkan'},
+  {id:'review', label:'Menunggu persetujuan'},
   {id:'done',   label:'Selesai'}
 ];
+/* Daftar pilihan status, dikelompokkan jadi empat tahap. */
+function opsiStatus(terpilih, kepala){
+  var h = kepala || '';
+  TAHAP.forEach(function(t){
+    var isi = Object.keys(STATUS).filter(function(k){ return STATUS[k].tahap === t.id; });
+    if(!isi.length) return;
+    h += '<optgroup label="' + t.label + '">'
+      + isi.map(function(k){
+          return '<option value="' + k + '"' + (terpilih === k ? ' selected' : '') + '>'
+            + STATUS[k].label + '</option>'; }).join('')
+      + '</optgroup>';
+  });
+  return h;
+}
 var PRIORITAS = {P1:'#ef4444', P2:'#f59e0b', P3:'#22c55e'};
-var JALUR = {belum:'Belum ditentukan', langsung:'Tanpa sample', sample:'Pakai sample klien'};
+var JALUR = {belum:'Belum ditentukan', langsung:'Langsung, tanpa sample', sample:'Dengan sample klien'};
 var SELESAI = ['done'];
 
 function apakahReviewer(tim, nama){
@@ -1231,35 +1255,35 @@ function rondeTerakhir(p){
 function aksiBerikutnya(p, opsi){
   opsi = opsi || {};
   var st = p.status, jl = p.jalur || 'belum';
-  if(st === 'hold') return [{kode:'lanjut', label:'Lanjutkan lagi', utama:true}];
+  if(st === 'hold') return [{kode:'lanjut', label:'Lanjutkan pengerjaan', utama:true}];
   if(st === 'done') return [
-    {kode:'revisi_baru', label:'Klien minta revisi lagi', utama:true},
-    {kode:'buka', label:'Buka lagi (tanpa brief)'}
+    {kode:'revisi_baru', label:'Catat permintaan revisi baru', utama:true},
+    {kode:'buka', label:'Buka kembali tanpa brief'}
   ];
   if(st === 'review'){
     if(opsi.reviewer) return [
-      {kode:'setuju', label:'Review OK → SELESAI', utama:true},
-      {kode:'tolak',  label:'Minta perbaikan'}
+      {kode:'setuju', label:'Setujui & selesaikan', utama:true},
+      {kode:'tolak',  label:'Kembalikan untuk penyempurnaan'}
     ];
-    return [{kode:'', label:'Menunggu review ' + ((opsi.reviewer_nama||[]).join(' / ') || 'atasan'), mati:true}];
+    return [{kode:'', label:'Menunggu persetujuan ' + ((opsi.reviewer_nama||[]).join(' / ') || 'atasan'), mati:true}];
   }
   if(st === 'todo' && jl === 'belum') return [
-    {kode:'jalur_langsung', label:'Tanpa sample → kerjakan', utama:true},
-    {kode:'jalur_sample',   label:'Perlu sample ke klien', utama:true}
+    {kode:'jalur_langsung', label:'Kerjakan langsung (tanpa sample)', utama:true},
+    {kode:'jalur_sample',   label:'Perlu sample untuk klien', utama:true}
   ];
   if(st === 'todo') return jl === 'sample'
-    ? [{kode:'mulai_sample', label:'Mulai buat sample', utama:true}]
+    ? [{kode:'mulai_sample', label:'Mulai siapkan sample', utama:true}]
     : [{kode:'mulai', label:'Mulai kerjakan', utama:true}];
-  if(st === 'dikerjakan') return [{kode:'ke_review', label:'Sudah selesai → minta review', utama:true}];
-  if(st === 'revisi_internal') return [{kode:'perbaiki', label:'Perbaiki lagi', utama:true}];
+  if(st === 'dikerjakan') return [{kode:'ke_review', label:'Ajukan untuk persetujuan', utama:true}];
+  if(st === 'revisi_internal') return [{kode:'perbaiki', label:'Lanjutkan penyempurnaan', utama:true}];
   if(st === 'sample_buat') return [{kode:'kirim_sample', label:'Kirim sample ke klien', utama:true}];
-  if(st === 'sample_kirim') return [{kode:'jawaban', label:'Catat jawaban klien', utama:true}];
+  if(st === 'sample_kirim') return [{kode:'jawaban', label:'Catat tanggapan klien', utama:true}];
   if(st === 'revisi'){
     var n = (p.sampel||[]).length + 1;
-    return [{kode:'sample_baru', label:'Buat sample ronde ' + n, utama:true}];
+    return [{kode:'sample_baru', label:'Siapkan sample ronde ' + n, utama:true}];
   }
-  if(st === 'disetujui') return [{kode:'apply', label:'Apply warna ke semua slab', utama:true}];
-  if(st === 'apply') return [{kode:'ke_review', label:'Sudah selesai → minta review', utama:true}];
+  if(st === 'disetujui') return [{kode:'apply', label:'Terapkan warna ke seluruh slab', utama:true}];
+  if(st === 'apply') return [{kode:'ke_review', label:'Ajukan untuk persetujuan', utama:true}];
   return [];
 }
 /* Terapkan satu aksi. Mengembalikan project BARU + baris riwayat. Tidak mengubah masukan. */
@@ -1447,6 +1471,7 @@ if(typeof module !== 'undefined' && module.exports){
     apakahReviewer:apakahReviewer, daftarReviewer:daftarReviewer, briefTerbaru:briefTerbaru,
     tambahBriefKe:tambahBriefKe, telatHari:telatHari,
     tanggalIndo:tanggalIndo, kelompokPerHari:kelompokPerHari, tandaBaris:tandaBaris,
+    TAHAP:TAHAP, opsiStatus:opsiStatus,
     sepertiInggris:sepertiInggris, terjemahOtomatis:terjemahOtomatis, briefTampil:briefTampil,
     HARI_TENGGAT:HARI_TENGGAT, tambahHari:tambahHari, tenggatOtomatis:tenggatOtomatis,
     dariBarisSB:dariBarisSB, keBarisSB:keBarisSB, bedaKirim:bedaKirim, buangYangDihapus:buangYangDihapus};
@@ -1857,11 +1882,10 @@ function pilOrang(){
   s1.innerHTML = '<option value="">Saya: —</option>' + opsi;
   s1.value = v1 || saya || '';
   var s2 = $('#fPic'), v2 = s2.value;
-  s2.innerHTML = '<option value="">Semua PIC</option><option value="__kosong">Belum ada PIC</option>' + opsi;
+  s2.innerHTML = '<option value="">Semua PIC</option><option value="__kosong">Belum ditetapkan</option>' + opsi;
   s2.value = v2 || '';
   var s3 = $('#fStatus'), v3 = s3.value;
-  s3.innerHTML = '<option value="">Semua status</option>' + Object.keys(STATUS).map(function(k){
-    return '<option value="'+k+'">'+esc(STATUS[k].label)+'</option>'; }).join('');
+  s3.innerHTML = opsiStatus('', '<option value="">Semua status</option>');
   s3.value = v3 || '';
 }
 function badgeStatus(p){
@@ -1946,7 +1970,6 @@ function htmlPapan(ps){
   return html + '</div>';
 }
 function htmlDaftar(ps){
-  var opsiSt  = Object.keys(STATUS).map(function(k){ return '<option value="'+k+'">'+esc(STATUS[k].label)+'</option>'; }).join('');
   function barisTabel(p){
     var br = briefTerbaru(p);
     var briefBaru = br && (br.sumber === 'klien' || br.sumber === 'review');
@@ -1978,8 +2001,7 @@ function htmlDaftar(ps){
       + '<td class="pic">'+selPic(p)+'</td>'
       + '<td class="st"><span class="stat"><i class="titik" style="background:'+((STATUS[p.status]||STATUS.todo).warna)+'"></i>'
         + '<select class="tlg" data-set="status" data-id="'+esc(p.id)+'">'
-        + Object.keys(STATUS).map(function(k){ return '<option value="'+k+'"'+(p.status===k?' selected':'')+'>'+esc(STATUS[k].label)+'</option>'; }).join('')
-        + '</select></span>'
+        + opsiStatus(p.status) + '</select></span>'
         + (badgeTenggat(p) || badgeTunggu(p) ? '<div style="margin-top:4px">'+badgeTenggat(p)+' '+badgeTunggu(p)+'</div>' : '')
         + '</td>'
       + '</tr>';
@@ -2007,20 +2029,20 @@ function htmlDaftar(ps){
   var opsiOrang = '<option value="">— pilih orang —</option>' + (db.tim||[]).map(function(a){
     return '<option>'+esc(a.nama)+'</option>'; }).join('');
   return '<div class="baris-tugas">'
-    + '<b class="mini">Siapa yang mengerjakan batch ini?</b>'
+    + '<b class="mini">Penanggung jawab batch ini</b>'
     + '<select class="inp" id="tugasSemua" style="width:auto">'+opsiOrang+'</select>'
-    + '<button class="btn utama" id="btnTugasSemua">Tugaskan '+ps.length+' project yang tampil</button>'
+    + '<button class="btn utama" id="btnTugasSemua">Tetapkan untuk '+ps.length+' project yang tampil</button>'
     + '<span class="samar2 mini">atau centang baris untuk sebagian saja</span>'
     + '</div>'
     + '<div class="bungkus-tabel"><table class="tbl-rapi"><thead><tr>'
     + '<th class="cek"></th><th>Pri</th><th>Project</th><th>Pekerjaan &amp; brief terbaru</th>'
-    + '<th>Dikerjakan oleh</th><th>Status</th>'
+    + '<th>PIC</th><th>Status</th>'
     + '</tr></thead><tbody>' + (baris || '<tr><td colspan="6" class="kosong">tidak ada project</td></tr>') + '</tbody></table></div>'
     + '<div class="samar2 mini" style="margin-top:8px">'+ps.length+' project. Klik baris untuk detail &amp; brief lengkap; prioritas, PIC, dan status bisa diubah langsung di sini.</div>';
 }
 /* Sel PIC: kalau belum ada yang pegang, tampil sebagai tombol "+ Tugaskan" biru. */
 function selPic(p){
-  var o = '<option value="">' + (p.pic ? '— lepas —' : '+ tugaskan') + '</option>'
+  var o = '<option value="">' + (p.pic ? '— kosongkan —' : 'Tetapkan PIC') + '</option>'
     + (db.tim||[]).map(function(a){ return '<option'+(p.pic===a.nama?' selected':'')+'>'+esc(a.nama)+'</option>'; }).join('');
   return '<div class="pic-sel'+(p.pic?'':' kosong')+'">' + avaHTML(p.pic)
     + '<select class="tlg" data-set="pic" data-id="'+esc(p.id)+'">'+o+'</select></div>';
@@ -2032,7 +2054,7 @@ function htmlOrang(semua){
     + daftar.map(function(n){
         var r = ringkasOrang(semua, n);
         return '<option value="'+esc(n)+'"'+(n===nama?' selected':'')+'>'+esc(n)+'  ('+r.aktif+' aktif / '+r.total+' total)</option>'; }).join('')
-    + '<option value="__kosong"'+(nama==='__kosong'?' selected':'')+'>⚠ Belum ada PIC ('
+    + '<option value="__kosong"'+(nama==='__kosong'?' selected':'')+'>⚠ Belum ditetapkan ('
     + semua.filter(function(p){ return !p.pic; }).length + ')</option>';
 
   var atas = '<div class="orang-top">'
@@ -2044,16 +2066,16 @@ function htmlOrang(semua){
   if(nama === '__kosong'){
     ps = semua.filter(function(p){ return !p.pic; });
     atas += '<div style="display:flex;align-items:center;gap:11px">'+avaHTML('', true)
-      + '<div><b style="font-size:16px">Belum ada PIC</b><div class="samar mini">'+ps.length+' project belum dipegang siapa pun</div></div></div>';
+      + '<div><b style="font-size:16px">Belum ditetapkan</b><div class="samar mini">'+ps.length+' project belum ada penanggung jawabnya</div></div></div>';
   } else if(nama){
     ps = semua.filter(function(p){ return p.pic === nama; });
     var r = ringkasOrang(semua, nama);
     atas += '<div style="display:flex;align-items:center;gap:11px">'+avaHTML(nama, true)
       + '<div><b style="font-size:16px">'+esc(nama)+'</b><div class="samar mini">'+r.aktif+' sedang jalan · '+r.total+' total</div></div></div>'
       + '<div class="orang-stat">'
-      + '<div class="stat"><b>'+r.belum+'</b><span>belum mulai</span></div>'
+      + '<div class="stat"><b>'+r.belum+'</b><span>dalam antrean</span></div>'
       + '<div class="stat"><b>'+r.aktif+'</b><span>dikerjakan</span></div>'
-      + '<div class="stat" style="border-color:'+(r.tunggu?'var(--warn)':'var(--line)')+'"><b>'+r.tunggu+'</b><span>tunggu klien</span></div>'
+      + '<div class="stat" style="border-color:'+(r.tunggu?'var(--warn)':'var(--line)')+'"><b>'+r.tunggu+'</b><span>menunggu klien</span></div>'
       + '<div class="stat" style="border-color:'+(r.revisi?'var(--err)':'var(--line)')+'"><b>'+r.revisi+'</b><span>revisi</span></div>'
       + '<div class="stat"><b>'+r.selesai+'</b><span>selesai</span></div>'
       + '</div>';
@@ -2089,13 +2111,13 @@ function htmlOrang(semua){
   } else {
     var grup = [
       {t:'🔥 Urgent', f:function(p){ return p.urgent && p.status!=='done'; }},
-      {t:'Perlu diperbaiki (hasil review)', f:function(p){ return p.status==='revisi_internal'; }},
-      {t:'Revisi dari klien', f:function(p){ return p.status==='revisi'; }},
-      {t:'Menunggu klien', f:function(p){ return p.status==='sample_kirim'; }},
+      {t:'Perlu penyempurnaan', f:function(p){ return p.status==='revisi_internal'; }},
+      {t:'Permintaan revisi klien', f:function(p){ return p.status==='revisi'; }},
+      {t:'Menunggu tanggapan klien', f:function(p){ return p.status==='sample_kirim'; }},
       {t:'Sedang dikerjakan', f:function(p){ return ['dikerjakan','sample_buat','disetujui','apply'].indexOf(p.status)>=0; }},
-      {t:'Belum mulai', f:function(p){ return p.status==='todo'; }},
-      {t:'Pending review', f:function(p){ return p.status==='review'; }},
-      {t:'Ditahan', f:function(p){ return p.status==='hold'; }},
+      {t:'Dalam antrean', f:function(p){ return p.status==='todo'; }},
+      {t:'Menunggu persetujuan', f:function(p){ return p.status==='review'; }},
+      {t:'Ditunda', f:function(p){ return p.status==='hold'; }},
       {t:'Selesai', f:function(p){ return p.status==='done'; }}
     ];
     var sudah = {};
@@ -2149,13 +2171,13 @@ function htmlRingkas(ps){
         + '</div>'
       : '<div class="samar2 mini">aman, tidak ada yang urgent atau telat</div>') + '</div>';
 
-  html += '<div class="kartu-b"><h4>⚠ Belum ada yang pegang</h4>'
+  html += '<div class="kartu-b"><h4>⚠ Belum ada PIC</h4>'
     + (tanpaPic.length ? '<div class="lst">' + tanpaPic.map(function(p){
         return '<div><span class="titik" style="background:'+(PRIORITAS[p.prioritas]||'')+'"></span>'
           + '<a href="#" data-buka="'+esc(p.id)+'">'+esc(p.kode)+'</a><b>'+esc(p.prioritas||'')+'</b></div>'; }).join('') + '</div>'
-      : '<div class="samar2 mini">semua project sudah ada PIC-nya 🎉</div>') + '</div>';
+      : '<div class="samar2 mini">seluruh project sudah ada penanggung jawabnya</div>') + '</div>';
 
-  html += '<div class="kartu-b"><h4>⏱ Menunggu jawaban klien</h4>'
+  html += '<div class="kartu-b"><h4>⏱ Menunggu tanggapan klien</h4>'
     + (tunggu.length ? '<div class="lst">' + tunggu.map(function(x){
         return '<div><a href="#" data-buka="'+esc(x.p.id)+'">'+esc(x.p.kode)+'</a>'
           + '<span class="samar2 mini">'+esc(x.p.pic||'tanpa PIC')+'</span>'
@@ -2188,9 +2210,9 @@ function render(){
     +   '<span class="ket">klik kode untuk detail &amp; brief</span></h2>' + htmlDaftar(ps) + '</section>'
     + '<section class="sesi" id="s-papan"><h2>🗂 Papan alur kerja'
     +   '<span class="ket">geser ke kanan untuk melihat tahap berikutnya</span></h2>'
-    +   '<div class="jalur-info"><span>Tanpa sample: kerjakan → minta review → SELESAI</span>'
-    +   '<span>Pakai sample: sample → klien → revisi/final → apply semua → review → SELESAI</span>'
-    +   '<span>Review oleh: '+esc(daftarReviewer(db.tim).join(' & ') || '—')+'</span></div>'
+    +   '<div class="jalur-info"><span>Tanpa sample: dikerjakan → diajukan → disetujui → selesai</span>'
+    +   '<span>Dengan sample: sample → klien → revisi / disetujui → diterapkan → diajukan → selesai</span>'
+    +   '<span>Persetujuan akhir: '+esc(daftarReviewer(db.tim).join(' & ') || '—')+'</span></div>'
     +   htmlPapan(ps) + '</section>';
   pasangBinding();
   if(laciId) renderLaci();
@@ -2207,9 +2229,9 @@ function pasangBinding(){
     if(!n){ pesan('Pilih dulu orangnya di sebelah kiri tombol'); return; }
     var ps = terpakai();
     if(!ps.length){ pesan('Tidak ada project yang tampil'); return; }
-    if(!confirm('Tugaskan ' + ps.length + ' project yang sedang tampil ke ' + n + '?')) return;
-    ps.forEach(function(p){ if(p.pic !== n) ubahDiam(p.id, {pic:n}, 'PIC → ' + n + ' (tugas massal)'); });
-    tandaiKotor(); render(); pesan(ps.length + ' project ditugaskan ke ' + n);
+    if(!confirm('Tetapkan ' + n + ' sebagai PIC untuk ' + ps.length + ' project yang sedang tampil?')) return;
+    ps.forEach(function(p){ if(p.pic !== n) ubahDiam(p.id, {pic:n}, 'PIC → ' + n + ' (penetapan massal)'); });
+    tandaiKotor(); render(); pesan('PIC ' + n + ' ditetapkan untuk ' + ps.length + ' project');
   };
   perbaruiBar();
 }
@@ -2250,13 +2272,13 @@ function renderLaci(){
   var p = pilihProject(laciId); if(!p){ tutupLaci(); return; }
   $('#laciJudul').innerHTML = '<span class="titik" style="background:'+(PRIORITAS[p.prioritas]||'')+'"></span> ' + esc(p.kode);
   var aksi = aksiBerikutnya(p, opsiAksi());
-  var opsiPic = '<option value="">— belum ada —</option>' + (db.tim||[]).map(function(a){
+  var opsiPic = '<option value="">— belum ditetapkan —</option>' + (db.tim||[]).map(function(a){
     return '<option'+(p.pic===a.nama?' selected':'')+'>'+esc(a.nama)+'</option>'; }).join('');
   var h = '';
   h += '<div class="aksi-kotak"><div class="jdl">Langkah berikutnya</div><div class="tbl">'
     + aksi.map(function(a){ return tombolAksi(p, a, false); }).join('')
-    + (p.status !== 'hold' && p.status !== 'done' ? '<button class="btn" data-aksi="tahan" data-id="'+esc(p.id)+'">Tahan dulu</button>' : '')
-    + (!p.pic && saya ? '<button class="btn" data-ambil="'+esc(p.id)+'">Saya ambil ini</button>' : '')
+    + (p.status !== 'hold' && p.status !== 'done' ? '<button class="btn" data-aksi="tahan" data-id="'+esc(p.id)+'">Tunda</button>' : '')
+    + (!p.pic && saya ? '<button class="btn" data-ambil="'+esc(p.id)+'">Saya yang kerjakan</button>' : '')
     + '<button class="btn'+(p.urgent?' bahaya':'')+'" data-aksi="urgent" data-id="'+esc(p.id)+'">'
       + (p.urgent ? '🔥 Lepas urgent' : '🔥 Tandai urgent') + '</button>'
     + '</div><div class="mini samar" style="margin-top:8px">Status: '+badgeStatus(p)+' '+badgeUrgent(p)+' '+badgeTenggat(p)+' '+badgeTunggu(p)
@@ -2299,7 +2321,7 @@ function renderLaci(){
     + '</div>';
   h += '<div class="fld"><label>Revisi / permintaan</label><textarea class="inp" data-set="revisi" data-id="'+esc(p.id)+'">'+esc(p.revisi||'')+'</textarea></div>';
   h += '<div class="duo">'
-    + '<div class="fld"><label>PIC</label><select class="inp" data-set="pic" data-id="'+esc(p.id)+'">'+opsiPic+'</select></div>'
+    + '<div class="fld"><label>Penanggung jawab (PIC)</label><select class="inp" data-set="pic" data-id="'+esc(p.id)+'">'+opsiPic+'</select></div>'
     + '<div class="fld"><label>Prioritas</label><select class="inp" data-set="prioritas" data-id="'+esc(p.id)+'">'
       + ['P1','P2','P3'].map(function(x){ return '<option'+(p.prioritas===x?' selected':'')+'>'+x+'</option>'; }).join('') + '</select></div>'
     + '</div>';
@@ -2307,7 +2329,7 @@ function renderLaci(){
     + '<div class="fld"><label>Jalur kerja</label><select class="inp" data-set="jalur" data-id="'+esc(p.id)+'">'
       + Object.keys(JALUR).map(function(k){ return '<option value="'+k+'"'+(p.jalur===k?' selected':'')+'>'+esc(JALUR[k])+'</option>'; }).join('') + '</select></div>'
     + '<div class="fld"><label>Status</label><select class="inp" data-set="status" data-id="'+esc(p.id)+'">'
-      + Object.keys(STATUS).map(function(k){ return '<option value="'+k+'"'+(p.status===k?' selected':'')+'>'+esc(STATUS[k].label)+'</option>'; }).join('') + '</select></div>'
+      + opsiStatus(p.status) + '</select></div>'
     + '</div>';
   h += '<div class="duo">'
     + '<div class="fld"><label>Diterima</label><input class="inp" type="date" data-set="diterima" data-id="'+esc(p.id)+'" value="'+esc(p.diterima||'')+'"></div>'
@@ -2495,14 +2517,14 @@ function dialogBrief(id){
      }}]);
 }
 function dialogTambah(){
-  var opsiPic = '<option value="">— belum ada —</option>' + (db.tim||[]).map(function(a){ return '<option>'+esc(a.nama)+'</option>'; }).join('');
+  var opsiPic = '<option value="">— belum ditetapkan —</option>' + (db.tim||[]).map(function(a){ return '<option>'+esc(a.nama)+'</option>'; }).join('');
   var opsiBatch = (db.batches||[]).map(function(b){ return '<option value="'+esc(b.id)+'">'+esc(b.nama)+'</option>'; }).join('');
   modal('Project baru',
     '<div class="duo"><div class="fld"><label>Kode project *</label><input class="inp" id="nKode" placeholder="TURARG20H2235"></div>'
     + '<div class="fld"><label>Slab</label><input class="inp" id="nSlab" placeholder="43–63 / kosongkan"></div></div>'
     + '<div class="fld"><label>Revisi / permintaan</label><textarea class="inp" id="nRev"></textarea></div>'
     + '<div class="duo"><div class="fld"><label>Prioritas</label><select class="inp" id="nPri"><option>P1</option><option selected>P2</option><option>P3</option></select></div>'
-    + '<div class="fld"><label>PIC</label><select class="inp" id="nPic">'+opsiPic+'</select></div></div>'
+    + '<div class="fld"><label>Penanggung jawab (PIC)</label><select class="inp" id="nPic">'+opsiPic+'</select></div></div>'
     + '<div class="duo"><div class="fld"><label>Diterima</label><input class="inp" type="date" id="nTgl" value="'+hariIni()+'"></div>'
     + '<div class="fld"><label>Batch</label><select class="inp" id="nBatch">'+opsiBatch+'</select></div></div>'
     + '<div class="fld"><label>Jenis (pisah koma)</label><input class="inp" id="nJenis" placeholder="Color Match, Tag"></div>',
@@ -2672,7 +2694,7 @@ document.addEventListener('click', function(e){
   var brf = e.target.closest('[data-brief]');
   if(brf){ e.stopPropagation(); dialogBrief(brf.dataset.brief); return; }
   var amb = e.target.closest('[data-ambil]');
-  if(amb){ ubahProject(amb.dataset.ambil, {pic:saya}, 'diambil oleh ' + saya); pesan('Kamu ambil project ini'); return; }
+  if(amb){ ubahProject(amb.dataset.ambil, {pic:saya}, 'PIC → ' + saya); pesan('Kamu tercatat sebagai PIC project ini'); return; }
   var org = e.target.closest('[data-orang]');
   if(org){ e.preventDefault(); orangPilih = org.dataset.orang; LS.taruh('mb_orang', orangPilih);
     tampilan = 'orang'; LS.taruh('mb_tampilan', tampilan); render(); return; }
@@ -2727,7 +2749,7 @@ function aksiMassal(fn, pesanTeks){
 }
 $('#barPic').addEventListener('change', function(){
   var n = $('#barPic').value; if(!n) return;
-  aksiMassal(function(id){ ubahDiam(id, {pic:n}, 'PIC → ' + n + ' (tugas massal)'); }, 'ditugaskan ke ' + n);
+  aksiMassal(function(id){ ubahDiam(id, {pic:n}, 'PIC → ' + n + ' (penetapan massal)'); }, 'ditetapkan ke ' + n);
   $('#barPic').value = '';
 });
 $('#barPri').addEventListener('change', function(){
