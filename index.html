@@ -40,7 +40,33 @@ a{color:var(--ac)}
 .tumbuh{flex:1}
 .bar2{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--bg);
   border-bottom:1px solid var(--line);flex-wrap:wrap}
-.isi{flex:1;overflow:auto;padding:14px}
+.isi{flex:1;overflow:auto;padding:14px;scroll-behavior:smooth}
+.sesi{margin-bottom:22px;scroll-margin-top:8px}
+.sesi > h2{margin:0 0 10px;font-size:14px;letter-spacing:.3px;display:flex;align-items:center;gap:9px;
+  padding-bottom:8px;border-bottom:1px solid var(--line)}
+.sesi > h2 .cap{font-size:11px;font-weight:500;color:var(--tx2);background:var(--bg3);
+  border:1px solid var(--line);border-radius:20px;padding:2px 9px}
+.sesi > h2 .ket{font-size:11.5px;font-weight:400;color:var(--tx3);margin-left:auto;text-align:right}
+.jalur-info{display:flex;gap:8px;flex-wrap:wrap;font-size:11.5px;color:var(--tx2);margin-bottom:10px}
+.jalur-info span{background:var(--bg3);border:1px solid var(--line);border-radius:20px;padding:3px 10px}
+.tile{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:9px;margin-bottom:12px}
+.tile .t{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.tile .t b{display:block;font-size:22px;line-height:1.2}
+.tile .t span{font-size:11.5px;color:var(--tx2)}
+.tile .t.klik{cursor:pointer}
+.tile .t.klik:hover{border-color:var(--ac)}
+/* ---------- penugasan orang ---------- */
+.pic-sel{display:flex;align-items:center;gap:6px;min-width:0}
+.pic-sel select{min-width:104px}
+.pic-sel.kosong select{color:var(--ac);border:1px dashed var(--ac);background:var(--ac2);font-weight:600}
+.baris-tugas{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--bg2);
+  border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:10px}
+td.cek,th.cek{width:30px;padding-left:12px}
+tr.hari td .cekhari{margin-right:8px}
+#barAksi{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:45;
+  background:var(--bg2);border:1px solid var(--ac);border-radius:12px;box-shadow:var(--sh);
+  padding:9px 13px;display:none;align-items:center;gap:9px;flex-wrap:wrap;max-width:94vw}
+#barAksi.on{display:flex}
 
 /* ---------- kontrol ---------- */
 .btn{background:var(--bg3);border:1px solid var(--line);border-radius:8px;padding:6px 11px;
@@ -103,6 +129,9 @@ th{position:sticky;top:0;background:var(--bg2);text-align:left;padding:9px 10px;
 td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 tr:last-child td{border-bottom:0}
 tbody tr:hover{background:var(--bg3)}
+tr.hari td{background:var(--bg3);border-top:2px solid var(--line2);font-weight:700;font-size:12.5px;
+  letter-spacing:.3px;padding:7px 10px;position:sticky;top:34px;z-index:1}
+tr.hari td .n{font-weight:500;color:var(--tx2);margin-left:7px}
 td.kodesel{font-weight:650;white-space:nowrap;cursor:pointer}
 td.kodesel:hover{color:var(--ac)}
 .sel-inp{background:transparent;border:1px solid transparent;border-radius:6px;padding:3px 5px;width:100%}
@@ -210,10 +239,10 @@ td.kodesel:hover{color:var(--ac)}
 
   <div class="bar2">
     <div class="tab" id="tabs">
-      <button data-v="orang" class="on">Per Orang</button>
-      <button data-v="papan">Papan</button>
-      <button data-v="tabel">Tabel</button>
       <button data-v="ringkas">Ringkasan</button>
+      <button data-v="orang">Siapa kerjakan apa</button>
+      <button data-v="daftar">List pending</button>
+      <button data-v="papan">Papan alur</button>
     </div>
     <select class="inp" id="fPic" style="width:auto"></select>
     <select class="inp" id="fPri" style="width:auto">
@@ -222,6 +251,7 @@ td.kodesel:hover{color:var(--ac)}
     <select class="inp" id="fStatus" style="width:auto"></select>
     <label class="pil" style="cursor:pointer;border-color:var(--err);color:var(--err)"><input type="checkbox" id="fUrgent"> 🔥 urgent saja</label>
     <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSaya"> punya saya</label>
+    <label class="pil" style="cursor:pointer"><input type="checkbox" id="fHari" checked> 📅 kelompok per hari</label>
     <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSelesai"> tampilkan yang selesai</label>
     <div class="tumbuh"></div>
     <button class="btn" id="btnTempel">Tempel dari tabel</button>
@@ -247,8 +277,696 @@ td.kodesel:hover{color:var(--ac)}
   <footer id="modalKaki"></footer>
 </div></div>
 
+<div id="barAksi">
+  <b id="barJml">0 dipilih</b>
+  <span class="samar mini">tugaskan ke</span>
+  <select class="inp" id="barPic" style="width:auto"></select>
+  <span class="samar mini">prioritas</span>
+  <select class="inp" id="barPri" style="width:auto"><option value="">—</option><option>P1</option><option>P2</option><option>P3</option></select>
+  <button class="btn" id="barUrgent">🔥 Urgent</button>
+  <button class="btn" id="barBatal">Batal</button>
+</div>
 <div class="pesan" id="pesan"></div>
 
+<script type="application/json" id="benih">
+{
+ "versi": 1,
+ "diperbarui": "2026-09-10T05:00:00.000Z",
+ "batches": [
+  {
+   "id": "b_20260910",
+   "nama": "List Pending Slab — 10 Sep 2026",
+   "tanggal": "2026-09-10",
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  }
+ ],
+ "tim": [
+  {
+   "id": "t_baldy",
+   "nama": "Baldy",
+   "warna": "#4f8cff",
+   "reviewer": true,
+   "aktif": true,
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "t_indra",
+   "nama": "Indra",
+   "warna": "#f97316",
+   "reviewer": true,
+   "aktif": true,
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "t_kallysta",
+   "nama": "Kallysta",
+   "warna": "#ec4899",
+   "reviewer": false,
+   "aktif": true,
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "t_vincent",
+   "nama": "Vincent",
+   "warna": "#10b981",
+   "reviewer": false,
+   "aktif": true,
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  }
+ ],
+ "projects": [
+  {
+   "id": "p_turarg20h2235",
+   "kode": "TURARG20H2235",
+   "slab": "",
+   "prioritas": "P1",
+   "revisi": "Remove tag + color match",
+   "jenis": [
+    "Tag",
+    "Color"
+   ],
+   "pic": "",
+   "diterima": "2026-09-10",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-10T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Remove tag + color match",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-10T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 10 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_ascot20h2769",
+   "kode": "ASCOT20H2769",
+   "slab": "20",
+   "prioritas": "P1",
+   "revisi": "Adjust slab 20",
+   "jenis": [
+    "Adjustment"
+   ],
+   "pic": "",
+   "diterima": "2026-09-10",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-10T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Adjust slab 20",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-10T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 10 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_bevros20h5802",
+   "kode": "BEVROS20H5802",
+   "slab": "",
+   "prioritas": "P1",
+   "revisi": "Adjust warna",
+   "jenis": [
+    "Color"
+   ],
+   "pic": "Indra",
+   "diterima": "2026-09-10",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-10T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Adjust warna",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-10T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 10 Sep, PIC Indra"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_carpat20lf4769_37_48",
+   "kode": "CARPAT20LF4769",
+   "slab": "37–48",
+   "prioritas": "P1",
+   "revisi": "Color match slab 37–48",
+   "jenis": [
+    "Color Match"
+   ],
+   "pic": "",
+   "diterima": "2026-09-09",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "Batch kedua CARPAT; batch slab 25–36 masuk 7 Sep (entri terpisah)",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-09T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Color match, slab 37–48",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-09T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 9 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_solbla20h6004",
+   "kode": "SOLBLA20H6004",
+   "slab": "32",
+   "prioritas": "P2",
+   "revisi": "Kembalikan area yang hilang pada slab 32",
+   "jenis": [
+    "Retouch"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Klien",
+     "sumber": "klien",
+     "teks": "Could you please add the missing area back to slab 32?",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_newsav20h2639",
+   "kode": "NEWSAV20H2639",
+   "slab": "43",
+   "prioritas": "P2",
+   "revisi": "Edit slab no. 43 memakai file RAW baru",
+   "jenis": [
+    "Re-edit",
+    "RAW"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Edit slab no. 43 — pakai file RAW baru",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_borcry20h3083",
+   "kode": "BORCRY20H3083",
+   "slab": "",
+   "prioritas": "P2",
+   "revisi": "Tone down white tanpa mengembalikan orange wash; samakan dengan sample baru",
+   "jenis": [
+    "Color Correction"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "sample",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "Klien mengirim sample pembanding (new sample 8 Sep)",
+   "tautan": "Z:\\CDKStone_Slab_230308\\Baldy\\Task\\260724_BORCRY20H3083_8_revisiLessOrangeVeining\\newsample8sep",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Klien",
+     "sumber": "klien",
+     "teks": "Could you please tone down the white without bringing back the orange wash? The rest of the batch is similar to the attached image.",
+     "lampiran": "Z:\\CDKStone_Slab_230308\\Baldy\\Task\\260724_BORCRY20H3083_8_revisiLessOrangeVeining\\newsample8sep",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep; klien kirim sample baru 8 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_amewav20lf3446",
+   "kode": "AMEWAV20LF3446",
+   "slab": "",
+   "prioritas": "P2",
+   "revisi": "Versi sedikit lebih blue + koreksi stone details",
+   "jenis": [
+    "Color",
+    "Detail"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "Teks katalog harus: Amethyst Wave Quartzite  Block 3446  Slab #",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Klien",
+     "sumber": "klien",
+     "teks": "Another version that is a bit bluer please? Also, can we please correct the stone details to the below:\nNAME TYPE   Amethyst Wave Quartzite   Block 3446   Slab #",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_carpat20lf4769_25_36",
+   "kode": "CARPAT20LF4769",
+   "slab": "25–36",
+   "prioritas": "P1",
+   "revisi": "Color match slab 25–36",
+   "jenis": [
+    "Color Match"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "Batch pertama CARPAT; slab 37–48 masuk 9 Sep (entri terpisah)",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Color match, slab 25–36",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_turarg20h2508",
+   "kode": "TURARG20H2508",
+   "slab": "43–63 + slab 1",
+   "prioritas": "P2",
+   "revisi": "Tambah slab no. 1 + remove tags",
+   "jenis": [
+    "Batch",
+    "Tag"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260901_TURARG20H2508_21",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Slab 43–63: tambah slab no. 1, remove tags",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_tajmah20h1865",
+   "kode": "TAJMAH20H1865",
+   "slab": "",
+   "prioritas": "P3",
+   "revisi": "Color match",
+   "jenis": [
+    "Color Match"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Color match",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_sentos20h8032",
+   "kode": "SENTOS20H8032",
+   "slab": "",
+   "prioritas": "P3",
+   "revisi": "Color match",
+   "jenis": [
+    "Color Match"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Color match",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_clatra20vchf1680",
+   "kode": "CLATRA20VCHF1680",
+   "slab": "",
+   "prioritas": "P3",
+   "revisi": "Color match",
+   "jenis": [
+    "Color Match"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260903_CLATRA20VCHF1680 _50",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Color match",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_turarg20h2411",
+   "kode": "TURARG20H2411",
+   "slab": "",
+   "prioritas": "P3",
+   "revisi": "Keep color dari file RAW",
+   "jenis": [
+    "RAW",
+    "Color"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260903_TURARG20H2411_34",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Keep color dari file RAW",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_monter20h5577",
+   "kode": "MONTER20H5577",
+   "slab": "",
+   "prioritas": "P3",
+   "revisi": "Ikuti color brief",
+   "jenis": [
+    "Color"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Klien",
+     "sumber": "klien",
+     "teks": "Ikuti color brief dari klien.",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  },
+  {
+   "id": "p_breper20h1579",
+   "kode": "BREPER20H1579",
+   "slab": "",
+   "prioritas": "P3",
+   "revisi": "Adjust saturation",
+   "jenis": [
+    "Color"
+   ],
+   "pic": "",
+   "diterima": "2026-09-07",
+   "tenggat": "",
+   "batch": "b_20260910",
+   "jalur": "belum",
+   "status": "todo",
+   "urgent": false,
+   "catatan": "",
+   "tautan": "",
+   "brief": [
+    {
+     "id": "br_1",
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "List pending",
+     "sumber": "awal",
+     "teks": "Adjust saturation",
+     "lampiran": "",
+     "ronde": 0
+    }
+   ],
+   "sampel": [],
+   "riwayat": [
+    {
+     "waktu": "2026-09-07T04:00:00.000Z",
+     "oleh": "Baldy",
+     "teks": "masuk list pending 7 Sep"
+    }
+   ],
+   "diperbarui": "2026-09-10T05:00:00.000Z"
+  }
+ ]
+}
+</script>
 <script>
 /* =================== LOGIKA MURNI: MULAI (diuji lewat node) =================== */
 var STATUS = {
@@ -435,6 +1153,28 @@ function gabungDB(basis, lokal, remote){
     projects: gabungKoleksi(basis.projects, lokal.projects, remote.projects)
   };
 }
+var BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function tanggalIndo(iso){
+  if(!iso) return 'Tanpa tanggal';
+  var b = String(iso).split('-');
+  if(b.length !== 3) return String(iso);
+  return parseInt(b[2],10) + ' ' + (BULAN_ID[parseInt(b[1],10)-1] || b[1]) + ' ' + b[0];
+}
+/* Kelompokkan per hari diterima, hari terbaru di atas — persis seperti
+   "List pending slab: 10 sep / 9 sep / 7 sep" milik operator. */
+function kelompokPerHari(projects){
+  var peta = {};
+  (projects||[]).forEach(function(p){
+    var k = p.diterima || '';
+    (peta[k] = peta[k] || []).push(p);
+  });
+  return Object.keys(peta).sort(function(a,b){
+    if(!a) return 1; if(!b) return -1;
+    return a < b ? 1 : -1;
+  }).map(function(k){
+    return {tanggal:k, label:tanggalIndo(k), items:peta[k].sort(urutProject)};
+  });
+}
 function urutProject(a, b){
   if(!!a.urgent !== !!b.urgent) return a.urgent ? -1 : 1;      // URGENT selalu di atas
   var ta = a.tenggat || '', tb = b.tenggat || '';
@@ -490,7 +1230,8 @@ if(typeof module !== 'undefined' && module.exports){
     gabungKoleksi:gabungKoleksi, gabungDB:gabungDB, urutProject:urutProject,
     parseTempel:parseTempel, ringkasOrang:ringkasOrang, rondeTerakhir:rondeTerakhir,
     apakahReviewer:apakahReviewer, daftarReviewer:daftarReviewer, briefTerbaru:briefTerbaru,
-    tambahBriefKe:tambahBriefKe, telatHari:telatHari};
+    tambahBriefKe:tambahBriefKe, telatHari:telatHari,
+    tanggalIndo:tanggalIndo, kelompokPerHari:kelompokPerHari};
 }
 /* =================== LOGIKA MURNI: SELESAI =================== */
 
@@ -510,6 +1251,7 @@ var kotor = false;       // ada perubahan lokal yang belum tersimpan
 var tampilan = LS.ambil('mb_tampilan', 'orang');
 var orangPilih = LS.ambil('mb_orang', '');
 var laciId = null, jamSimpan = null, jamPoll = null;
+var terpilih = {};        // id project yang dicentang untuk tugas massal
 
 var $ = function(s){ return document.querySelector(s); };
 var esc = function(s){ return String(s===undefined||s===null?'':s)
@@ -530,6 +1272,11 @@ function avaHTML(nama, besar){
   return '<span class="ava'+(besar?' b':'')+'" style="background:'+warnaOrang(nama)+'" title="'+esc(nama)+'">'+esc(inisial(nama))+'</span>';
 }
 function pilihProject(id){ return (db.projects||[]).find(function(p){ return p.id === id; }); }
+/* Data awal yang ditanam di dalam berkas ini: dipakai kalau GitHub belum bisa
+   dibaca (repo baru / offline / dibuka langsung dari berkas). */
+function bacaBenih(){
+  try{ return JSON.parse(document.getElementById('benih').textContent); }catch(e){ return null; }
+}
 
 /* ============================ GITHUB ============================ */
 function kepala(){
@@ -555,30 +1302,87 @@ function setSink(keadaan, teks){
   $('#btnSimpan').disabled = !kotor;
   $('#btnSimpan').textContent = kotor ? 'Simpan •' : 'Tersimpan';
 }
+function urlMentah(){
+  return 'https://raw.githubusercontent.com/'+cfg.owner+'/'+cfg.repo+'/'+cfg.branch+'/'+cfg.path;
+}
+/* Jangan menggambar ulang saat orangnya sedang mengetik — tunda sampai selesai. */
+var perluRender = false;
+function sedangMengetik(){
+  var a = document.activeElement;
+  return !!a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
+}
+function renderAman(){
+  if(sedangMengetik()){
+    perluRender = true;
+    var a = document.activeElement;
+    a.addEventListener('blur', function sekali(){
+      a.removeEventListener('blur', sekali);
+      if(perluRender){ perluRender = false; render(); }
+    });
+    return;
+  }
+  render();
+}
 async function muatDariGitHub(diam){
   if(!diam) setSink('muat','memuat…');
   try{
-    var r = await fetch(urlIsi() + '&t=' + Date.now(), {headers:kepala(), cache:'no-store'});
-    if(r.status === 404){ sha = null; basis = JSON.parse(JSON.stringify(db)); setSink('kotor','berkas belum ada di GitHub'); return true; }
-    if(!r.ok) throw new Error('HTTP ' + r.status + (r.status===403?' (batas API tercapai — isi token di ⚙)':''));
-    var j = await r.json();
-    var isi = JSON.parse(b64dari(j.content));
-    sha = j.sha;
+    var isi, j = null;
+    if(token){
+      var r = await fetch(urlIsi() + '&t=' + Date.now(), {headers:kepala(), cache:'no-store'});
+      if(r.status === 404){ sha = null; pakaiBenihBilaKosong(); basis = JSON.parse(JSON.stringify(db));
+        setSink('kotor','berkas belum ada di GitHub — tekan Simpan untuk membuatnya'); return true; }
+      if(!r.ok) throw new Error('HTTP ' + r.status + (r.status===403?' (batas API tercapai — isi token di ⚙)':''));
+      j = await r.json();
+      isi = JSON.parse(b64dari(j.content));
+      sha = j.sha;
+    } else {
+      // Tanpa token: baca berkas mentah (tanpa batas 60 permintaan/jam)
+      var rm = await fetch(urlMentah() + '?t=' + Date.now(), {cache:'no-store'});
+      if(rm.status === 404){ pakaiBenihBilaKosong(); setSink('kotor','berkas belum ada di GitHub (pakai data awal)'); return true; }
+      if(!rm.ok) throw new Error('HTTP ' + rm.status);
+      isi = JSON.parse(await rm.text());
+      sha = null;
+    }
+    var berubah = JSON.stringify(isi) !== JSON.stringify(basis);
     if(kotor){
       db = gabungDB(basis, db, isi);
       basis = JSON.parse(JSON.stringify(isi));
-      setSink('kotor','digabung, belum tersimpan');
+      setSink('kotor','digabung dengan perubahan tim, belum tersimpan');
+      if(berubah) pesan('Ada perubahan baru dari tim — digabung dengan punyamu');
     } else {
       db = isi; basis = JSON.parse(JSON.stringify(isi));
       setSink('ok','sinkron ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
+      if(berubah && !pertamaKali) pesan('Data diperbarui' + (isi.diperbarui_oleh ? ' oleh ' + isi.diperbarui_oleh : ''));
     }
+    pertamaKali = false;
     LS.taruh('mb_cache', db);
-    render();
+    renderAman();
     return true;
   }catch(e){
+    pakaiBenihBilaKosong();
     setSink('galat','gagal muat: ' + e.message);
     return false;
   }
+}
+function pakaiBenihBilaKosong(){
+  if((db.projects||[]).length) return false;
+  var b = bacaBenih(); if(!b) return false;
+  db = b; kotor = true; LS.taruh('mb_cache', db); renderAman();
+  return true;
+}
+var pertamaKali = true, jamMuatTerakhir = 0;
+function segarkanSekarang(){
+  if(Date.now() - jamMuatTerakhir < 3000) return;
+  jamMuatTerakhir = Date.now();
+  muatDariGitHub(true);
+}
+function mulaiPolling(){
+  if(jamPoll) clearInterval(jamPoll);
+  // Dengan token: tiap 15 detik (batas API 5000/jam, jauh dari cukup).
+  // Tanpa token: berkas mentah tiap 60 detik.
+  jamPoll = setInterval(function(){
+    if(!document.hidden){ jamMuatTerakhir = Date.now(); muatDariGitHub(true); }
+  }, token ? 15000 : 60000);
 }
 async function simpanKeGitHub(otomatis){
   if(!token){ if(!otomatis) bukaSetelan('Butuh token GitHub untuk menyimpan. Tempel token di bawah.'); return false; }
@@ -594,6 +1398,7 @@ async function simpanKeGitHub(otomatis){
         db = gabungDB(basis, db, jauh);
       } else if(r0.status === 404){ sha = null; }
       db.diperbarui = new Date().toISOString();
+      db.diperbarui_oleh = saya || 'tim';
       var badan = {message:'Perbarui batch — ' + (saya || 'tim') + ' — ' + new Date().toLocaleString('id-ID'),
                    content:b64ke(JSON.stringify(db, null, 1)), branch:cfg.branch};
       if(sha) badan.sha = sha;
@@ -606,7 +1411,7 @@ async function simpanKeGitHub(otomatis){
       basis = JSON.parse(JSON.stringify(db));
       kotor = false; LS.taruh('mb_cache', db);
       setSink('ok','tersimpan ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
-      render();
+      renderAman();
       return true;
     }catch(e){
       if(coba === 2){ setSink('galat','gagal simpan: ' + e.message); if(!otomatis) pesan('Gagal simpan: ' + e.message, 5000); return false; }
@@ -742,28 +1547,28 @@ function barisHTML(p){
     + '<span class="kode">'+esc(p.kode)+'</span>'
     + (p.slab && p.slab!=='—' ? '<span class="pil mini">slab '+esc(p.slab)+'</span>' : '')
     + '<span class="rev"'+(baru?' style="color:var(--ac)"':'')+'>'+esc(baru ? '📌 ' + br.teks : (p.revisi||''))+'</span>'
+    + '<span class="samar2 mini" style="white-space:nowrap" title="tanggal diterima">📅 '+esc(tanggalIndo(p.diterima).replace(/ \d{4}$/,''))+'</span>'
     + badgeTenggat(p) + badgeTunggu(p) + badgeStatus(p)
     + (a && !a.mati ? '<button class="btn kecil '+(a.utama?'utama':'')+'" data-aksi="'+esc(a.kode)+'" data-id="'+esc(p.id)+'">'+esc(a.label)+'</button>' : '')
     + '</div>';
 }
-function renderPapan(){
-  var ps = terpakai(), html = '<div class="papan">';
+function htmlPapan(ps){
+  var html = '<div class="papan">';
   KOLOM.forEach(function(k){
     var isi = ps.filter(function(p){ return (STATUS[p.status]||STATUS.todo).kolom === k.id; });
     html += '<section class="kol"><h3>'+esc(k.label)+'<span class="n">'+isi.length+'</span></h3><div class="isikol">'
       + (isi.length ? isi.map(kartuHTML).join('') : '<div class="kosong mini">kosong</div>')
       + '</div></section>';
   });
-  $('#isi').innerHTML = html + '</div>';
+  return html + '</div>';
 }
-function renderTabel(){
-  var ps = terpakai();
-  var opsiPic = '<option value="">—</option>' + (db.tim||[]).map(function(a){ return '<option>'+esc(a.nama)+'</option>'; }).join('');
+function htmlDaftar(ps){
   var opsiSt  = Object.keys(STATUS).map(function(k){ return '<option value="'+k+'">'+esc(STATUS[k].label)+'</option>'; }).join('');
-  var baris = ps.map(function(p){
+  function barisTabel(p){
     var br = briefTerbaru(p);
     var baru = br && (br.sumber === 'klien' || br.sumber === 'review');
-    return '<tr>'
+    return '<tr'+(terpilih[p.id]?' style="background:var(--ac2)"':'')+'>'
+      + '<td class="cek"><input type="checkbox" data-pilih="'+esc(p.id)+'"'+(terpilih[p.id]?' checked':'')+'></td>'
       + '<td><button class="btn kecil" data-aksi="urgent" data-id="'+esc(p.id)+'" title="Tandai urgent"'
         + ' style="'+(p.urgent?'background:var(--err);border-color:var(--err);color:#fff':'opacity:.35')+'">🔥</button></td>'
       + '<td><select class="sel-inp" data-set="prioritas" data-id="'+esc(p.id)+'" style="color:'+(PRIORITAS[p.prioritas]||'')+';font-weight:700">'
@@ -774,23 +1579,48 @@ function renderTabel(){
         + (baru ? '<div class="brief-mini" style="margin-top:5px">📌 '+esc(br.teks)+'</div>' : '')
         + (p.catatan?'<div class="samar2 mini">'+esc(p.catatan)+'</div>':'')+'</td>'
       + '<td>'+(p.jenis||[]).map(function(j){ return '<span class="pil mini">'+esc(j)+'</span>'; }).join(' ')+'</td>'
-      + '<td><select class="sel-inp" data-set="pic" data-id="'+esc(p.id)+'">'
-        + opsiPic.replace('<option>'+esc(p.pic)+'</option>', '<option selected>'+esc(p.pic)+'</option>') + '</select></td>'
+      + '<td>'+selPic(p)+'</td>'
       + '<td class="samar" style="white-space:nowrap">'+esc(p.diterima||'')+'</td>'
       + '<td><input class="sel-inp" type="date" data-set="tenggat" data-id="'+esc(p.id)+'" value="'+esc(p.tenggat||'')+'" style="width:135px"></td>'
       + '<td><select class="sel-inp" data-set="status" data-id="'+esc(p.id)+'">'
         + opsiSt.replace('value="'+p.status+'"', 'value="'+p.status+'" selected') + '</select></td>'
       + '<td style="white-space:nowrap">'+badgeTenggat(p)+' '+badgeTunggu(p)+'</td>'
       + '</tr>';
-  }).join('');
-  $('#isi').innerHTML = '<div class="bungkus-tabel"><table><thead><tr>'
-    + '<th>🔥</th><th>Pri</th><th>Kode</th><th>Slab</th><th>Revisi &amp; brief terbaru</th><th>Jenis</th><th>PIC</th><th>Diterima</th><th>Tenggat</th><th>Status</th><th></th>'
-    + '</tr></thead><tbody>' + (baris || '<tr><td colspan="11" class="kosong">tidak ada project</td></tr>') + '</tbody></table></div>'
+  }
+  var baris;
+  if($('#fHari').checked){
+    baris = kelompokPerHari(ps).map(function(g){
+      return '<tr class="hari"><td colspan="12">'
+        + '<input type="checkbox" class="cekhari" data-pilih-hari="'+esc(g.tanggal)+'"'
+        + (g.items.every(function(x){ return terpilih[x.id]; }) ? ' checked' : '') + '>'
+        + '📅 '+esc(g.label) + '<span class="n">'+g.items.length+' project</span></td></tr>'
+        + g.items.map(barisTabel).join('');
+    }).join('');
+  } else {
+    baris = ps.map(barisTabel).join('');
+  }
+  var opsiOrang = '<option value="">— pilih orang —</option>' + (db.tim||[]).map(function(a){
+    return '<option>'+esc(a.nama)+'</option>'; }).join('');
+  return '<div class="baris-tugas">'
+    + '<b class="mini">Siapa yang mengerjakan batch ini?</b>'
+    + '<select class="inp" id="tugasSemua" style="width:auto">'+opsiOrang+'</select>'
+    + '<button class="btn utama" id="btnTugasSemua">Tugaskan '+ps.length+' project yang tampil</button>'
+    + '<span class="samar2 mini">— atau centang beberapa baris untuk menugaskan sebagian saja</span>'
+    + '</div>'
+    + '<div class="bungkus-tabel"><table><thead><tr>'
+    + '<th class="cek"></th><th>🔥</th><th>Pri</th><th>Kode</th><th>Slab</th><th>Revisi &amp; brief terbaru</th><th>Jenis</th><th>PIC</th><th>Diterima</th><th>Tenggat</th><th>Status</th><th></th>'
+    + '</tr></thead><tbody>' + (baris || '<tr><td colspan="12" class="kosong">tidak ada project</td></tr>') + '</tbody></table></div>'
     + '<div class="samar2 mini" style="margin-top:8px">'+ps.length+' project ditampilkan. Klik kode untuk detail; PIC, prioritas, dan status bisa diubah langsung di tabel.</div>';
 }
-function renderOrang(){
+/* Sel PIC: kalau belum ada yang pegang, tampil sebagai tombol "+ Tugaskan" biru. */
+function selPic(p){
+  var o = '<option value="">' + (p.pic ? '— lepas —' : '+ Tugaskan…') + '</option>'
+    + (db.tim||[]).map(function(a){ return '<option'+(p.pic===a.nama?' selected':'')+'>'+esc(a.nama)+'</option>'; }).join('');
+  return '<div class="pic-sel'+(p.pic?'':' kosong')+'">' + avaHTML(p.pic)
+    + '<select class="sel-inp" data-set="pic" data-id="'+esc(p.id)+'">'+o+'</select></div>';
+}
+function htmlOrang(semua){
   var nama = orangPilih;
-  var semua = terpakai();
   var daftar = (db.tim||[]).map(function(a){ return a.nama; });
   var opsi = '<option value="">— pilih orang —</option>'
     + daftar.map(function(n){
@@ -801,7 +1631,8 @@ function renderOrang(){
 
   var atas = '<div class="orang-top">'
     + '<div style="min-width:230px;flex:1"><label class="samar mini" style="display:block;margin-bottom:5px">Siapa yang mengerjakan?</label>'
-    +   '<select class="inp" id="pilihOrang" style="font-size:15px;padding:9px">'+opsi+'</select></div>';
+    +   '<div style="display:flex;gap:7px"><select class="inp" id="pilihOrang" style="font-size:15px;padding:9px">'+opsi+'</select>'
+    +   '<button class="btn" id="btnOrangBaru" title="Tambah anggota tim">+ Orang</button></div></div>';
 
   var ps;
   if(nama === '__kosong'){
@@ -871,12 +1702,9 @@ function renderOrang(){
     });
     if(!ps.length) badan += '<div class="kosong" style="margin-top:14px">Tidak ada project untuk pilihan ini.</div>';
   }
-  $('#isi').innerHTML = atas + badan;
-  var so = $('#pilihOrang');
-  if(so) so.onchange = function(){ orangPilih = so.value; LS.taruh('mb_orang', orangPilih); render(); };
+  return atas + badan;
 }
-function renderRingkas(){
-  var ps = terpakai();
+function htmlRingkas(ps){
   var perStatus = {}; ps.forEach(function(p){ perStatus[p.status] = (perStatus[p.status]||0)+1; });
   var tunggu = ps.filter(function(p){ return p.status==='sample_kirim'; })
     .map(function(p){ var r = rondeTerakhir(p); return {p:p, n:(r&&r.dikirim)?hariAntara(r.dikirim, hariIni()):null}; })
@@ -937,16 +1765,66 @@ function renderRingkas(){
   html += '<div class="kartu-b"><h4>Prioritas</h4><div class="lst">'
     + ['P1','P2','P3'].map(function(k){ return '<div><span class="titik" style="background:'+PRIORITAS[k]+'"></span>'+k+'<b>'+perPri[k]+'</b></div>'; }).join('')
     + '</div></div>';
-  $('#isi').innerHTML = html + '</div>';
+  return html + '</div>';
 }
+/* SATU HALAMAN: semua bagian tersusun ke bawah, tombol atas hanya melompat. */
 function render(){
   pilBatch(); pilOrang();
-  document.querySelectorAll('#tabs button').forEach(function(b){ b.classList.toggle('on', b.dataset.v === tampilan); });
-  if(tampilan === 'papan') renderPapan();
-  else if(tampilan === 'tabel') renderTabel();
-  else if(tampilan === 'ringkas') renderRingkas();
-  else renderOrang();
+  var ps = terpakai();
+  var nBatch = $('#pilihBatch').value;
+  var namaBatch = nBatch ? ((db.batches||[]).find(function(b){ return b.id === nBatch; })||{}).nama : 'Semua batch';
+  $('#isi').innerHTML =
+      '<section class="sesi" id="s-ringkas"><h2>📊 Ringkasan<span class="cap">'+ps.length+' project</span>'
+    +   '<span class="ket">'+esc(namaBatch||'')+'</span></h2>' + htmlRingkas(ps) + '</section>'
+    + '<section class="sesi" id="s-orang"><h2>👤 Siapa mengerjakan apa'
+    +   '<span class="ket">pilih nama untuk melihat pekerjaannya</span></h2>' + htmlOrang(ps) + '</section>'
+    + '<section class="sesi" id="s-daftar"><h2>📋 List pending slab<span class="cap">dikelompokkan per hari</span>'
+    +   '<span class="ket">klik kode untuk detail &amp; brief</span></h2>' + htmlDaftar(ps) + '</section>'
+    + '<section class="sesi" id="s-papan"><h2>🗂 Papan alur kerja'
+    +   '<span class="ket">geser ke kanan untuk melihat tahap berikutnya</span></h2>'
+    +   '<div class="jalur-info"><span>Tanpa sample: kerjakan → minta review → SELESAI</span>'
+    +   '<span>Pakai sample: sample → klien → revisi/final → apply semua → review → SELESAI</span>'
+    +   '<span>Review oleh: '+esc(daftarReviewer(db.tim).join(' & ') || '—')+'</span></div>'
+    +   htmlPapan(ps) + '</section>';
+  pasangBinding();
   if(laciId) renderLaci();
+}
+/* Binding untuk kendali yang dibuat ulang tiap render */
+function pasangBinding(){
+  var so = $('#pilihOrang');
+  if(so) so.onchange = function(){ orangPilih = so.value; LS.taruh('mb_orang', orangPilih); render(); };
+  var bo = $('#btnOrangBaru');
+  if(bo) bo.onclick = dialogOrang;
+  var bt = $('#btnTugasSemua');
+  if(bt) bt.onclick = function(){
+    var n = $('#tugasSemua').value;
+    if(!n){ pesan('Pilih dulu orangnya di sebelah kiri tombol'); return; }
+    var ps = terpakai();
+    if(!ps.length){ pesan('Tidak ada project yang tampil'); return; }
+    if(!confirm('Tugaskan ' + ps.length + ' project yang sedang tampil ke ' + n + '?')) return;
+    ps.forEach(function(p){ if(p.pic !== n) ubahDiam(p.id, {pic:n}, 'PIC → ' + n + ' (tugas massal)'); });
+    tandaiKotor(); render(); pesan(ps.length + ' project ditugaskan ke ' + n);
+  };
+  perbaruiBar();
+}
+/* Ubah tanpa render (dipakai tugas massal supaya tidak menggambar berkali-kali) */
+function ubahDiam(id, tambalan, catat){
+  var p = pilihProject(id); if(!p) return;
+  Object.assign(p, tambalan);
+  p.diperbarui = new Date().toISOString();
+  if(catat){ p.riwayat = p.riwayat || []; p.riwayat.push({waktu:new Date().toISOString(), oleh:saya||'—', teks:catat}); }
+}
+function perbaruiBar(){
+  var ids = Object.keys(terpilih).filter(function(k){ return terpilih[k]; });
+  var bar = $('#barAksi');
+  bar.classList.toggle('on', ids.length > 0);
+  $('#barJml').textContent = ids.length + ' dipilih';
+  var sel = $('#barPic');
+  if(sel.dataset.isi !== String((db.tim||[]).length)){
+    sel.innerHTML = '<option value="">— pilih orang —</option>'
+      + (db.tim||[]).map(function(a){ return '<option>'+esc(a.nama)+'</option>'; }).join('');
+    sel.dataset.isi = String((db.tim||[]).length);
+  }
 }
 
 /* ============================ LACI DETAIL ============================ */
@@ -1091,6 +1969,37 @@ function dialogKirim(id){
     [{label:'Batal', klik:tutupModal},
      {label:'Sudah dikirim', utama:true, klik:function(){ jalankanAksi(id,'kirim_sample',{tautan:$('#mTaut').value.trim()}); tutupModal(); }}]);
 }
+function dialogOrang(){
+  var daftar = (db.tim||[]).map(function(a){
+    return '<div style="display:flex;gap:7px;align-items:center;margin-bottom:6px">' + avaHTML(a.nama)
+      + '<span style="flex:1">'+esc(a.nama)+'</span>'
+      + (a.reviewer ? '<span class="pil mini">reviewer</span>' : '')
+      + '<button class="btn kecil bahaya" data-hapus-tim="'+esc(a.id)+'">✕</button></div>'; }).join('');
+  modal('Anggota tim',
+    '<div class="info">Nama yang ditambahkan di sini langsung muncul di dropdown PIC untuk semua orang setelah tersimpan.</div>'
+    + '<div class="fld"><label>Sekarang ada '+((db.tim||[]).length)+' orang</label>'+daftar+'</div>'
+    + '<div class="fld"><label>Tambah orang baru</label>'
+    + '<div style="display:flex;gap:7px"><input class="inp" id="oNama" placeholder="nama, mis. Rio">'
+    + '<button class="btn utama" id="oTambah">Tambah</button></div></div>'
+    + '<div class="fld"><label class="pil" style="cursor:pointer"><input type="checkbox" id="oRev"> jadikan reviewer (boleh menyetujui hasil)</label></div>',
+    [{label:'Tutup', klik:function(){ tutupModal(); render(); }}]);
+  $('#oTambah').onclick = function(){
+    var n = $('#oNama').value.trim(); if(!n){ pesan('Nama masih kosong'); return; }
+    if((db.tim||[]).some(function(x){ return x.nama.toLowerCase() === n.toLowerCase(); })){ pesan(n + ' sudah ada'); return; }
+    db.tim.push({id:uid('t'), nama:n, warna:'', reviewer:$('#oRev').checked, aktif:true, diperbarui:new Date().toISOString()});
+    tandaiKotor(); dialogOrang(); pesan(n + ' ditambahkan');
+  };
+  document.querySelectorAll('[data-hapus-tim]').forEach(function(b){
+    b.onclick = function(){
+      var a = (db.tim||[]).find(function(x){ return x.id === b.dataset.hapusTim; });
+      var kena = (db.projects||[]).filter(function(p){ return a && p.pic === a.nama; }).length;
+      if(kena && !confirm(a.nama + ' masih memegang ' + kena + ' project. Hapus tetap? PIC-nya jadi kosong.')) return;
+      if(a) (db.projects||[]).forEach(function(p){ if(p.pic === a.nama) p.pic = ''; });
+      db.tim = db.tim.filter(function(x){ return x.id !== b.dataset.hapusTim; });
+      tandaiKotor(); dialogOrang();
+    };
+  });
+}
 function dialogTolak(id){
   var p = pilihProject(id); if(!p) return;
   modal('Minta perbaikan — ' + p.kode,
@@ -1187,7 +2096,9 @@ function bukaSetelan(catatan){
     + '<div style="display:flex;gap:7px"><input class="inp" id="sTimBaru" placeholder="nama baru"><button class="btn" id="sTambahTim">Tambah</button></div></div>'
     + '<div class="fld"><label>Batch</label><div style="display:flex;gap:7px"><input class="inp" id="sBatchBaru" placeholder="mis. Master Pending 17 Sep 2026"><button class="btn" id="sTambahBatch">Tambah</button></div></div>'
     + '<div class="fld"><label>Cadangan</label><div style="display:flex;gap:7px">'
-    + '<button class="btn" id="sUnduh">Unduh JSON</button><button class="btn" id="sSalin">Salin JSON</button></div></div>',
+    + '<button class="btn" id="sUnduh">Unduh JSON</button><button class="btn" id="sSalin">Salin JSON</button>'
+    + '<button class="btn bahaya" id="sBenih">Pulihkan data awal</button></div>'
+    + '<div class="samar2 mini" style="margin-top:5px">Pulihkan data awal membuang perubahan di browser ini dan memakai daftar bawaan aplikasi.</div></div>',
     [{label:'Tutup', klik:tutupModal},
      {label:'Simpan pengaturan', utama:true, klik:function(){
         token = $('#sToken').value.trim(); LS.taruh('mb_token', token);
@@ -1203,7 +2114,7 @@ function bukaSetelan(catatan){
           if(a && !!a.reviewer !== i.checked){ a.reviewer=i.checked; a.diperbarui=new Date().toISOString(); kotor=true; }
         });
         if(kotor) tandaiKotor();
-        tutupModal(); render(); muatDariGitHub(true);
+        tutupModal(); render(); mulaiPolling(); muatDariGitHub(true);
      }}]);
   $('#sTambahTim').onclick = function(){
     var n = $('#sTimBaru').value.trim(); if(!n) return;
@@ -1219,6 +2130,11 @@ function bukaSetelan(catatan){
     var a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([JSON.stringify(db,null,1)], {type:'application/json'}));
     a.download = 'db-' + hariIni() + '.json'; a.click();
+  };
+  $('#sBenih').onclick = function(){
+    if(!confirm('Buang data di browser ini dan kembali ke daftar bawaan aplikasi?')) return;
+    var b = bacaBenih(); if(!b){ pesan('Data awal tidak ketemu'); return; }
+    db = b; kotor = true; LS.taruh('mb_cache', db); tutupModal(); render(); pesan('Data awal dipulihkan — tekan Simpan bila mau dikirim ke GitHub');
   };
   $('#sSalin').onclick = function(){
     navigator.clipboard.writeText(JSON.stringify(db,null,1)).then(function(){ pesan('JSON disalin'); },
@@ -1275,9 +2191,44 @@ document.addEventListener('change', function(e){
 });
 $('#tabs').addEventListener('click', function(e){
   var b = e.target.closest('button'); if(!b) return;
-  tampilan = b.dataset.v; LS.taruh('mb_tampilan', tampilan); render();
+  var el = document.getElementById('s-' + b.dataset.v);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  document.querySelectorAll('#tabs button').forEach(function(x){ x.classList.toggle('on', x === b); });
 });
-['cari','fPic','fPri','fStatus','fSelesai','fUrgent','fSaya'].forEach(function(id){
+document.addEventListener('change', function(e){
+  var c = e.target.closest('[data-pilih]');
+  if(c){ terpilih[c.dataset.pilih] = c.checked; perbaruiBar();
+    var tr = c.closest('tr'); if(tr) tr.style.background = c.checked ? 'var(--ac2)' : ''; return; }
+  var h = e.target.closest('[data-pilih-hari]');
+  if(h){
+    kelompokPerHari(terpakai()).forEach(function(g){
+      if(g.tanggal !== h.dataset.pilihHari) return;
+      g.items.forEach(function(p){ terpilih[p.id] = h.checked; });
+    });
+    render(); return;
+  }
+});
+function aksiMassal(fn, pesanTeks){
+  var ids = Object.keys(terpilih).filter(function(k){ return terpilih[k]; });
+  if(!ids.length) return;
+  ids.forEach(fn);
+  terpilih = {}; tandaiKotor(); render(); pesan(ids.length + ' project ' + pesanTeks);
+}
+$('#barPic').addEventListener('change', function(){
+  var n = $('#barPic').value; if(!n) return;
+  aksiMassal(function(id){ ubahDiam(id, {pic:n}, 'PIC → ' + n + ' (tugas massal)'); }, 'ditugaskan ke ' + n);
+  $('#barPic').value = '';
+});
+$('#barPri').addEventListener('change', function(){
+  var v = $('#barPri').value; if(!v) return;
+  aksiMassal(function(id){ ubahDiam(id, {prioritas:v}, 'prioritas → ' + v); }, 'jadi ' + v);
+  $('#barPri').value = '';
+});
+$('#barUrgent').onclick = function(){
+  aksiMassal(function(id){ var p = pilihProject(id); ubahDiam(id, {urgent:!p.urgent}, 'tanda urgent diubah'); }, 'diubah tanda urgentnya');
+};
+$('#barBatal').onclick = function(){ terpilih = {}; render(); };
+['cari','fPic','fPri','fStatus','fSelesai','fUrgent','fSaya','fHari'].forEach(function(id){
   $('#'+id).addEventListener('input', render);
   $('#'+id).addEventListener('change', render);
 });
@@ -1312,11 +2263,14 @@ window.addEventListener('beforeunload', function(e){ if(kotor && !cfg.autosimpan
 (function mulai(){
   document.documentElement.dataset.tema = LS.ambil('mb_tema','gelap');
   var cache = LS.ambil('mb_cache', null);
-  if(cache && cache.projects){ db = cache; basis = JSON.parse(JSON.stringify(cache)); }
-  render(); setSink('lokal', token ? 'menyambung…' : 'lokal (belum ada token)');
-  muatDariGitHub(true).then(function(){
-    jamPoll = setInterval(function(){ if(!document.hidden) muatDariGitHub(true); }, token ? 45000 : 300000);
-  });
+  if(cache && cache.projects && cache.projects.length){ db = cache; basis = JSON.parse(JSON.stringify(cache)); }
+  else { db = bacaBenih() || db; basis = JSON.parse(JSON.stringify(db)); }
+  render(); setSink('lokal', token ? 'menyambung…' : 'hanya lihat (belum ada token)');
+  muatDariGitHub(true).then(mulaiPolling);
+  // Perubahan orang lain langsung tersusul begitu tab dibuka / komputer bangun
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) segarkanSekarang(); });
+  window.addEventListener('focus', segarkanSekarang);
+  window.addEventListener('online', segarkanSekarang);
 })();
 </script>
 </body>

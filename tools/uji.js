@@ -114,16 +114,78 @@ cek('project baru lokal tetap ada', !!cari('c'));
 cek('project baru orang lain ikut masuk', !!cari('d'));
 cek('project yang dihapus orang lain tidak balik lagi', !cari('b'));
 
+judul('Kelompok per hari (seperti "List pending slab")');
+cek('tanggal ditulis Indonesia', L.tanggalIndo('2026-09-10') === '10 September 2026', L.tanggalIndo('2026-09-10'));
+cek('tanggal kosong aman', L.tanggalIndo('') === 'Tanpa tanggal');
+const kel = L.kelompokPerHari([
+  { id: '1', diterima: '2026-09-07', prioritas: 'P3', kode: 'C' },
+  { id: '2', diterima: '2026-09-10', prioritas: 'P1', kode: 'A' },
+  { id: '3', diterima: '2026-09-07', prioritas: 'P1', kode: 'B' },
+  { id: '4', diterima: '', prioritas: 'P2', kode: 'D' }]);
+cek('tiga kelompok hari', kel.length === 3, kel.map(g => g.tanggal));
+cek('hari terbaru di atas', kel[0].tanggal === '2026-09-10' && kel[1].tanggal === '2026-09-07');
+cek('tanpa tanggal di paling bawah', kel[2].tanggal === '');
+cek('di dalam hari tetap urut prioritas', kel[1].items.map(x => x.kode).join('') === 'BC');
+
 judul('Data awal (data/db.json)');
 const dbj = JSON.parse(fs.readFileSync(path.join(akar, 'data', 'db.json'), 'utf8'));
-cek('15 project dari master list', dbj.projects.length === 15, dbj.projects.length);
+cek('16 baris dari list pending', dbj.projects.length === 16, dbj.projects.length);
 cek('4 anggota tim', dbj.tim.length === 4);
 cek('Baldy & Indra reviewer', L.daftarReviewer(dbj.tim).sort().join(',') === 'Baldy,Indra');
-cek('semua project punya id unik', new Set(dbj.projects.map(x => x.id)).size === 15);
+cek('semua project punya id unik', new Set(dbj.projects.map(x => x.id)).size === 16);
+const hari = L.kelompokPerHari(dbj.projects);
+cek('terbagi 3 hari: 10, 9, 7 Sep', hari.map(g => g.tanggal).join(',') === '2026-09-10,2026-09-09,2026-09-07',
+  hari.map(g => g.tanggal + '=' + g.items.length));
+cek('10 Sep berisi 3 project', hari[0].items.length === 3, hari[0].items.map(x => x.kode));
+cek('9 Sep berisi CARPAT 37–48', hari[1].items.length === 1 && hari[1].items[0].slab === '37–48', hari[1].items[0]);
+cek('7 Sep berisi 12 project', hari[2].items.length === 12, hari[2].items.length);
+cek('CARPAT muncul dua kali dengan slab berbeda',
+  dbj.projects.filter(p => p.kode === 'CARPAT20LF4769').map(p => p.slab).sort().join('|') === '25–36|37–48');
+cek('brief klien BORCRY tersimpan utuh',
+  dbj.projects.find(p => p.kode === 'BORCRY20H3083').brief[0].teks.includes('without bringing back the orange wash'));
+cek('lokasi sample baru BORCRY tercatat',
+  dbj.projects.find(p => p.kode === 'BORCRY20H3083').tautan.includes('newsample8sep'));
+cek('detail batu AMEWAV tercatat',
+  dbj.projects.find(p => p.kode === 'AMEWAV20LF3446').brief[0].teks.includes('Amethyst Wave Quartzite'));
+cek('BEVROS dipegang Indra', dbj.projects.find(p => p.kode === 'BEVROS20H5802').pic === 'Indra');
+cek('semua brief punya sumber dikenal', dbj.projects.every(x => (x.brief||[]).every(b => ['awal','klien','klien-final','review','internal'].includes(b.sumber))));
 cek('semua status dikenal', dbj.projects.every(x => L.STATUS[x.status]));
 cek('semua prioritas dikenal', dbj.projects.every(x => L.PRIORITAS[x.prioritas]));
 cek('semua punya brief awal', dbj.projects.every(x => (x.brief || []).length >= 1));
 cek('semua kolom papan terpakai valid', Object.keys(L.STATUS).every(s => L.KOLOM.some(k => k.id === L.STATUS[s].kolom)));
+
+
+judul('Struktur halaman (satu landing page, tanpa browser)');
+const seedRaw = src.match(/<script type="application\/json" id="benih">([\s\S]*?)<\/script>/);
+cek('data awal tertanam di index.html', !!seedRaw);
+const seed = JSON.parse(seedRaw[1]);
+cek('data awal sama persis dengan data/db.json',
+  JSON.stringify(seed) === JSON.stringify(dbj), 'benih ' + seed.projects.length + ' vs db ' + dbj.projects.length);
+['s-ringkas', 's-orang', 's-daftar', 's-papan'].forEach(id =>
+  cek('bagian ' + id + ' dibuat render()', src.indexOf('id="' + id + '"') >= 0));
+['ringkas', 'orang', 'daftar', 'papan'].forEach(v =>
+  cek('tombol lompat ' + v + ' punya tujuan', src.indexOf('data-v="' + v + '"') >= 0));
+cek('tidak ada lagi pemanggil fungsi lama',
+  !/\brender(Papan|Tabel|Orang|Ringkas)\s*\(/.test(src), (src.match(/\brender(Papan|Tabel|Orang|Ringkas)\s*\(/g) || []).slice(0, 3));
+
+const idStatis = new Set([...src.matchAll(/\sid="([A-Za-z0-9_-]+)"/g)].map(m => m[1]));
+const idDinamis = new Set(['pilihOrang', 'btnOrangBaru', 'tugasSemua', 'btnTugasSemua',
+  'sToken', 'sOwner', 'sRepo', 'sBranch', 'sPath', 'sAuto', 'sTimBaru', 'sTambahTim',
+  'sBatchBaru', 'sTambahBatch', 'sUnduh', 'sSalin', 'sBenih',
+  'mBrief', 'mLamp', 'mTaut', 'mTempel', 'mCatatan',
+  'nKode', 'nSlab', 'nRev', 'nPri', 'nPic', 'nTgl', 'nBatch', 'nJenis', 'nTenggat',
+  'oNama', 'oRev', 'oTambah', 'bTeks', 'bSumber', 'bLampiran']);
+const dipakai = [...new Set([...src.matchAll(/\$\('#([A-Za-z0-9_-]+)'\)/g)].map(m => m[1]))];
+const hilang = dipakai.filter(id => !idStatis.has(id) && !idDinamis.has(id));
+cek('semua $(\'#id\') menunjuk elemen yang ada', hilang.length === 0, hilang);
+const wajib = ['isi', 'tabs', 'barAksi', 'barJml', 'barPic', 'barPri', 'barUrgent', 'barBatal',
+  'pesan', 'laci', 'laciBadan', 'modal', 'modalBadan', 'cari', 'fPic', 'fPri', 'fStatus',
+  'fSelesai', 'fUrgent', 'fSaya', 'fHari', 'pilihBatch', 'pilihSaya', 'sink', 'btnSimpan'];
+cek('elemen inti ada di HTML', wajib.every(id => idStatis.has(id)), wajib.filter(id => !idStatis.has(id)));
+cek('kolom tabel konsisten (colspan 12)', (src.match(/colspan="12"/g) || []).length >= 2);
+cek('sel PIC kosong berbunyi "+ Tugaskan"', src.indexOf('+ Tugaskan…') >= 0);
+cek('tugas massal per centang tersedia', src.indexOf('data-pilih=') >= 0 && src.indexOf('aksiMassal') >= 0);
+cek('tugaskan seluruh batch tersedia', src.indexOf('btnTugasSemua') >= 0);
 
 console.log('\n' + (gagal ? 'GAGAL: ' + gagal + ' dari ' + jumlah + ' uji' : 'LULUS semua ' + jumlah + ' uji'));
 process.exit(gagal ? 1 : 0);
