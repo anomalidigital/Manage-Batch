@@ -61,7 +61,37 @@ a{color:var(--ac)}
 .pic-sel.kosong select{color:var(--ac);border:1px dashed var(--ac);background:var(--ac2);font-weight:600}
 .baris-tugas{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--bg2);
   border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:10px}
-td.cek,th.cek{width:30px;padding-left:12px}
+td.cek,th.cek{width:34px;padding-left:14px}
+/* ---------- daftar yang ditenangkan ---------- */
+.tbl-rapi td{padding:10px 12px;vertical-align:middle}
+.tbl-rapi tbody tr.brs:hover{background:var(--bg3)}
+.tbl-rapi tr.pilih{background:var(--ac2)}
+.tbl-rapi td.cek input{opacity:.25;cursor:pointer}
+.tbl-rapi tr:hover td.cek input,.tbl-rapi td.cek input:checked{opacity:1}
+/* kendali tanpa bingkai: baru terlihat sebagai kendali saat disentuh */
+select.tlg{appearance:none;-webkit-appearance:none;background:transparent;border:1px solid transparent;
+  border-radius:7px;padding:3px 7px;cursor:pointer;max-width:100%;text-overflow:ellipsis}
+select.tlg:hover{border-color:var(--line2);background:var(--bg3)}
+select.tlg:focus{outline:none;border-color:var(--ac);background:var(--bg)}
+select.tlg option{background:var(--bg2);color:var(--tx)}
+.pri-P1{color:var(--p1);font-weight:800}
+.pri-P2{color:var(--p2);font-weight:800}
+.pri-P3{color:var(--p3);font-weight:800}
+td.pri{width:78px;white-space:nowrap}
+td.proj{width:210px}
+td.proj .kd{font-weight:700;letter-spacing:.2px;cursor:pointer}
+td.proj .kd:hover{color:var(--ac)}
+td.proj .sub{font-size:11.5px;color:var(--tx3);margin-top:2px}
+td.kerja{cursor:pointer}
+td.kerja .rv{line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+td.kerja .bf{font-size:12px;color:var(--tx2);margin-top:3px;padding-left:9px;
+  border-left:2px solid var(--ac);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+td.pic{width:168px}
+td.st{width:190px;white-space:nowrap}
+.stat{display:inline-flex;align-items:center;gap:6px;min-width:0}
+.pic-sel.kosong select{color:var(--tx3);border:1px dashed var(--line2);background:transparent;font-weight:500}
+.pic-sel.kosong:hover select{color:var(--ac);border-color:var(--ac)}
+.api{color:var(--err)}
 tr.hari td .cekhari{margin-right:8px}
 #barAksi{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:45;
   background:var(--bg2);border:1px solid var(--ac);border-radius:12px;box-shadow:var(--sh);
@@ -85,6 +115,11 @@ select.inp{cursor:pointer}
 .cari{position:relative;min-width:180px;flex:1;max-width:320px}
 .cari .inp{padding-left:29px}
 .cari::before{content:"⌕";position:absolute;left:9px;top:5px;color:var(--tx3);font-size:15px}
+select.tipis{background:transparent;border-color:transparent;color:var(--tx2);padding:5px 7px}
+select.tipis:hover{border-color:var(--line);background:var(--bg3)}
+select.tipis:focus{color:var(--tx)}
+.bar2 .pil{color:var(--tx2);border-color:transparent}
+.bar2 .pil:hover{border-color:var(--line);background:var(--bg3)}
 .tab{display:flex;gap:2px;background:var(--bg3);padding:3px;border-radius:9px;border:1px solid var(--line)}
 .tab button{background:none;border:0;padding:5px 12px;border-radius:7px;color:var(--tx2);font-weight:600;font-size:13px}
 .tab button.on{background:var(--bg2);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.25)}
@@ -129,8 +164,9 @@ th{position:sticky;top:0;background:var(--bg2);text-align:left;padding:9px 10px;
 td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 tr:last-child td{border-bottom:0}
 tbody tr:hover{background:var(--bg3)}
-tr.hari td{background:var(--bg3);border-top:2px solid var(--line2);font-weight:700;font-size:12.5px;
-  letter-spacing:.3px;padding:7px 10px;position:sticky;top:34px;z-index:1}
+tr.hari td{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:var(--tx2);
+  padding:9px 12px;position:sticky;top:33px;z-index:1}
 tr.hari td .n{font-weight:500;color:var(--tx2);margin-left:7px}
 td.kodesel{font-weight:650;white-space:nowrap;cursor:pointer}
 td.kodesel:hover{color:var(--ac)}
@@ -244,11 +280,11 @@ td.kodesel:hover{color:var(--ac)}
       <button data-v="daftar">List pending</button>
       <button data-v="papan">Papan alur</button>
     </div>
-    <select class="inp" id="fPic" style="width:auto"></select>
-    <select class="inp" id="fPri" style="width:auto">
+    <select class="inp tipis" id="fPic" style="width:auto"></select>
+    <select class="inp tipis" id="fPri" style="width:auto">
       <option value="">Semua prioritas</option><option>P1</option><option>P2</option><option>P3</option>
     </select>
-    <select class="inp" id="fStatus" style="width:auto"></select>
+    <select class="inp tipis" id="fStatus" style="width:auto"></select>
     <label class="pil" style="cursor:pointer;border-color:var(--err);color:var(--err)"><input type="checkbox" id="fUrgent"> 🔥 urgent saja</label>
     <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSaya"> punya saya</label>
     <label class="pil" style="cursor:pointer"><input type="checkbox" id="fHari" checked> 📅 kelompok per hari</label>
@@ -1566,31 +1602,35 @@ function htmlDaftar(ps){
   var opsiSt  = Object.keys(STATUS).map(function(k){ return '<option value="'+k+'">'+esc(STATUS[k].label)+'</option>'; }).join('');
   function barisTabel(p){
     var br = briefTerbaru(p);
-    var baru = br && (br.sumber === 'klien' || br.sumber === 'review');
-    return '<tr'+(terpilih[p.id]?' style="background:var(--ac2)"':'')+'>'
+    var briefBaru = br && (br.sumber === 'klien' || br.sumber === 'review');
+    var jenis = (p.jenis||[]).join(' · ');
+    var sub = [];
+    if(p.slab && p.slab !== '—') sub.push('slab ' + p.slab);
+    if(jenis) sub.push(jenis);
+    if(!$('#fHari').checked && p.diterima) sub.push(tanggalIndo(p.diterima).replace(/ \d{4}$/,''));
+    return '<tr class="brs'+(terpilih[p.id]?' pilih':'')+'">'
       + '<td class="cek"><input type="checkbox" data-pilih="'+esc(p.id)+'"'+(terpilih[p.id]?' checked':'')+'></td>'
-      + '<td><button class="btn kecil" data-aksi="urgent" data-id="'+esc(p.id)+'" title="Tandai urgent"'
-        + ' style="'+(p.urgent?'background:var(--err);border-color:var(--err);color:#fff':'opacity:.35')+'">🔥</button></td>'
-      + '<td><select class="sel-inp" data-set="prioritas" data-id="'+esc(p.id)+'" style="color:'+(PRIORITAS[p.prioritas]||'')+';font-weight:700">'
-        + ['P1','P2','P3'].map(function(x){ return '<option'+(p.prioritas===x?' selected':'')+'>'+x+'</option>'; }).join('') + '</select></td>'
-      + '<td class="kodesel" data-buka="'+esc(p.id)+'">'+esc(p.kode)+'</td>'
-      + '<td class="samar">'+esc(p.slab||'—')+'</td>'
-      + '<td style="min-width:230px">'+esc(p.revisi||'')
-        + (baru ? '<div class="brief-mini" style="margin-top:5px">📌 '+esc(br.teks)+'</div>' : '')
-        + (p.catatan?'<div class="samar2 mini">'+esc(p.catatan)+'</div>':'')+'</td>'
-      + '<td>'+(p.jenis||[]).map(function(j){ return '<span class="pil mini">'+esc(j)+'</span>'; }).join(' ')+'</td>'
-      + '<td>'+selPic(p)+'</td>'
-      + '<td class="samar" style="white-space:nowrap">'+esc(p.diterima||'')+'</td>'
-      + '<td><input class="sel-inp" type="date" data-set="tenggat" data-id="'+esc(p.id)+'" value="'+esc(p.tenggat||'')+'" style="width:135px"></td>'
-      + '<td><select class="sel-inp" data-set="status" data-id="'+esc(p.id)+'">'
-        + opsiSt.replace('value="'+p.status+'"', 'value="'+p.status+'" selected') + '</select></td>'
-      + '<td style="white-space:nowrap">'+badgeTenggat(p)+' '+badgeTunggu(p)+'</td>'
+      + '<td class="pri">' + (p.urgent && p.status!=='done' ? '<span class="api" title="urgent">🔥</span> ' : '')
+        + '<select class="tlg pri-'+esc(p.prioritas||'P3')+'" data-set="prioritas" data-id="'+esc(p.id)+'" title="prioritas">'
+        + ['P1','P2','P3'].map(function(x){ return '<option'+(p.prioritas===x?' selected':'')+'>'+x+'</option>'; }).join('')
+        + '</select></td>'
+      + '<td class="proj"><div class="kd" data-buka="'+esc(p.id)+'">'+esc(p.kode)+'</div>'
+        + (sub.length ? '<div class="sub">'+esc(sub.join(' · '))+'</div>' : '') + '</td>'
+      + '<td class="kerja" data-buka="'+esc(p.id)+'"><div class="rv">'+esc(p.revisi||'—')+'</div>'
+        + (briefBaru ? '<div class="bf">'+esc(br.teks)+'</div>' : '') + '</td>'
+      + '<td class="pic">'+selPic(p)+'</td>'
+      + '<td class="st"><span class="stat"><i class="titik" style="background:'+((STATUS[p.status]||STATUS.todo).warna)+'"></i>'
+        + '<select class="tlg" data-set="status" data-id="'+esc(p.id)+'">'
+        + Object.keys(STATUS).map(function(k){ return '<option value="'+k+'"'+(p.status===k?' selected':'')+'>'+esc(STATUS[k].label)+'</option>'; }).join('')
+        + '</select></span>'
+        + (badgeTenggat(p) || badgeTunggu(p) ? '<div style="margin-top:4px">'+badgeTenggat(p)+' '+badgeTunggu(p)+'</div>' : '')
+        + '</td>'
       + '</tr>';
   }
   var baris;
   if($('#fHari').checked){
     baris = kelompokPerHari(ps).map(function(g){
-      return '<tr class="hari"><td colspan="12">'
+      return '<tr class="hari"><td colspan="6">'
         + '<input type="checkbox" class="cekhari" data-pilih-hari="'+esc(g.tanggal)+'"'
         + (g.items.every(function(x){ return terpilih[x.id]; }) ? ' checked' : '') + '>'
         + '📅 '+esc(g.label) + '<span class="n">'+g.items.length+' project</span></td></tr>'
@@ -1605,19 +1645,20 @@ function htmlDaftar(ps){
     + '<b class="mini">Siapa yang mengerjakan batch ini?</b>'
     + '<select class="inp" id="tugasSemua" style="width:auto">'+opsiOrang+'</select>'
     + '<button class="btn utama" id="btnTugasSemua">Tugaskan '+ps.length+' project yang tampil</button>'
-    + '<span class="samar2 mini">— atau centang beberapa baris untuk menugaskan sebagian saja</span>'
+    + '<span class="samar2 mini">atau centang baris untuk sebagian saja</span>'
     + '</div>'
-    + '<div class="bungkus-tabel"><table><thead><tr>'
-    + '<th class="cek"></th><th>🔥</th><th>Pri</th><th>Kode</th><th>Slab</th><th>Revisi &amp; brief terbaru</th><th>Jenis</th><th>PIC</th><th>Diterima</th><th>Tenggat</th><th>Status</th><th></th>'
-    + '</tr></thead><tbody>' + (baris || '<tr><td colspan="12" class="kosong">tidak ada project</td></tr>') + '</tbody></table></div>'
-    + '<div class="samar2 mini" style="margin-top:8px">'+ps.length+' project ditampilkan. Klik kode untuk detail; PIC, prioritas, dan status bisa diubah langsung di tabel.</div>';
+    + '<div class="bungkus-tabel"><table class="tbl-rapi"><thead><tr>'
+    + '<th class="cek"></th><th>Pri</th><th>Project</th><th>Pekerjaan &amp; brief terbaru</th>'
+    + '<th>Dikerjakan oleh</th><th>Status</th>'
+    + '</tr></thead><tbody>' + (baris || '<tr><td colspan="6" class="kosong">tidak ada project</td></tr>') + '</tbody></table></div>'
+    + '<div class="samar2 mini" style="margin-top:8px">'+ps.length+' project. Klik baris untuk detail &amp; brief lengkap; prioritas, PIC, dan status bisa diubah langsung di sini.</div>';
 }
 /* Sel PIC: kalau belum ada yang pegang, tampil sebagai tombol "+ Tugaskan" biru. */
 function selPic(p){
-  var o = '<option value="">' + (p.pic ? '— lepas —' : '+ Tugaskan…') + '</option>'
+  var o = '<option value="">' + (p.pic ? '— lepas —' : '+ tugaskan') + '</option>'
     + (db.tim||[]).map(function(a){ return '<option'+(p.pic===a.nama?' selected':'')+'>'+esc(a.nama)+'</option>'; }).join('');
   return '<div class="pic-sel'+(p.pic?'':' kosong')+'">' + avaHTML(p.pic)
-    + '<select class="sel-inp" data-set="pic" data-id="'+esc(p.id)+'">'+o+'</select></div>';
+    + '<select class="tlg" data-set="pic" data-id="'+esc(p.id)+'">'+o+'</select></div>';
 }
 function htmlOrang(semua){
   var nama = orangPilih;

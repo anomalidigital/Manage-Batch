@@ -182,8 +182,8 @@ const wajib = ['isi', 'tabs', 'barAksi', 'barJml', 'barPic', 'barPri', 'barUrgen
   'pesan', 'laci', 'laciBadan', 'modal', 'modalBadan', 'cari', 'fPic', 'fPri', 'fStatus',
   'fSelesai', 'fUrgent', 'fSaya', 'fHari', 'pilihBatch', 'pilihSaya', 'sink', 'btnSimpan'];
 cek('elemen inti ada di HTML', wajib.every(id => idStatis.has(id)), wajib.filter(id => !idStatis.has(id)));
-cek('kolom tabel konsisten (colspan 12)', (src.match(/colspan="12"/g) || []).length >= 2);
-cek('sel PIC kosong berbunyi "+ Tugaskan"', src.indexOf('+ Tugaskan…') >= 0);
+cek("kolom tabel konsisten (colspan 6)", (src.match(/colspan="6"/g) || []).length >= 2);
+cek('sel PIC kosong berbunyi "+ Tugaskan"', src.indexOf('+ tugaskan') >= 0);
 cek('tugas massal per centang tersedia', src.indexOf('data-pilih=') >= 0 && src.indexOf('aksiMassal') >= 0);
 cek('tugaskan seluruh batch tersedia', src.indexOf('btnTugasSemua') >= 0);
 
