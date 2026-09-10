@@ -1460,8 +1460,8 @@ if(typeof module !== 'undefined' && module.exports){
    yang menjaga data adalah aturan RLS di supabase/skema.sql (baca/tambah/ubah
    boleh, HAPUS tidak). Bisa juga ditimpa per-browser lewat tombol ⚙.        */
 var SB_BAWAAN = {
-  sb_url: '',      // contoh: https://abcdefgh.supabase.co
-  sb_key: ''       // kunci "anon public" dari Settings -> API
+  sb_url: 'https://nxajmrzamuihmlfmfbrl.supabase.co',
+  sb_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54YWptcnphbXVpaG1sZm1mYnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMTU2NzQsImV4cCI6MjEwNDU5MTY3NH0.yElRYyQTxYhV4mqk1hYG3YtXWas3dzkPdNgWrzw7MCc'
 };
 var CFG_BAWAAN = Object.assign({owner:'anomalidigital', repo:'Manage-Batch',
   branch:'main', path:'data/db.json'}, SB_BAWAAN);
@@ -1470,6 +1470,8 @@ var LS = {
   taruh:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 };
 var cfg  = Object.assign({}, CFG_BAWAAN, LS.ambil('mb_cfg', {}));
+// Alamat Supabase bawaan menang atas setelan lama yang masih kosong di browser
+if(!cfg.sb_url && SB_BAWAAN.sb_url){ cfg.sb_url = SB_BAWAAN.sb_url; cfg.sb_key = SB_BAWAAN.sb_key; }
 var token = LS.ambil('mb_token', '');
 var saya  = LS.ambil('mb_saya', '');
 var db    = {versi:1, diperbarui:'', batches:[], tim:[], projects:[]};
