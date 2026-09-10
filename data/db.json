@@ -1,0 +1,171 @@
+{
+ "versi": 1,
+ "diperbarui": "2026-09-10T04:00:00.000Z",
+ "batches": [
+  {
+   "id": "b_20260910",
+   "nama": "Master Pending Slab — 10 Sep 2026",
+   "tanggal": "2026-09-10",
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  }
+ ],
+ "tim": [
+  { "id": "t_baldy",    "nama": "Baldy",    "warna": "#4f8cff", "reviewer": true,  "aktif": true, "diperbarui": "2026-09-10T04:00:00.000Z" },
+  { "id": "t_indra",    "nama": "Indra",    "warna": "#f97316", "reviewer": true,  "aktif": true, "diperbarui": "2026-09-10T04:00:00.000Z" },
+  { "id": "t_kallysta", "nama": "Kallysta", "warna": "#ec4899", "reviewer": false, "aktif": true, "diperbarui": "2026-09-10T04:00:00.000Z" },
+  { "id": "t_vincent",  "nama": "Vincent",  "warna": "#10b981", "reviewer": false, "aktif": true, "diperbarui": "2026-09-10T04:00:00.000Z" }
+ ],
+ "projects": [
+  {
+   "id": "p_turarg20h2235", "kode": "TURARG20H2235", "slab": "", "prioritas": "P1",
+   "revisi": "Remove tag + color match", "jenis": ["Tag", "Color"],
+   "pic": "", "diterima": "2026-09-10", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-10T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Remove tag + color match", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-10T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 10 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_ascot20h2769", "kode": "ASCOT20H2769", "slab": "20", "prioritas": "P1",
+   "revisi": "Adjust slab 20", "jenis": ["Adjustment"],
+   "pic": "", "diterima": "2026-09-10", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-10T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Adjust slab 20", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-10T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 10 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_bevros20h5802", "kode": "BEVROS20H5802", "slab": "", "prioritas": "P1",
+   "revisi": "Adjust warna", "jenis": ["Color"],
+   "pic": "Indra", "diterima": "2026-09-10", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-10T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Adjust warna", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-10T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 10 Sep, PIC Indra" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_carpat20lf4769", "kode": "CARPAT20LF4769", "slab": "25–48", "prioritas": "P1",
+   "revisi": "Color match", "jenis": ["Color Match"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "Diterima 7 & 9 Sep", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Color match slab 25–48", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab (7 & 9 Sep)" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_solbla20h6004", "kode": "SOLBLA20H6004", "slab": "32", "prioritas": "P2",
+   "revisi": "Add missing area back", "jenis": ["Retouch"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Add missing area back (slab 32)", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_newsav20h2639", "kode": "NEWSAV20H2639", "slab": "43", "prioritas": "P2",
+   "revisi": "Edit slab menggunakan file RAW baru", "jenis": ["Re-edit", "RAW"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Edit slab 43 memakai file RAW baru", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_borcry20h3083", "kode": "BORCRY20H3083", "slab": "", "prioritas": "P2",
+   "revisi": "Tone down white tanpa mengembalikan orange wash. Samakan dengan attached/new sample", "jenis": ["Color Correction"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "sample", "status": "todo", "urgent": false,
+   "catatan": "Klien mengirim sample pembanding", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Klien", "sumber": "klien",
+               "teks": "Tone down white tanpa mengembalikan orange wash. Samakan dengan attached/new sample.", "lampiran": "new sample dari klien", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep; klien kirim sample pembanding" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_amewav20lf3446", "kode": "AMEWAV20LF3446", "slab": "", "prioritas": "P2",
+   "revisi": "Buat versi sedikit lebih blue + correct stone details", "jenis": ["Color", "Detail"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Klien", "sumber": "klien",
+               "teks": "Buat versi sedikit lebih blue + perbaiki detail batunya.", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_turarg20h2508", "kode": "TURARG20H2508", "slab": "43–63 + slab 1", "prioritas": "P2",
+   "revisi": "Tambah slab no. 1 + remove tags", "jenis": ["Batch", "Tag"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260901_TURARG20H2508_21",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Tambah slab no. 1 + remove tags (slab 43–63)", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_tajmah20h1865", "kode": "TAJMAH20H1865", "slab": "", "prioritas": "P3",
+   "revisi": "Color match", "jenis": ["Color Match"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Color match", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_sentos20h8032", "kode": "SENTOS20H8032", "slab": "", "prioritas": "P3",
+   "revisi": "Color match", "jenis": ["Color Match"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Color match", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_clatra20vchf1680", "kode": "CLATRA20VCHF1680", "slab": "", "prioritas": "P3",
+   "revisi": "Color match", "jenis": ["Color Match"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260903_CLATRA20VCHF1680 _50",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Color match", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_turarg20h2411", "kode": "TURARG20H2411", "slab": "", "prioritas": "P3",
+   "revisi": "Keep color dari RAW files", "jenis": ["RAW", "Color"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260903_TURARG20H2411_34",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Keep color dari RAW files", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_monter20h5577", "kode": "MONTER20H5577", "slab": "", "prioritas": "P3",
+   "revisi": "Follow color brief", "jenis": ["Color"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Klien", "sumber": "klien",
+               "teks": "Ikuti color brief dari klien.", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  },
+  {
+   "id": "p_breper20h1579", "kode": "BREPER20H1579", "slab": "", "prioritas": "P3",
+   "revisi": "Adjust saturation", "jenis": ["Color"],
+   "pic": "", "diterima": "2026-09-07", "tenggat": "", "batch": "b_20260910",
+   "jalur": "belum", "status": "todo", "urgent": false, "catatan": "", "tautan": "",
+   "brief": [{ "id": "br_1", "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Master list", "sumber": "awal",
+               "teks": "Adjust saturation", "lampiran": "", "ronde": 0 }],
+   "sampel": [], "riwayat": [{ "waktu": "2026-09-07T04:00:00.000Z", "oleh": "Baldy", "teks": "masuk dari Master Pending Slab 7 Sep" }],
+   "diperbarui": "2026-09-10T04:00:00.000Z"
+  }
+ ]
+}
