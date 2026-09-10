@@ -27,10 +27,16 @@ daftar awal ditanam di dalam berkasnya sendiri.
 
 ---
 
-## Supaya bisa MENYIMPAN (sekali saja per orang)
+## Supaya bisa MENGUBAH (sekali saja per orang)
 
-Tanpa token: semua orang bisa **melihat** data terbaru.
-Untuk **mengubah**, tiap orang perlu token GitHub sendiri:
+**Tidak ada tombol Simpan.** Setiap perubahan langsung dikirim sendiri dan
+muncul di layar tim paling lama 15 detik kemudian. Indikator di kanan atas
+memberi tahu keadaannya: `menyimpan…`, `tersimpan & terkirim`, atau
+`gagal kirim — dicoba lagi`.
+
+Tanpa token: semua orang bisa **melihat** data terbaru, tapi perubahannya hanya
+tersimpan di browser sendiri (ada peringatannya).
+Untuk ikut **mengubah**, tiap orang perlu token GitHub sendiri:
 
 1. GitHub → Settings → Developer settings → Personal access tokens →
    **Fine-grained tokens** → Generate new token
@@ -52,7 +58,7 @@ setiap perubahan tercatat atas namamu.
 |---|---|
 | **Ringkasan** | jumlah per status, yang urgent, yang telat tenggat, yang menunggu klien, yang belum ada PIC, beban tiap orang |
 | **Siapa mengerjakan apa** | dropdown nama → daftar pekerjaan orang itu, dikelompokkan (urgent, perlu diperbaiki, revisi klien, menunggu klien, dikerjakan, belum mulai, pending review, selesai) |
-| **List pending slab** | tabel seperti catatan aslinya, **dikelompokkan per hari diterima** (10 Sep, 9 Sep, 7 Sep) |
+| **List pending slab** | tabel seperti catatan aslinya, **dikelompokkan per hari diterima** (10 Sep, 9 Sep, 7 Sep); klik judul harinya untuk menutup/membuka kelompok itu |
 | **Papan alur kerja** | kolom per tahap: Belum mulai → Dikerjakan → Menunggu klien → Revisi → Final/apply → Pending review → Selesai |
 
 Tombol di bar atas hanya melompat ke bagiannya, halamannya tetap satu.
@@ -90,8 +96,18 @@ Reviewer (Baldy & Indra) yang melihat tombol **"Review OK → SELESAI"** dan
 **"Minta perbaikan"**. Kalau minta perbaikan, catatannya jadi brief baru dan
 project balik ke pengerjaan. Orang lain hanya melihat tulisan "Menunggu review".
 
-Tiap project juga punya **tenggat** (opsional; telat = merah) dan penanda
-**🔥 urgent** yang selalu naik ke paling atas.
+**Tenggat otomatis:** tiap tugas yang masuk langsung diberi target selesai
+**7 hari sejak diterima**. Bisa diubah sendiri di detail project. Lewat tenggat
+= tanda merah. Penanda **🔥 urgent** selalu naik ke paling atas.
+
+**Sudah selesai lalu klien minta revisi lagi?** Buka project yang statusnya
+Selesai → **"Klien minta revisi lagi"** → tulis brief barunya. Project kembali ke
+antrean (yang pakai sample kembali ke jalur sample), diberi tanda
+`REVISI KE-2`, dan brief lamanya tetap tersimpan.
+
+**Tanda menyala di daftar:** `BARU` untuk yang baru masuk, `REVISI KE-N` untuk
+yang dibuka lagi, `BARU SELESAI` untuk yang baru kelar, `URGENT` untuk yang
+mendesak — masing-masing dengan garis warna di tepi kiri barisnya.
 
 ---
 
@@ -106,6 +122,15 @@ Brief tidak pernah ditimpa. Di detail project (klik kodenya):
 
 Di tabel dan kartu papan, brief terbaru dari klien ikut terlihat sekilas.
 
+**Brief berbahasa Inggris otomatis di-Indonesia-kan.** Aplikasi membawa kamus
+istilah CDK sendiri (tanpa internet, tanpa kunci API): "tone down the white"
+→ "turunkan kadar putihnya", "add the missing area back" → "kembalikan area yang
+hilang", "color match" → "samakan warna". Teks aslinya tetap ditampilkan di atas
+terjemahan. Hasil otomatis memang kaku — siapa pun boleh menekan **Perbaiki**
+dan menulis versi yang benar; perbaikan itu tersimpan untuk seluruh tim dan
+selalu menang atas terjemahan otomatis. Saklar `🌐 Bahasa Indonesia` di bar atas
+mematikan/menyalakan tampilan terjemahan.
+
 ---
 
 ## Beberapa orang mengedit bersamaan
@@ -119,8 +144,9 @@ Di tabel dan kartu papan, brief terbaru dari klien ikut terlihat sekilas.
 - Kalau kamu sedang mengetik, penggambaran ulang ditunda sampai selesai supaya
   ketikanmu tidak lompat.
 
-Simpan otomatis 4 detik setelah perubahan terakhir (bisa dimatikan di ⚙), atau
-tekan **Ctrl+S**.
+Perubahan dikirim 1,2 detik setelah ketikan terakhir. Kalau pengiriman gagal
+(internet putus), aplikasi mencoba lagi sendiri tiap 20 detik dan datanya aman
+di browser sampai berhasil.
 
 ---
 
@@ -130,7 +156,8 @@ tekan **Ctrl+S**.
 |---|---|
 | `index.html` | seluruh aplikasi: tampilan, logika, dan salinan data awal |
 | `data/db.json` | data hidup yang dipakai bersama (project, tim, batch) |
-| `tools/uji.js` | 86 uji tanpa browser: `node tools/uji.js` |
+| `tools/uji.js` | 117 uji tanpa browser: `node tools/uji.js` |
+| `tools/benih.js` | menyamakan data awal di `index.html` dengan `data/db.json` |
 
 `data/db.json` dan data awal di dalam `index.html` wajib sama — ada ujinya.
 

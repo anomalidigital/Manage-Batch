@@ -180,12 +180,74 @@ const hilang = dipakai.filter(id => !idStatis.has(id) && !idDinamis.has(id));
 cek('semua $(\'#id\') menunjuk elemen yang ada', hilang.length === 0, hilang);
 const wajib = ['isi', 'tabs', 'barAksi', 'barJml', 'barPic', 'barPri', 'barUrgent', 'barBatal',
   'pesan', 'laci', 'laciBadan', 'modal', 'modalBadan', 'cari', 'fPic', 'fPri', 'fStatus',
-  'fSelesai', 'fUrgent', 'fSaya', 'fHari', 'pilihBatch', 'pilihSaya', 'sink', 'btnSimpan'];
+  'fSelesai', 'fUrgent', 'fSaya', 'fHari', 'pilihBatch', 'pilihSaya', 'sink', 'btnMuat'];
 cek('elemen inti ada di HTML', wajib.every(id => idStatis.has(id)), wajib.filter(id => !idStatis.has(id)));
 cek("kolom tabel konsisten (colspan 6)", (src.match(/colspan="6"/g) || []).length >= 2);
 cek('sel PIC kosong berbunyi "+ Tugaskan"', src.indexOf('+ tugaskan') >= 0);
 cek('tugas massal per centang tersedia', src.indexOf('data-pilih=') >= 0 && src.indexOf('aksiMassal') >= 0);
 cek('tugaskan seluruh batch tersedia', src.indexOf('btnTugasSemua') >= 0);
+
+
+judul('Terjemahan brief klien (kamus istilah CDK)');
+cek('kalimat Inggris dikenali', L.sepertiInggris('Could you please tone down the white?') === true);
+cek('kalimat Indonesia TIDAK diterjemahkan',
+  L.sepertiInggris('Kembalikan area yang hilang pada slab 32') === false);
+const t1 = L.terjemahOtomatis('Could you please add the missing area back to slab 32?');
+cek('minta tambah area', /tolong/i.test(t1) && /area yang hilang/.test(t1) && /slab 32/.test(t1), t1);
+const t2 = L.terjemahOtomatis('Could you please tone down the white without bringing back the orange wash? The rest of the batch is similar to the attached image.');
+cek('tone down white', /turunkan kadar putihnya/.test(t2) && /tanpa memunculkan lagi/.test(t2)
+  && /semburat oranye/.test(t2) && /gambar terlampir/.test(t2), t2);
+const t3 = L.terjemahOtomatis('Another version that is a bit bluer please?');
+cek('versi lebih biru', /versi lain/i.test(t3) && /sedikit lebih biru/.test(t3), t3);
+cek('kode batu tidak diubah', L.terjemahOtomatis('Please match AMEWAV20LF3446 to the attached image').includes('AMEWAV20LF3446'));
+cek('perbaikan tangan menang atas otomatis',
+  L.briefTampil({ teks: 'Please tone down the white', terjemahan: 'Putihnya diturunkan ya' }, true).teks === 'Putihnya diturunkan ya');
+cek('jenis terjemahan ditandai',
+  L.briefTampil({ teks: 'Could you please tone down the white' }, true).jenis === 'otomatis'
+  && L.briefTampil({ teks: 'Kembalikan area yang hilang pada slab 32' }, true).jenis === 'asli');
+
+judul('Tenggat otomatis seminggu');
+cek('tenggat = diterima + 7 hari', L.tenggatOtomatis('2026-09-10') === '2026-09-17', L.tenggatOtomatis('2026-09-10'));
+cek('lompat bulan benar', L.tenggatOtomatis('2026-09-28') === '2026-10-05', L.tenggatOtomatis('2026-09-28'));
+cek('tanggal kosong aman', L.tenggatOtomatis('') === '');
+cek('HARI_TENGGAT = 7', L.HARI_TENGGAT === 7);
+cek('semua project awal sudah punya tenggat', dbj.projects.every(p => !!p.tenggat));
+cek('tenggat data awal = diterima + 7',
+  dbj.projects.every(p => p.tenggat === L.tenggatOtomatis(p.diterima)));
+
+judul('Project selesai bisa dibuka lagi untuk revisi');
+let r = baru();
+r = L.terapkanAksi(r, 'jalur_langsung', ctx('Vincent')).p;
+r = L.terapkanAksi(r, 'ke_review', ctx('Vincent')).p;
+r = L.terapkanAksi(r, 'setuju', ctx('Baldy')).p;
+cek('sudah selesai', r.status === 'done');
+cek('ada tawaran revisi baru', L.aksiBerikutnya(r)[0].kode === 'revisi_baru');
+r = L.terapkanAksi(r, 'revisi_baru', ctx('Baldy', { teks: 'slab 45 masih terlalu hangat' })).p;
+cek('balik ke antrean', r.status === 'todo', r.status);
+cek('hitungan revisi naik', r.dibuka_ulang === 1);
+cek('tanggal selesai dihapus', !r.selesai_pada);
+cek('brief baru dari klien masuk', L.briefTerbaru(r).teks === 'slab 45 masih terlalu hangat');
+cek('bertanda REVISI KE-1', L.tandaBaris(r, '2026-09-10').some(x => x.teks === 'REVISI KE-1'));
+let rs = baru(); rs.jalur = 'sample'; rs.status = 'done'; rs.selesai_pada = '2026-09-09';
+rs = L.terapkanAksi(rs, 'revisi_baru', ctx('Baldy', { teks: 'kurang biru' })).p;
+cek('yang pakai sample balik ke jalur sample', rs.status === 'revisi', rs.status);
+
+judul('Tanda menyala di daftar');
+cek('tugas baru bertanda BARU',
+  L.tandaBaris({ status: 'todo', diterima: '2026-09-10' }, '2026-09-10').some(x => x.teks === 'BARU'));
+cek('tugas lama tidak bertanda BARU',
+  !L.tandaBaris({ status: 'todo', diterima: '2026-09-01' }, '2026-09-10').some(x => x.teks === 'BARU'));
+cek('baru selesai bertanda',
+  L.tandaBaris({ status: 'done', selesai_pada: '2026-09-09' }, '2026-09-10').some(x => x.teks === 'BARU SELESAI'));
+cek('selesai lama tidak bertanda',
+  L.tandaBaris({ status: 'done', selesai_pada: '2026-09-01' }, '2026-09-10').length === 0);
+cek('urgent bertanda', L.tandaBaris({ status: 'todo', urgent: true }, '2026-09-10')[0].teks === 'URGENT');
+
+judul('Simpan otomatis (tanpa tombol Simpan)');
+cek('tombol Simpan sudah tidak ada', src.indexOf('id="btnSimpan"') < 0);
+cek('perubahan dijadwalkan terkirim sendiri', /function simpanNanti\(\)/.test(src) && /1200/.test(src));
+cek('gagal kirim dicoba ulang otomatis', /jamSimpan = setTimeout\(function\(\)\{ simpanKeGitHub\(true\); \}, 20000\)/.test(src));
+cek('kelompok hari bisa ditutup', src.indexOf('data-tutup=') >= 0 && src.indexOf('mb_tutup') >= 0);
 
 console.log('\n' + (gagal ? 'GAGAL: ' + gagal + ' dari ' + jumlah + ' uji' : 'LULUS semua ' + jumlah + ' uji'));
 process.exit(gagal ? 1 : 0);

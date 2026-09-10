@@ -92,6 +92,23 @@ td.st{width:190px;white-space:nowrap}
 .pic-sel.kosong select{color:var(--tx3);border:1px dashed var(--line2);background:transparent;font-weight:500}
 .pic-sel.kosong:hover select{color:var(--ac);border-color:var(--ac)}
 .api{color:var(--err)}
+/* ---------- tanda menyala + kelompok hari yang bisa ditutup ---------- */
+.tag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.5px;padding:1px 6px;
+  border-radius:5px;color:#fff;vertical-align:middle;margin-left:6px}
+.tbl-rapi tr.t-baru td:first-child{box-shadow:inset 3px 0 0 var(--ac)}
+.tbl-rapi tr.t-ulang td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+.tbl-rapi tr.t-kelar td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
+.tbl-rapi tr.t-kelar td.proj .kd{text-decoration:line-through;text-decoration-color:var(--tx3)}
+.tgl-tutup{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:7px}
+.tgl-tutup:hover{color:var(--tx)}
+.tgl-tutup .kar{display:inline-block;width:11px;color:var(--tx3);font-size:10px}
+tr.hari.tertutup td{opacity:.72}
+.ringkas-hari{font-weight:400;text-transform:none;letter-spacing:0;color:var(--tx3);margin-left:10px}
+.lbl-id{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.5px;padding:1px 4px;
+  border-radius:4px;background:var(--line2);color:var(--tx);vertical-align:middle}
+.terjemah{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line2)}
+.terjemah .teks-id{margin-top:4px;font-size:13.5px;line-height:1.5;white-space:pre-wrap}
+.terjemah.kcl .teks-id{font-size:12px;color:var(--tx2)}
 tr.hari td .cekhari{margin-right:8px}
 #barAksi{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:45;
   background:var(--bg2);border:1px solid var(--ac);border-radius:12px;box-shadow:var(--sh);
@@ -267,7 +284,6 @@ td.kodesel:hover{color:var(--ac)}
     <div class="tumbuh"></div>
     <select class="inp" id="pilihSaya" style="width:auto" title="Kamu login sebagai siapa"></select>
     <span class="sink" id="sink"><span class="titik" style="background:var(--tx3)"></span><span id="sinkTeks">lokal</span></span>
-    <button class="btn utama" id="btnSimpan">Simpan</button>
     <button class="btn" id="btnMuat" title="Ambil versi terbaru dari GitHub">↻</button>
     <button class="btn" id="btnTema" title="Terang / gelap">◐</button>
     <button class="btn" id="btnSetel" title="Pengaturan">⚙</button>
@@ -288,6 +304,7 @@ td.kodesel:hover{color:var(--ac)}
     <label class="pil" style="cursor:pointer;border-color:var(--err);color:var(--err)"><input type="checkbox" id="fUrgent"> 🔥 urgent saja</label>
     <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSaya"> punya saya</label>
     <label class="pil" style="cursor:pointer"><input type="checkbox" id="fHari" checked> 📅 kelompok per hari</label>
+    <label class="pil" style="cursor:pointer" title="Brief berbahasa Inggris ditampilkan dalam Bahasa Indonesia"><input type="checkbox" id="fID" checked> 🌐 Bahasa Indonesia</label>
     <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSelesai"> tampilkan yang selesai</label>
     <div class="tumbuh"></div>
     <button class="btn" id="btnTempel">Tempel dari tabel</button>
@@ -383,7 +400,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-10",
-   "tenggat": "",
+   "tenggat": "2026-09-17",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -422,7 +439,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-10",
-   "tenggat": "",
+   "tenggat": "2026-09-17",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -461,7 +478,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "Indra",
    "diterima": "2026-09-10",
-   "tenggat": "",
+   "tenggat": "2026-09-17",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -500,7 +517,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-09",
-   "tenggat": "",
+   "tenggat": "2026-09-16",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -539,7 +556,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -579,7 +596,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -618,7 +635,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "sample",
    "status": "todo",
@@ -658,7 +675,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -697,7 +714,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -737,7 +754,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -776,7 +793,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -815,7 +832,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -854,7 +871,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -894,7 +911,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -933,7 +950,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -972,7 +989,7 @@ td.kodesel:hover{color:var(--ac)}
    ],
    "pic": "",
    "diterima": "2026-09-07",
-   "tenggat": "",
+   "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
    "status": "todo",
@@ -1044,6 +1061,121 @@ function tambahBriefKe(p, o){
   p.brief = p.brief || [];
   p.brief.push(Object.assign({id:'br_' + (p.brief.length+1) + '_' + (o.waktu||'')}, o));
 }
+
+/* ---------- Terjemahan brief klien (kamus istilah CDK, tanpa internet) ----------
+   Brief dari klien selalu berkisar pada hal yang sama: samakan warna, turunkan
+   putih, kembalikan area yang hilang, versi lebih biru, hilangkan tag. Kamus
+   frasa di bawah menutup kalimat-kalimat itu; sisanya diterjemahkan per kata.
+   Hasilnya kasar tapi cukup untuk mengerti maksudnya, dan SIAPA PUN boleh
+   memperbaikinya lewat tombol "Perbaiki terjemahan" -- perbaikan itu disimpan
+   di brief-nya, jadi seluruh tim melihat versi yang sudah dibetulkan.        */
+var KAMUS_FRASA = [
+  ['could you please','tolong'], ['can you please','tolong'], ['can we please','tolong'],
+  ['would you please','tolong'], ['could you','bisakah'], ['are you able to','bisakah'],
+  ['add the missing area back to','kembalikan area yang hilang pada'],
+  ['add the missing area back','kembalikan area yang hilang'],
+  ['the missing area','area yang hilang'], ['missing area','area yang hilang'],
+  ['tone down the white','turunkan kadar putihnya'], ['tone down','turunkan'],
+  ['without bringing back','tanpa memunculkan lagi'], ['bringing back','memunculkan lagi'],
+  ['bring back','munculkan lagi'],
+  ['the orange wash','semburat oranye'], ['orange wash','semburat oranye'],
+  ['the rest of the batch','sisa batch'], ['the rest of','sisa'],
+  ['is similar to','mirip dengan'], ['similar to','mirip dengan'],
+  ['the attached image','gambar terlampir'], ['attached image','gambar terlampir'],
+  ['the attached','yang terlampir'],
+  ['another version','versi lain'], ['a bit bluer','sedikit lebih biru'],
+  ['a bit more','sedikit lebih'], ['a bit less','sedikit kurang'], ['a bit','sedikit'],
+  ['that is','yang'], ['that are','yang'], ['which is','yang'], ['we can','kami bisa'],
+  ['correct the stone details','perbaiki detail batunya'], ['stone details','detail batu'],
+  ['to the below','menjadi seperti di bawah'], ['as below','seperti di bawah'], ['as per','sesuai'],
+  ['color match','samakan warna'], ['colour match','samakan warna'],
+  ['remove the tags','hilangkan tag'], ['remove tags','hilangkan tag'], ['remove tag','hilangkan tag'],
+  ['keep the color','pertahankan warna'], ['keep color','pertahankan warna'], ['keep colour','pertahankan warna'],
+  ['adjust the saturation','atur saturasinya'], ['adjust saturation','atur saturasi'],
+  ['adjust color','atur warna'], ['adjust colour','atur warna'],
+  ['raw files','berkas RAW'], ['raw file','berkas RAW'], ['new sample','sample baru'],
+  ['the same as','sama seperti'], ['same as','sama seperti'], ['instead of','bukan'],
+  ['make it','buat jadi'], ['thank you','terima kasih'], ['thanks','terima kasih'],
+  ['let us know','kabari kami'], ['let me know','kabari saya'],
+  ['as soon as possible','secepatnya'], ['if possible','kalau bisa'],
+  ['too dark','terlalu gelap'], ['too bright','terlalu terang'], ['too warm','terlalu hangat'],
+  ['too cool','terlalu dingin'], ['too much','terlalu banyak'], ['not enough','kurang'],
+  ['a little','sedikit'], ['at the moment','saat ini'], ['for now','untuk sekarang']
+];
+var KAMUS_KATA = {
+  'the':'', 'a':'', 'an':'', 'is':'', 'are':'', 'be':'', 'been':'', 'would':'', 'do':'', 'does':'',
+  'please':'tolong', 'and':'dan', 'also':'juga', 'with':'dengan', 'without':'tanpa',
+  'to':'ke', 'from':'dari', 'on':'pada', 'in':'di', 'for':'untuk', 'but':'tapi', 'or':'atau',
+  'we':'kami', 'you':'kamu', 'us':'kami', 'it':'itu', 'this':'ini', 'that':'itu', 'these':'ini',
+  'can':'bisa', 'could':'bisa', 'need':'perlu', 'want':'ingin', 'should':'sebaiknya',
+  'back':'kembali', 'again':'lagi', 'more':'lebih', 'less':'kurang', 'still':'masih',
+  'slab':'slab', 'slabs':'slab', 'image':'gambar', 'images':'gambar', 'picture':'gambar',
+  'version':'versi', 'batch':'batch', 'block':'block', 'file':'berkas', 'files':'berkas',
+  'white':'putih', 'black':'hitam', 'blue':'biru', 'bluer':'lebih biru', 'green':'hijau',
+  'red':'merah', 'orange':'oranye', 'grey':'abu-abu', 'gray':'abu-abu', 'brown':'cokelat',
+  'color':'warna', 'colour':'warna', 'colors':'warna', 'colours':'warna',
+  'tone':'tone', 'tones':'tone', 'bit':'sedikit', 'rest':'sisa', 'correct':'perbaiki',
+  'detail':'detail', 'details':'detail', 'below':'di bawah', 'above':'di atas',
+  'area':'area', 'missing':'hilang', 'new':'baru', 'old':'lama',
+  'sample':'sample', 'samples':'sample', 'like':'seperti', 'similar':'mirip', 'attached':'terlampir',
+  'brighter':'lebih terang', 'darker':'lebih gelap', 'warmer':'lebih hangat', 'cooler':'lebih dingin',
+  'lighter':'lebih terang', 'saturation':'saturasi', 'contrast':'kontras', 'edge':'tepi', 'edges':'tepi',
+  'background':'latar', 'crop':'potongan', 'remove':'hilangkan', 'add':'tambahkan',
+  'adjust':'atur', 'keep':'pertahankan', 'make':'buat', 'match':'samakan', 'fix':'perbaiki',
+  'photo':'foto', 'photos':'foto', 'looks':'terlihat', 'look':'terlihat', 'good':'bagus',
+  'fine':'oke', 'now':'sekarang', 'next':'berikutnya', 'all':'semua', 'each':'tiap',
+  'other':'lain', 'others':'lainnya', 'same':'sama', 'different':'berbeda',
+  'very':'sangat', 'quite':'cukup', 'just':'saja', 'only':'hanya', 'one':'satu', 'two':'dua'
+};
+var STOP_EN = ['the','please','could','you','we','and','with','to','is','are','this','that','of','for','can','it','a','an','we','your'];
+/* Teks ini kelihatannya Inggris? (dipakai supaya brief yang sudah Indonesia
+   tidak ikut diacak-acak) */
+function sepertiInggris(teks){
+  var kata = String(teks||'').toLowerCase().match(/[a-z']+/g) || [];
+  if(kata.length < 2) return false;
+  var tahu = kata.filter(function(w){
+    return KAMUS_KATA[w] !== undefined || STOP_EN.indexOf(w) >= 0;
+  }).length;
+  return (tahu / kata.length) >= 0.5;
+}
+function terjemahOtomatis(teks){
+  var t = ' ' + String(teks||'') + ' ';
+  KAMUS_FRASA.forEach(function(pas){
+    t = t.replace(new RegExp('\\b' + pas[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi'), pas[1]);
+  });
+  t = t.replace(/\b[A-Za-z']+\b/g, function(w){
+    if(w.length > 3 && w === w.toUpperCase()) return w;       // kode batu / NAMA TYPE
+    var g = KAMUS_KATA[w.toLowerCase()];
+    if(g === undefined) return w;
+    if(g && w[0] === w[0].toUpperCase() && w.length > 1) return g.charAt(0).toUpperCase() + g.slice(1);
+    return g;
+  });
+  t = t.replace(/[ \t]+/g, ' ').replace(/ +([,.?!:;])/g, '$1').replace(/\n /g, '\n').trim();
+  // huruf besar di awal kalimat (juga sesudah . ? ! dan ganti baris)
+  t = t.replace(/(^|[.?!]\s+|\n\s*)([a-z])/g, function(_, aw, hr){ return aw + hr.toUpperCase(); });
+  return t;
+}
+/* Yang ditampilkan untuk sebuah brief: perbaikan tangan menang, lalu
+   terjemahan otomatis, lalu teks aslinya. */
+function briefTampil(b, mauID){
+  if(!b) return null;
+  if(b.terjemahan) return {teks:b.terjemahan, asli:b.teks, jenis:'tangan'};
+  if(mauID && sepertiInggris(b.teks)) return {teks:terjemahOtomatis(b.teks), asli:b.teks, jenis:'otomatis'};
+  return {teks:b.teks, asli:b.teks, jenis:'asli'};
+}
+
+/* Tanda menyala di daftar: BARU (baru masuk), REVISI KE-N (dibuka lagi karena
+   klien minta revisi setelah selesai), BARU SELESAI (baru saja kelar). */
+function tandaBaris(p, ini){
+  var t = [];
+  if(p.urgent && p.status !== 'done') t.push({teks:'URGENT', warna:'var(--err)'});
+  if(p.dibuka_ulang && p.status !== 'done') t.push({teks:'REVISI KE-' + p.dibuka_ulang, warna:'var(--warn)'});
+  var hb = hariAntara(p.diterima, ini);
+  if(p.status === 'todo' && !p.dibuka_ulang && hb !== null && hb >= 0 && hb <= 1) t.push({teks:'BARU', warna:'var(--ac)'});
+  var hs = hariAntara(p.selesai_pada, ini);
+  if(p.status === 'done' && hs !== null && hs >= 0 && hs <= 2) t.push({teks:'BARU SELESAI', warna:'var(--ok)'});
+  return t;
+}
 /* Sudah lewat tenggat? >0 = telat sekian hari, <=0 = masih ada waktu, null = tanpa tenggat */
 function telatHari(p, ini){
   if(!p || !p.tenggat || p.status === 'done') return null;
@@ -1056,6 +1188,16 @@ function hariAntara(dari, ke){
   if(isNaN(a) || isNaN(b)) return null;
   return Math.round((b-a)/86400000);
 }
+var HARI_TENGGAT = 7;      // tugas baru otomatis diberi waktu seminggu
+function tambahHari(iso, n){
+  if(!iso) return '';
+  var d = new Date(iso + 'T00:00:00');
+  if(isNaN(d.getTime())) return '';
+  d.setDate(d.getDate() + n);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+/* Target selesai bawaan: seminggu sejak tugas diterima. */
+function tenggatOtomatis(diterima){ return tambahHari(diterima, HARI_TENGGAT); }
 function rondeTerakhir(p){
   var s = p.sampel || [];
   return s.length ? s[s.length-1] : null;
@@ -1066,7 +1208,10 @@ function aksiBerikutnya(p, opsi){
   opsi = opsi || {};
   var st = p.status, jl = p.jalur || 'belum';
   if(st === 'hold') return [{kode:'lanjut', label:'Lanjutkan lagi', utama:true}];
-  if(st === 'done') return [{kode:'buka', label:'Buka lagi'}];
+  if(st === 'done') return [
+    {kode:'revisi_baru', label:'Klien minta revisi lagi', utama:true},
+    {kode:'buka', label:'Buka lagi (tanpa brief)'}
+  ];
   if(st === 'review'){
     if(opsi.reviewer) return [
       {kode:'setuju', label:'Review OK → SELESAI', utama:true},
@@ -1140,6 +1285,16 @@ function terapkanAksi(pAsli, kode, ctx){
     case 'ke_edited': p.status='review'; catat='hasil ditaruh di folder Edited, menunggu review'; break;
     case 'selesai':   p.status='done';   p.selesai_pada=tgl; catat='ditandai SELESAI'; break;
     case 'buka':      p.status='todo';   p.selesai_pada=''; catat='dibuka lagi'; break;
+    case 'revisi_baru': {
+      p.dibuka_ulang = (p.dibuka_ulang || 0) + 1;
+      p.selesai_pada = '';
+      // batu yang dulu pakai sample balik ke jalur sample; sisanya masuk antrean lagi
+      p.status = (p.jalur === 'sample') ? 'revisi' : 'todo';
+      if(d.teks) tambahBriefKe(p, {waktu:(ctx.stempel||tgl), oleh:(d.oleh||'Klien'), sumber:'klien',
+        teks:d.teks, lampiran:d.lampiran||'', ronde:(p.sampel||[]).length});
+      catat = 'DIBUKA LAGI — revisi ke-' + p.dibuka_ulang + (d.teks ? ': ' + d.teks : '');
+      break;
+    }
     case 'tahan':     p.status='hold';   catat='ditahan'; break;
     case 'lanjut':    p.status='dikerjakan'; catat='dilanjutkan lagi'; break;
     case 'brief':     tambahBriefKe(p, {waktu:(ctx.stempel||tgl), oleh:(d.oleh||oleh), sumber:(d.sumber||'internal'),
@@ -1267,7 +1422,9 @@ if(typeof module !== 'undefined' && module.exports){
     parseTempel:parseTempel, ringkasOrang:ringkasOrang, rondeTerakhir:rondeTerakhir,
     apakahReviewer:apakahReviewer, daftarReviewer:daftarReviewer, briefTerbaru:briefTerbaru,
     tambahBriefKe:tambahBriefKe, telatHari:telatHari,
-    tanggalIndo:tanggalIndo, kelompokPerHari:kelompokPerHari};
+    tanggalIndo:tanggalIndo, kelompokPerHari:kelompokPerHari, tandaBaris:tandaBaris,
+    sepertiInggris:sepertiInggris, terjemahOtomatis:terjemahOtomatis, briefTampil:briefTampil,
+    HARI_TENGGAT:HARI_TENGGAT, tambahHari:tambahHari, tenggatOtomatis:tenggatOtomatis};
 }
 /* =================== LOGIKA MURNI: SELESAI =================== */
 
@@ -1288,6 +1445,7 @@ var tampilan = LS.ambil('mb_tampilan', 'orang');
 var orangPilih = LS.ambil('mb_orang', '');
 var laciId = null, jamSimpan = null, jamPoll = null;
 var terpilih = {};        // id project yang dicentang untuk tugas massal
+var tutupHari = LS.ambil('mb_tutup', {});   // kelompok hari yang sedang ditutup
 
 var $ = function(s){ return document.querySelector(s); };
 var esc = function(s){ return String(s===undefined||s===null?'':s)
@@ -1335,8 +1493,6 @@ function b64dari(b){
 function setSink(keadaan, teks){
   var w = {lokal:'var(--tx3)', muat:'var(--warn)', ok:'var(--ok)', kotor:'var(--warn)', galat:'var(--err)'}[keadaan] || 'var(--tx3)';
   $('#sink').innerHTML = '<span class="titik" style="background:'+w+'"></span><span>'+esc(teks)+'</span>';
-  $('#btnSimpan').disabled = !kotor;
-  $('#btnSimpan').textContent = kotor ? 'Simpan •' : 'Tersimpan';
 }
 function urlMentah(){
   return 'https://raw.githubusercontent.com/'+cfg.owner+'/'+cfg.repo+'/'+cfg.branch+'/'+cfg.path;
@@ -1391,6 +1547,7 @@ async function muatDariGitHub(diam){
       if(berubah && !pertamaKali) pesan('Data diperbarui' + (isi.diperbarui_oleh ? ' oleh ' + isi.diperbarui_oleh : ''));
     }
     pertamaKali = false;
+    if(lengkapiTenggat()) simpanNanti();
     LS.taruh('mb_cache', db);
     renderAman();
     return true;
@@ -1399,6 +1556,19 @@ async function muatDariGitHub(diam){
     setSink('galat','gagal muat: ' + e.message);
     return false;
   }
+}
+/* Tugas lama yang belum punya target selesai diberi tenggat otomatis
+   (7 hari sejak diterima) begitu datanya dimuat. */
+function lengkapiTenggat(){
+  var n = 0;
+  (db.projects||[]).forEach(function(p){
+    if(!p.tenggat && p.diterima && p.status !== 'done'){
+      var t = tenggatOtomatis(p.diterima);
+      if(t){ p.tenggat = t; p.diperbarui = new Date().toISOString(); n++; }
+    }
+  });
+  if(n){ kotor = true; }
+  return n;
 }
 function pakaiBenihBilaKosong(){
   if((db.projects||[]).length) return false;
@@ -1421,7 +1591,7 @@ function mulaiPolling(){
   }, token ? 15000 : 60000);
 }
 async function simpanKeGitHub(otomatis){
-  if(!token){ if(!otomatis) bukaSetelan('Butuh token GitHub untuk menyimpan. Tempel token di bawah.'); return false; }
+  if(!token){ if(!otomatis) bukaSetelan('Butuh token GitHub supaya perubahanmu ikut tersimpan untuk tim.'); return false; }
   if(!kotor) return true;
   setSink('muat','menyimpan…');
   for(var coba=0; coba<3; coba++){
@@ -1446,19 +1616,39 @@ async function simpanKeGitHub(otomatis){
       sha = jr.content && jr.content.sha;
       basis = JSON.parse(JSON.stringify(db));
       kotor = false; LS.taruh('mb_cache', db);
-      setSink('ok','tersimpan ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
+      setSink('ok','tersimpan & terkirim ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
       renderAman();
       return true;
     }catch(e){
-      if(coba === 2){ setSink('galat','gagal simpan: ' + e.message); if(!otomatis) pesan('Gagal simpan: ' + e.message, 5000); return false; }
+      if(coba === 2){
+        setSink('galat','gagal kirim — dicoba lagi');
+        clearTimeout(jamSimpan); jamSimpan = setTimeout(function(){ simpanKeGitHub(true); }, 20000);
+        if(!otomatis) pesan('Gagal simpan: ' + e.message, 5000);
+        return false;
+      }
     }
   }
   setSink('galat','gagal simpan (bentrok berulang)');
   return false;
 }
+/* Tidak ada tombol Simpan: tiap perubahan langsung dikirim (jeda 1,2 detik
+   supaya ketikan beruntun jadi satu kiriman), lalu tersusul sendiri oleh
+   anggota tim lain paling lama 15 detik kemudian. */
+function simpanNanti(){
+  clearTimeout(jamSimpan);
+  jamSimpan = setTimeout(function(){ simpanKeGitHub(true); }, 1200);
+}
+var sudahIngatToken = false;
 function tandaiKotor(){
-  kotor = true; LS.taruh('mb_cache', db); setSink('kotor','ada perubahan');
-  if(cfg.autosimpan && token){ clearTimeout(jamSimpan); jamSimpan = setTimeout(function(){ simpanKeGitHub(true); }, 4000); }
+  kotor = true; LS.taruh('mb_cache', db);
+  if(token){ setSink('muat','menyimpan…'); simpanNanti(); }
+  else {
+    setSink('kotor','tersimpan di browser ini saja');
+    if(!sudahIngatToken){
+      sudahIngatToken = true;
+      pesan('Perubahanmu belum sampai ke tim: isi token GitHub lewat tombol ⚙ supaya ikut tersimpan', 6000);
+    }
+  }
 }
 
 /* ============================ UBAH DATA ============================ */
@@ -1562,8 +1752,11 @@ function kartuHTML(p){
     +   (p.slab && p.slab !== '—' ? '<span class="pil mini">slab '+esc(p.slab)+'</span>' : '')
     +   '<div class="tumbuh" style="flex:1"></div>' + avaHTML(p.pic)
     + '</div>'
+    + '<div style="margin-top:2px">' + tandaBaris(p, hariIni()).map(function(x){
+        return '<span class="tag" style="background:'+x.warna+';margin-left:0;margin-right:5px">'+esc(x.teks)+'</span>'; }).join('') + '</div>'
     + '<div class="rev">'+esc(p.revisi||'—')+'</div>'
-    + (briefBaru ? '<div class="brief-mini"><b>'+(br.sumber==='review'?'Catatan review':'Brief terbaru klien')+':</b> '+esc(br.teks)+'</div>' : '')
+    + (briefBaru ? '<div class="brief-mini"><b>'+(br.sumber==='review'?'Catatan review':'Brief terbaru klien')+':</b> '
+        + esc(briefTampil(br, $('#fID') ? $('#fID').checked : true).teks)+'</div>' : '')
     + '<div class="kaki">' + badgeUrgent(p) + badgeTenggat(p) + badgeTunggu(p)
     +   (p.jalur === 'sample' ? '<span class="pil mini">sample R'+((p.sampel||[]).length||1)+'</span>' : '')
     +   (p.jalur === 'langsung' ? '<span class="pil mini">tanpa sample</span>' : '')
@@ -1608,16 +1801,26 @@ function htmlDaftar(ps){
     if(p.slab && p.slab !== '—') sub.push('slab ' + p.slab);
     if(jenis) sub.push(jenis);
     if(!$('#fHari').checked && p.diterima) sub.push(tanggalIndo(p.diterima).replace(/ \d{4}$/,''));
-    return '<tr class="brs'+(terpilih[p.id]?' pilih':'')+'">'
+    var tanda = tandaBaris(p, hariIni());
+    var kelas = 'brs' + (terpilih[p.id] ? ' pilih' : '')
+      + (p.dibuka_ulang && p.status !== 'done' ? ' t-ulang' : '')
+      + (tanda.some(function(x){ return x.teks === 'BARU'; }) ? ' t-baru' : '')
+      + (tanda.some(function(x){ return x.teks === 'BARU SELESAI'; }) ? ' t-kelar' : '');
+    return '<tr class="'+kelas+'">'
       + '<td class="cek"><input type="checkbox" data-pilih="'+esc(p.id)+'"'+(terpilih[p.id]?' checked':'')+'></td>'
       + '<td class="pri">' + (p.urgent && p.status!=='done' ? '<span class="api" title="urgent">🔥</span> ' : '')
         + '<select class="tlg pri-'+esc(p.prioritas||'P3')+'" data-set="prioritas" data-id="'+esc(p.id)+'" title="prioritas">'
         + ['P1','P2','P3'].map(function(x){ return '<option'+(p.prioritas===x?' selected':'')+'>'+x+'</option>'; }).join('')
         + '</select></td>'
-      + '<td class="proj"><div class="kd" data-buka="'+esc(p.id)+'">'+esc(p.kode)+'</div>'
+      + '<td class="proj"><div class="kd" data-buka="'+esc(p.id)+'">'+esc(p.kode)
+        + tanda.map(function(x){ return '<span class="tag" style="background:'+x.warna+'">'+esc(x.teks)+'</span>'; }).join('')
+        + '</div>'
         + (sub.length ? '<div class="sub">'+esc(sub.join(' · '))+'</div>' : '') + '</td>'
       + '<td class="kerja" data-buka="'+esc(p.id)+'"><div class="rv">'+esc(p.revisi||'—')+'</div>'
-        + (briefBaru ? '<div class="bf">'+esc(br.teks)+'</div>' : '') + '</td>'
+        + (briefBaru ? '<div class="bf">'
+            + (function(){ var v = briefTampil(br, $('#fID').checked);
+                 return (v.jenis !== 'asli' ? '<span class="lbl-id" title="terjemahan '+v.jenis+'">ID</span> ' : '') + esc(v.teks); })()
+            + '</div>' : '') + '</td>'
       + '<td class="pic">'+selPic(p)+'</td>'
       + '<td class="st"><span class="stat"><i class="titik" style="background:'+((STATUS[p.status]||STATUS.todo).warna)+'"></i>'
         + '<select class="tlg" data-set="status" data-id="'+esc(p.id)+'">'
@@ -1630,11 +1833,19 @@ function htmlDaftar(ps){
   var baris;
   if($('#fHari').checked){
     baris = kelompokPerHari(ps).map(function(g){
-      return '<tr class="hari"><td colspan="6">'
+      var tutup = !!tutupHari[g.tanggal];
+      var belumPic = g.items.filter(function(x){ return !x.pic; }).length;
+      var kelar = g.items.filter(function(x){ return x.status === 'done'; }).length;
+      return '<tr class="hari'+(tutup?' tertutup':'')+'"><td colspan="6">'
         + '<input type="checkbox" class="cekhari" data-pilih-hari="'+esc(g.tanggal)+'"'
         + (g.items.every(function(x){ return terpilih[x.id]; }) ? ' checked' : '') + '>'
-        + '📅 '+esc(g.label) + '<span class="n">'+g.items.length+' project</span></td></tr>'
-        + g.items.map(barisTabel).join('');
+        + '<span class="tgl-tutup" data-tutup="'+esc(g.tanggal)+'" title="klik untuk '+(tutup?'membuka':'menutup')+'">'
+        + '<span class="kar">'+(tutup?'▶':'▼')+'</span>📅 '+esc(g.label)
+        + '<span class="n">'+g.items.length+' project</span>'
+        + (tutup ? '<span class="ringkas-hari">'
+            + (belumPic ? belumPic+' belum ada PIC · ' : '') + kelar+' selesai</span>' : '')
+        + '</span></td></tr>'
+        + (tutup ? '' : g.items.map(barisTabel).join(''));
     }).join('');
   } else {
     baris = ps.map(barisTabel).join('');
@@ -1871,6 +2082,16 @@ function perbaruiBar(){
 /* ============================ LACI DETAIL ============================ */
 function bukaLaci(id){ laciId = id; $('#laci').classList.add('on'); $('#tirai').classList.add('on'); renderLaci(); }
 function tutupLaci(){ laciId = null; $('#laci').classList.remove('on'); $('#tirai').classList.remove('on'); }
+/* Blok terjemahan di bawah teks asli brief (hanya kalau teksnya Inggris) */
+function blokTerjemah(p, b, kecil){
+  var v = briefTampil(b, true);
+  if(v.jenis === 'asli') return '';
+  return '<div class="terjemah'+(kecil?' kcl':'')+'">'
+    + '<span class="lbl-id">ID</span> '
+    + '<span class="samar2 mini">' + (v.jenis === 'tangan' ? 'terjemahan tim' : 'terjemahan otomatis') + '</span>'
+    + '<button class="btn kecil" data-terjemah="'+esc(p.id)+'" data-brief="'+esc(b.id||'')+'" style="margin-left:8px">Perbaiki</button>'
+    + '<div class="teks-id">'+esc(v.teks)+'</div></div>';
+}
 function renderLaci(){
   var p = pilihProject(laciId); if(!p){ tutupLaci(); return; }
   $('#laciJudul').innerHTML = '<span class="titik" style="background:'+(PRIORITAS[p.prioritas]||'')+'"></span> ' + esc(p.kode);
@@ -1901,6 +2122,7 @@ function renderLaci(){
       + '<span class="mini samar">'+esc(akhir.oleh||'')+' · '+esc((akhir.waktu||'').slice(0,10))
       + (akhir.ronde ? ' · ronde '+akhir.ronde : '') + '</span></div>'
       + '<div class="isi-b">'+esc(akhir.teks)+'</div>'
+      + blokTerjemah(p, akhir)
       + (akhir.lampiran ? '<div class="mini samar" style="margin-top:6px">lampiran: '+esc(akhir.lampiran)+'</div>' : '')
       + '</div>';
     if(br.length > 1){
@@ -1909,6 +2131,7 @@ function renderLaci(){
         return '<div class="brief-lama coret"><div class="mini samar2">'+esc(b.oleh||'')+' · '+esc((b.waktu||'').slice(0,10))
           + (b.ronde ? ' · ronde '+b.ronde : '') + (b.sumber ? ' · '+esc(b.sumber) : '') + '</div>'
           + '<div class="isi-b">'+esc(b.teks)+'</div>'
+          + blokTerjemah(p, b, true)
           + (b.lampiran ? '<div class="mini samar2">lampiran: '+esc(b.lampiran)+'</div>' : '')
           + '</div>';
       }).join('');
@@ -1934,7 +2157,7 @@ function renderLaci(){
     + '</div>';
   h += '<div class="duo">'
     + '<div class="fld"><label>Diterima</label><input class="inp" type="date" data-set="diterima" data-id="'+esc(p.id)+'" value="'+esc(p.diterima||'')+'"></div>'
-    + '<div class="fld"><label>Tenggat (target selesai)</label><input class="inp" type="date" data-set="tenggat" data-id="'+esc(p.id)+'" value="'+esc(p.tenggat||'')+'"></div>'
+    + '<div class="fld"><label>Tenggat (otomatis '+HARI_TENGGAT+' hari sejak diterima)</label><input class="inp" type="date" data-set="tenggat" data-id="'+esc(p.id)+'" value="'+esc(p.tenggat||'')+'"></div>'
     + '</div><div class="duo">'
     + '<div class="fld"><label>Batch</label><select class="inp" data-set="batch" data-id="'+esc(p.id)+'">'
       + '<option value="">—</option>' + (db.batches||[]).map(function(b){ return '<option value="'+esc(b.id)+'"'+(p.batch===b.id?' selected':'')+'>'+esc(b.nama)+'</option>'; }).join('') + '</select></div>'
@@ -2009,6 +2232,52 @@ function dialogKirim(id){
     + '<div class="fld"><label>Tautan / nama berkas sample</label><input class="inp" id="mTaut" value="'+esc((r&&r.tautan)||'')+'" placeholder="link WeTransfer / Drive / nama file"></div>',
     [{label:'Batal', klik:tutupModal},
      {label:'Sudah dikirim', utama:true, klik:function(){ jalankanAksi(id,'kirim_sample',{tautan:$('#mTaut').value.trim()}); tutupModal(); }}]);
+}
+function dialogTerjemah(id, briefId){
+  var p = pilihProject(id); if(!p) return;
+  var b = (p.brief||[]).find(function(x){ return String(x.id||'') === String(briefId); });
+  if(!b){ pesan('Brief tidak ketemu'); return; }
+  var v = briefTampil(b, true);
+  modal('Perbaiki terjemahan — ' + p.kode,
+    '<div class="fld"><label>Teks asli dari klien</label>'
+    + '<div class="brief-lama"><div class="isi-b">'+esc(b.teks)+'</div></div></div>'
+    + '<div class="fld"><label>Bahasa Indonesia (boleh diperbaiki)</label>'
+    + '<textarea class="inp" id="tTeks" style="min-height:96px">'+esc(v.teks)+'</textarea></div>'
+    + '<div class="info">Terjemahan otomatis memakai kamus istilah CDK, bukan penerjemah sungguhan — '
+    + 'jadi wajar kalau kalimatnya kaku. Yang kamu betulkan di sini tersimpan dan dilihat seluruh tim.</div>',
+    [{label:'Batal', klik:tutupModal},
+     {label:'Pakai terjemahan otomatis', klik:function(){
+        delete b.terjemahan; p.diperbarui = new Date().toISOString();
+        tandaiKotor(); tutupModal(); render(); pesan('Kembali ke terjemahan otomatis');
+     }},
+     {label:'Simpan', utama:true, klik:function(){
+        var t = $('#tTeks').value.trim();
+        if(!t){ pesan('Terjemahannya kosong'); return; }
+        b.terjemahan = t; p.diperbarui = new Date().toISOString();
+        p.riwayat = p.riwayat || [];
+        p.riwayat.push({waktu:new Date().toISOString(), oleh:saya||'—', teks:'terjemahan brief diperbaiki'});
+        tandaiKotor(); tutupModal(); render(); pesan('Terjemahan disimpan');
+     }}]);
+}
+function dialogRevisiBaru(id){
+  var p = pilihProject(id); if(!p) return;
+  var ke = (p.dibuka_ulang || 0) + 1;
+  modal('Revisi baru — ' + p.kode,
+    '<div class="info">Project ini sudah SELESAI, lalu klien minta perbaikan lagi. '
+    + 'Brief lama tidak dihapus: brief baru ini yang akan tampil menonjol, yang lama tetap terbaca sebagai riwayat.</div>'
+    + '<div class="fld"><label>Brief dari klien (revisi ke-' + ke + ')</label>'
+    + '<textarea class="inp" id="rTeks" placeholder="mis. slab 45 warnanya masih terlalu hangat"></textarea></div>'
+    + '<div class="fld"><label>Lampiran / sample dari klien (opsional)</label>'
+    + '<input class="inp" id="rLamp" placeholder="link atau lokasi berkas"></div>'
+    + '<div class="samar2 mini">Setelah disimpan, project balik ke antrean: '
+    + (p.jalur === 'sample' ? 'siap dibuatkan sample ronde berikutnya.' : 'masuk daftar “Belum mulai”.') + '</div>',
+    [{label:'Batal', klik:tutupModal},
+     {label:'Buka lagi untuk revisi', utama:true, klik:function(){
+        var t = $('#rTeks').value.trim();
+        if(!t){ pesan('Tulis dulu brief-nya supaya yang mengerjakan tahu'); return; }
+        jalankanAksi(id, 'revisi_baru', {teks:t, lampiran:$('#rLamp').value.trim()});
+        tutupModal();
+     }}]);
 }
 function dialogOrang(){
   var daftar = (db.tim||[]).map(function(a){
@@ -2089,6 +2358,7 @@ function dialogTambah(){
         db.projects.push({id:uid('p'), kode:kode, slab:$('#nSlab').value.trim(), revisi:$('#nRev').value.trim(),
           jenis:$('#nJenis').value.split(',').map(function(x){return x.trim();}).filter(Boolean),
           prioritas:$('#nPri').value, pic:$('#nPic').value, diterima:$('#nTgl').value,
+          tenggat:tenggatOtomatis($('#nTgl').value),
           batch:$('#nBatch').value, jalur:'belum', status:'todo', catatan:'', tautan:'', sampel:[],
           riwayat:[{waktu:new Date().toISOString(), oleh:saya||'—', teks:'project dibuat'}],
           diperbarui:new Date().toISOString()});
@@ -2106,7 +2376,8 @@ function dialogTempel(){
         var batch = $('#pilihBatch').value || ((db.batches[0]||{}).id || '');
         hasil.forEach(function(o){
           db.projects.push({id:uid('p'), kode:o.kode, slab:o.slab, revisi:o.revisi, jenis:o.jenis,
-            prioritas:o.prioritas||'P2', pic:o.pic||'', diterima:hariIni(), batch:batch,
+            prioritas:o.prioritas||'P2', pic:o.pic||'', diterima:hariIni(),
+            tenggat:tenggatOtomatis(hariIni()), batch:batch,
             jalur:'belum', status:'todo', catatan:o.diterima?('diterima: '+o.diterima):'', tautan:'', sampel:[],
             riwayat:[{waktu:new Date().toISOString(), oleh:saya||'—', teks:'diimpor dari tempel'}],
             diperbarui:new Date().toISOString()});
@@ -2132,7 +2403,7 @@ function bukaSetelan(catatan){
     + '<div class="fld"><label>Repo</label><input class="inp" id="sRepo" value="'+esc(cfg.repo)+'"></div></div>'
     + '<div class="duo"><div class="fld"><label>Branch</label><input class="inp" id="sBranch" value="'+esc(cfg.branch)+'"></div>'
     + '<div class="fld"><label>Berkas data</label><input class="inp" id="sPath" value="'+esc(cfg.path)+'"></div></div>'
-    + '<div class="fld"><label class="pil" style="cursor:pointer"><input type="checkbox" id="sAuto"'+(cfg.autosimpan?' checked':'')+'> simpan otomatis setelah 4 detik</label></div>'
+    + '<div class="info">Perubahan tersimpan sendiri, tidak ada tombol Simpan. Yang kamu ubah muncul di layar tim paling lama 15 detik kemudian.</div>'
     + '<div class="fld"><label>Anggota tim</label>'+tim
     + '<div style="display:flex;gap:7px"><input class="inp" id="sTimBaru" placeholder="nama baru"><button class="btn" id="sTambahTim">Tambah</button></div></div>'
     + '<div class="fld"><label>Batch</label><div style="display:flex;gap:7px"><input class="inp" id="sBatchBaru" placeholder="mis. Master Pending 17 Sep 2026"><button class="btn" id="sTambahBatch">Tambah</button></div></div>'
@@ -2145,7 +2416,7 @@ function bukaSetelan(catatan){
         token = $('#sToken').value.trim(); LS.taruh('mb_token', token);
         cfg.owner=$('#sOwner').value.trim(); cfg.repo=$('#sRepo').value.trim();
         cfg.branch=$('#sBranch').value.trim()||'main'; cfg.path=$('#sPath').value.trim()||'data/db.json';
-        cfg.autosimpan=$('#sAuto').checked; LS.taruh('mb_cfg', cfg);
+        LS.taruh('mb_cfg', cfg);
         document.querySelectorAll('[data-tim]').forEach(function(i){
           var a=(db.tim||[]).find(function(x){ return x.id===i.dataset.tim; });
           if(a && a.nama!==i.value.trim() && i.value.trim()){ a.nama=i.value.trim(); a.diperbarui=new Date().toISOString(); kotor=true; }
@@ -2196,6 +2467,7 @@ document.addEventListener('click', function(e){
     var kode = t.dataset.aksi, id = t.dataset.id;
     if(!kode) return;
     if(kode === 'jawaban') dialogJawaban(id);
+    else if(kode === 'revisi_baru') dialogRevisiBaru(id);
     else if(kode === 'kirim_sample') dialogKirim(id);
     else if(kode === 'tolak') dialogTolak(id);
     else if(kode === 'setuju'){
@@ -2214,6 +2486,14 @@ document.addEventListener('click', function(e){
   var org = e.target.closest('[data-orang]');
   if(org){ e.preventDefault(); orangPilih = org.dataset.orang; LS.taruh('mb_orang', orangPilih);
     tampilan = 'orang'; LS.taruh('mb_tampilan', tampilan); render(); return; }
+  var tj = e.target.closest('[data-terjemah]');
+  if(tj){ e.stopPropagation(); dialogTerjemah(tj.dataset.terjemah, tj.dataset.brief); return; }
+  var tt = e.target.closest('[data-tutup]');
+  if(tt){
+    var k = tt.dataset.tutup;
+    tutupHari[k] = !tutupHari[k];
+    LS.taruh('mb_tutup', tutupHari); render(); return;
+  }
   var bk = e.target.closest('[data-buka]');
   if(bk){ e.preventDefault(); bukaLaci(bk.dataset.buka); return; }
 });
@@ -2269,13 +2549,13 @@ $('#barUrgent').onclick = function(){
   aksiMassal(function(id){ var p = pilihProject(id); ubahDiam(id, {urgent:!p.urgent}, 'tanda urgent diubah'); }, 'diubah tanda urgentnya');
 };
 $('#barBatal').onclick = function(){ terpilih = {}; render(); };
-['cari','fPic','fPri','fStatus','fSelesai','fUrgent','fSaya','fHari'].forEach(function(id){
+['cari','fPic','fPri','fStatus','fSelesai','fUrgent','fSaya','fHari','fID'].forEach(function(id){
   $('#'+id).addEventListener('input', render);
   $('#'+id).addEventListener('change', render);
 });
 $('#pilihBatch').addEventListener('change', function(){ LS.taruh('mb_batch', $('#pilihBatch').value); render(); });
 $('#pilihSaya').addEventListener('change', function(){ saya = $('#pilihSaya').value; LS.taruh('mb_saya', saya); render(); });
-$('#btnSimpan').onclick = function(){ simpanKeGitHub(false); };
+
 $('#btnMuat').onclick = function(){ muatDariGitHub(false); };
 $('#btnSetel').onclick = function(){ bukaSetelan(); };
 $('#btnTambah').onclick = dialogTambah;
@@ -2298,7 +2578,7 @@ document.addEventListener('keydown', function(e){
   if(e.key === 'Escape'){ tutupModal(); tutupLaci(); }
   if((e.ctrlKey||e.metaKey) && e.key === 's'){ e.preventDefault(); simpanKeGitHub(false); }
 });
-window.addEventListener('beforeunload', function(e){ if(kotor && !cfg.autosimpan){ e.preventDefault(); e.returnValue=''; } });
+window.addEventListener('beforeunload', function(e){ if(kotor && !token){ e.preventDefault(); e.returnValue=''; } });
 
 /* ============================ MULAI ============================ */
 (function mulai(){
