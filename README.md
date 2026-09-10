@@ -150,6 +150,41 @@ di browser sampai berhasil.
 
 ---
 
+## Pakai Supabase (tanpa login, tanpa token per orang)
+
+Cara ini menghapus satu-satunya kerepotan yang tersisa: tim tinggal membuka
+halaman, langsung bisa mengubah. Perubahan muncul di layar orang lain dalam
+±5 detik.
+
+1. Buat project gratis di supabase.com.
+2. SQL Editor → New query → tempel isi **`supabase/skema.sql`** → Run.
+3. Settings → API → salin **Project URL** dan kunci **anon public**
+   (JANGAN kunci `service_role`).
+4. Buka aplikasi → ⚙ → tempel keduanya → **Uji sambungan** → **Kirim semua data
+   ke Supabase** (sekali saja, untuk mengisi tabel dari daftar yang sekarang).
+5. Supaya tim tidak perlu menempel apa pun, dua nilai itu bisa ditanam di
+   `SB_BAWAAN` pada `index.html`.
+
+**Kenapa aman walau tanpa login:** aturan RLS pada `skema.sql` mengizinkan
+baca/tambah/ubah, tapi **melarang DELETE**. Menghapus project di aplikasi hanya
+menandai `dihapus`, jadi selalu bisa dikembalikan. Kunci `anon` memang dirancang
+untuk dipasang di halaman; yang menjaga data adalah aturan RLS, bukan kunci itu.
+
+**Supabase gratis tidur setelah seminggu tidak dipakai.**
+`.github/workflows/jaga-nyala.yml` menyentuhnya setiap hari, sekaligus menarik
+cadangan datanya ke `data/db.json` dan menyimpannya sebagai commit — jadi ada
+riwayat harian yang bisa dikembalikan, dan repo tetap aktif sehingga jadwalnya
+tidak dinonaktifkan GitHub.
+
+Kalau Supabase belum diisi atau sedang tidak bisa dihubungi, aplikasi otomatis
+kembali memakai `data/db.json` di GitHub — datanya tetap terbaca.
+
+**Uji:** `node tools/uji_supabase.js` menjalankan lapisan Supabase melawan
+server tiruan (34 uji: alamat, header kunci, bentuk upsert, penggabungan saat
+dua orang mengubah bersamaan, dan apa yang terjadi kalau kuncinya salah).
+
+---
+
 ## Berkas
 
 | Berkas | Isi |
@@ -157,6 +192,9 @@ di browser sampai berhasil.
 | `index.html` | seluruh aplikasi: tampilan, logika, dan salinan data awal |
 | `data/db.json` | data hidup yang dipakai bersama (project, tim, batch) |
 | `tools/uji.js` | 117 uji tanpa browser: `node tools/uji.js` |
+| `tools/uji_supabase.js` | 34 uji lapisan Supabase lewat server tiruan |
+| `supabase/skema.sql` | tabel + aturan keamanan untuk Supabase |
+| `.github/workflows/jaga-nyala.yml` | jaga Supabase tetap nyala + cadangan harian |
 | `tools/benih.js` | menyamakan data awal di `index.html` dengan `data/db.json` |
 
 `data/db.json` dan data awal di dalam `index.html` wajib sama — ada ujinya.

@@ -1157,6 +1157,30 @@ function terjemahOtomatis(teks){
 }
 /* Yang ditampilkan untuk sebuah brief: perbaikan tangan menang, lalu
    terjemahan otomatis, lalu teks aslinya. */
+/* Baris Supabase -> objek aplikasi, dan sebaliknya. Isinya disimpan apa
+   adanya di kolom JSON, jadi kolom baru tidak perlu ubah tabel. */
+function dariBarisSB(baris){
+  return (baris||[]).map(function(r){
+    var o = r.data || {};
+    if(!o.id) o.id = r.id;
+    if(r.diperbarui && !o.diperbarui) o.diperbarui = r.diperbarui;
+    return o;
+  });
+}
+function keBarisSB(daftar){
+  return (daftar||[]).map(function(o){
+    return {id:o.id, data:o, diperbarui:o.diperbarui || new Date().toISOString()};
+  });
+}
+/* Yang perlu dikirim: baris yang berbeda dari versi terakhir yang tersimpan. */
+function bedaKirim(basisDaftar, daftar){
+  var b = {};
+  (basisDaftar||[]).forEach(function(x){ b[x.id] = JSON.stringify(x); });
+  return (daftar||[]).filter(function(x){ return b[x.id] !== JSON.stringify(x); });
+}
+function buangYangDihapus(daftar){
+  return (daftar||[]).filter(function(x){ return !x.dihapus; });
+}
 function briefTampil(b, mauID){
   if(!b) return null;
   if(b.terjemahan) return {teks:b.terjemahan, asli:b.teks, jenis:'tangan'};
@@ -1424,12 +1448,23 @@ if(typeof module !== 'undefined' && module.exports){
     tambahBriefKe:tambahBriefKe, telatHari:telatHari,
     tanggalIndo:tanggalIndo, kelompokPerHari:kelompokPerHari, tandaBaris:tandaBaris,
     sepertiInggris:sepertiInggris, terjemahOtomatis:terjemahOtomatis, briefTampil:briefTampil,
-    HARI_TENGGAT:HARI_TENGGAT, tambahHari:tambahHari, tenggatOtomatis:tenggatOtomatis};
+    HARI_TENGGAT:HARI_TENGGAT, tambahHari:tambahHari, tenggatOtomatis:tenggatOtomatis,
+    dariBarisSB:dariBarisSB, keBarisSB:keBarisSB, bedaKirim:bedaKirim, buangYangDihapus:buangYangDihapus};
 }
 /* =================== LOGIKA MURNI: SELESAI =================== */
 
 /* ============================ KEADAAN ============================ */
-var CFG_BAWAAN = {owner:'anomalidigital', repo:'Manage-Batch', branch:'main', path:'data/db.json', autosimpan:true};
+/* ===== Alamat Supabase =====================================================
+   Diisi sekali di sini supaya tim tinggal buka halaman, tanpa login dan tanpa
+   menempel apa pun. Kunci "anon" memang dirancang untuk dipasang di halaman;
+   yang menjaga data adalah aturan RLS di supabase/skema.sql (baca/tambah/ubah
+   boleh, HAPUS tidak). Bisa juga ditimpa per-browser lewat tombol ⚙.        */
+var SB_BAWAAN = {
+  sb_url: '',      // contoh: https://abcdefgh.supabase.co
+  sb_key: ''       // kunci "anon public" dari Settings -> API
+};
+var CFG_BAWAAN = Object.assign({owner:'anomalidigital', repo:'Manage-Batch',
+  branch:'main', path:'data/db.json'}, SB_BAWAAN);
 var LS = {
   ambil:function(k,b){ try{ var v=localStorage.getItem(k); return v===null?b:JSON.parse(v); }catch(e){ return b; } },
   taruh:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
@@ -1494,6 +1529,83 @@ function setSink(keadaan, teks){
   var w = {lokal:'var(--tx3)', muat:'var(--warn)', ok:'var(--ok)', kotor:'var(--warn)', galat:'var(--err)'}[keadaan] || 'var(--tx3)';
   $('#sink').innerHTML = '<span class="titik" style="background:'+w+'"></span><span>'+esc(teks)+'</span>';
 }
+/* ======================== SUPABASE (tanpa login) ======================== */
+function pakaiSB(){ return !!(cfg.sb_url && cfg.sb_key); }
+function sbKepala(tambah){
+  var h = {'apikey':cfg.sb_key, 'Authorization':'Bearer ' + cfg.sb_key};
+  return Object.assign(h, tambah || {});
+}
+function sbURL(jalan){ return String(cfg.sb_url).replace(/\/+$/, '') + '/rest/v1/' + jalan; }
+async function sbAmbilTabel(tabel){
+  var r = await fetch(sbURL(tabel + '?select=id,data,diperbarui&order=id'),
+    {headers:sbKepala(), cache:'no-store'});
+  if(!r.ok) throw new Error(tabel + ' HTTP ' + r.status + (r.status===401?' (kunci salah?)':''));
+  return dariBarisSB(await r.json());
+}
+/* Satu panggilan ringan: kapan terakhir ADA yang berubah? */
+async function sbCap(){
+  var r = await fetch(sbURL('rpc/cap_perubahan'),
+    {method:'POST', headers:sbKepala({'Content-Type':'application/json'}), body:'{}', cache:'no-store'});
+  if(!r.ok) throw new Error('cap HTTP ' + r.status);
+  return String(await r.text()).replace(/"/g, '');
+}
+async function sbSimpanTabel(tabel, daftar){
+  if(!daftar.length) return 0;
+  var r = await fetch(sbURL(tabel + '?on_conflict=id'), {
+    method:'POST',
+    headers:sbKepala({'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates,return=minimal'}),
+    body:JSON.stringify(keBarisSB(daftar))});
+  if(!r.ok) throw new Error(tabel + ' simpan HTTP ' + r.status + ' ' + (await r.text()).slice(0,120));
+  return daftar.length;
+}
+async function muatDariSupabase(diam){
+  if(!diam) setSink('muat','memuat…');
+  var hasil = await Promise.all([sbAmbilTabel('projects'), sbAmbilTabel('tim'), sbAmbilTabel('batches')]);
+  // MENTAH = apa adanya di server (termasuk yang bertanda dihapus). Ini yang
+  // jadi `basis`, sebab basis berarti "yang sudah ada di sana", bukan "yang
+  // sedang saya lihat". Kalau basis diisi hasil gabungan, perubahan lokal
+  // akan dikira sudah terkirim dan tidak pernah benar-benar dikirim.
+  var mentah = {versi:1, diperbarui:new Date().toISOString(),
+                projects:hasil[0], tim:hasil[1], batches:hasil[2]};
+  var isi = {versi:1, diperbarui:mentah.diperbarui,
+             projects:buangYangDihapus(hasil[0]), tim:buangYangDihapus(hasil[1]), batches:buangYangDihapus(hasil[2])};
+  var berubah = JSON.stringify(isi.projects) !== JSON.stringify(buangYangDihapus((basis||{}).projects || []));
+  if(kotor){
+    db = gabungDB(basis, db, isi);
+    setSink('kotor','digabung dengan perubahan tim');
+  } else {
+    db = isi;
+    setSink('ok','sinkron ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
+    if(berubah && !pertamaKali) pesan('Data diperbarui oleh tim');
+  }
+  basis = JSON.parse(JSON.stringify(mentah));
+  pertamaKali = false;
+  if(lengkapiTenggat()) simpanNanti();
+  LS.taruh('mb_cache', db);
+  renderAman();
+  return true;
+}
+async function simpanKeSupabase(){
+  var n = 0;
+  n += await sbSimpanTabel('projects', bedaKirim((basis||{}).projects, db.projects));
+  n += await sbSimpanTabel('tim',      bedaKirim((basis||{}).tim,      db.tim));
+  n += await sbSimpanTabel('batches',  bedaKirim((basis||{}).batches,  db.batches));
+  basis = JSON.parse(JSON.stringify(db));
+  kotor = false; LS.taruh('mb_cache', db);
+  capTerakhir = '';                     // paksa tarik ulang di putaran berikutnya
+  setSink('ok', n ? ('terkirim ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}))
+                  : 'tersimpan');
+  renderAman();
+  return true;
+}
+/* Kirim SELURUH data ke Supabase — dipakai sekali saat pertama mengisi tabel. */
+async function isiAwalSupabase(){
+  await sbSimpanTabel('projects', db.projects || []);
+  await sbSimpanTabel('tim',      db.tim || []);
+  await sbSimpanTabel('batches',  db.batches || []);
+  basis = JSON.parse(JSON.stringify(db)); kotor = false; capTerakhir = '';
+  return (db.projects||[]).length;
+}
 function urlMentah(){
   return 'https://raw.githubusercontent.com/'+cfg.owner+'/'+cfg.repo+'/'+cfg.branch+'/'+cfg.path;
 }
@@ -1514,6 +1626,44 @@ function renderAman(){
     return;
   }
   render();
+}
+var capTerakhir = '';
+/* Pengalih sumber: Supabase kalau sudah diisi, kalau tidak GitHub JSON. */
+async function muatData(diam){
+  if(!pakaiSB()) return muatDariGitHub(diam);
+  try{
+    return await muatDariSupabase(diam);
+  }catch(e){
+    setSink('galat','Supabase: ' + e.message + ' — pakai cadangan GitHub');
+    return muatDariGitHub(true);
+  }
+}
+async function simpanData(otomatis){
+  if(!pakaiSB()) return simpanKeGitHub(otomatis);
+  if(!kotor) return true;
+  setSink('muat','menyimpan…');
+  try{
+    return await simpanKeSupabase();
+  }catch(e){
+    setSink('galat','gagal kirim — dicoba lagi');
+    clearTimeout(jamSimpan); jamSimpan = setTimeout(function(){ simpanData(true); }, 15000);
+    if(!otomatis) pesan('Gagal simpan: ' + e.message, 5000);
+    return false;
+  }
+}
+/* Tanya ringan tiap beberapa detik: ada yang berubah? Kalau tidak, tidak ada
+   data yang ditarik sama sekali (hemat kuota Supabase gratis). */
+async function periksaPerubahan(){
+  if(!pakaiSB()) return muatData(true);
+  try{
+    var cap = await sbCap();
+    if(cap && cap === capTerakhir) return true;
+    capTerakhir = cap;
+    return await muatData(true);
+  }catch(e){
+    setSink('galat','Supabase tidak terjawab: ' + e.message);
+    return false;
+  }
 }
 async function muatDariGitHub(diam){
   if(!diam) setSink('muat','memuat…');
@@ -1578,17 +1728,18 @@ function pakaiBenihBilaKosong(){
 }
 var pertamaKali = true, jamMuatTerakhir = 0;
 function segarkanSekarang(){
-  if(Date.now() - jamMuatTerakhir < 3000) return;
+  if(Date.now() - jamMuatTerakhir < 2000) return;
   jamMuatTerakhir = Date.now();
-  muatDariGitHub(true);
+  periksaPerubahan();
 }
 function mulaiPolling(){
   if(jamPoll) clearInterval(jamPoll);
-  // Dengan token: tiap 15 detik (batas API 5000/jam, jauh dari cukup).
-  // Tanpa token: berkas mentah tiap 60 detik.
+  // Supabase: tanya "ada perubahan?" tiap 5 detik (balasannya cuma satu tanggal).
+  // GitHub: tarik berkasnya tiap 15 detik (bertoken) atau 60 detik.
+  var jeda = pakaiSB() ? 5000 : (token ? 15000 : 60000);
   jamPoll = setInterval(function(){
-    if(!document.hidden){ jamMuatTerakhir = Date.now(); muatDariGitHub(true); }
-  }, token ? 15000 : 60000);
+    if(!document.hidden){ jamMuatTerakhir = Date.now(); periksaPerubahan(); }
+  }, jeda);
 }
 async function simpanKeGitHub(otomatis){
   if(!token){ if(!otomatis) bukaSetelan('Butuh token GitHub supaya perubahanmu ikut tersimpan untuk tim.'); return false; }
@@ -1636,17 +1787,17 @@ async function simpanKeGitHub(otomatis){
    anggota tim lain paling lama 15 detik kemudian. */
 function simpanNanti(){
   clearTimeout(jamSimpan);
-  jamSimpan = setTimeout(function(){ simpanKeGitHub(true); }, 1200);
+  jamSimpan = setTimeout(function(){ simpanData(true); }, 1200);
 }
 var sudahIngatToken = false;
 function tandaiKotor(){
   kotor = true; LS.taruh('mb_cache', db);
-  if(token){ setSink('muat','menyimpan…'); simpanNanti(); }
+  if(pakaiSB() || token){ setSink('muat','menyimpan…'); simpanNanti(); }
   else {
     setSink('kotor','tersimpan di browser ini saja');
     if(!sudahIngatToken){
       sudahIngatToken = true;
-      pesan('Perubahanmu belum sampai ke tim: isi token GitHub lewat tombol ⚙ supaya ikut tersimpan', 6000);
+      pesan('Perubahanmu belum sampai ke tim: isi alamat Supabase (atau token GitHub) lewat tombol ⚙', 6000);
     }
   }
 }
@@ -1674,6 +1825,7 @@ function terpakai(){
   var fb = $('#pilihBatch').value, tampilSelesai = $('#fSelesai').checked;
   var hanyaUrgent = $('#fUrgent').checked, hanyaSaya = $('#fSaya').checked;
   return (db.projects||[]).filter(function(p){
+    if(p.dihapus) return false;
     if(fb && (p.batch||'') !== fb) return false;
     if(hanyaUrgent && !p.urgent) return false;
     if(hanyaSaya && saya && p.pic !== saya) return false;
@@ -2394,7 +2546,16 @@ function bukaSetelan(catatan){
       + '<button class="btn kecil bahaya" data-hapus-tim="'+esc(a.id)+'">✕</button></div>'; }).join('');
   modal('Pengaturan',
     (catatan ? '<div class="peringatan">'+esc(catatan)+'</div>' : '')
-    + '<div class="fld"><label>Token GitHub (hanya tersimpan di browser ini)</label>'
+    + '<div class="fld"><label>Supabase — Project URL</label>'
+    + '<input class="inp" id="sSbUrl" value="'+esc(cfg.sb_url||'')+'" placeholder="https://xxxxx.supabase.co"></div>'
+    + '<div class="fld"><label>Supabase — kunci anon public</label>'
+    + '<input class="inp" id="sSbKey" value="'+esc(cfg.sb_key||'')+'" placeholder="eyJhbGciOi..."></div>'
+    + '<div class="info">Kalau dua kolom di atas diisi, aplikasi memakai Supabase: tim tinggal membuka halaman, '
+    + 'tanpa login dan tanpa token. Perubahan muncul di layar orang lain dalam ±5 detik. '
+    + 'Jalankan dulu <b>supabase/skema.sql</b> di SQL Editor, lalu tekan tombol di bawah untuk mengisi tabelnya.</div>'
+    + '<div class="fld"><button class="btn" id="sSbIsi">Kirim semua data ke Supabase</button> '
+    + '<button class="btn" id="sSbUji">Uji sambungan</button></div>'
+    + '<div class="fld"><label>Token GitHub (cadangan, kalau tidak memakai Supabase)</label>'
     + '<input class="inp" id="sToken" type="password" value="'+esc(token)+'" placeholder="github_pat_…"></div>'
     + '<div class="info">Tanpa token kamu tetap bisa MELIHAT data (repo publik), tapi tidak bisa menyimpan. '
     + 'Buat token: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained → pilih repo '
@@ -2414,6 +2575,8 @@ function bukaSetelan(catatan){
     [{label:'Tutup', klik:tutupModal},
      {label:'Simpan pengaturan', utama:true, klik:function(){
         token = $('#sToken').value.trim(); LS.taruh('mb_token', token);
+        cfg.sb_url = $('#sSbUrl').value.trim().replace(/\/+$/, '');
+        cfg.sb_key = $('#sSbKey').value.trim();
         cfg.owner=$('#sOwner').value.trim(); cfg.repo=$('#sRepo').value.trim();
         cfg.branch=$('#sBranch').value.trim()||'main'; cfg.path=$('#sPath').value.trim()||'data/db.json';
         LS.taruh('mb_cfg', cfg);
@@ -2426,8 +2589,33 @@ function bukaSetelan(catatan){
           if(a && !!a.reviewer !== i.checked){ a.reviewer=i.checked; a.diperbarui=new Date().toISOString(); kotor=true; }
         });
         if(kotor) tandaiKotor();
-        tutupModal(); render(); mulaiPolling(); muatDariGitHub(true);
+        tutupModal(); render(); capTerakhir = ''; mulaiPolling(); muatData(true);
      }}]);
+  $('#sSbUji').onclick = async function(){
+    var u = $('#sSbUrl').value.trim().replace(/\/+$/, ''), k = $('#sSbKey').value.trim();
+    if(!u || !k){ pesan('Isi dulu URL dan kuncinya'); return; }
+    var simpan = {sb_url:cfg.sb_url, sb_key:cfg.sb_key};
+    cfg.sb_url = u; cfg.sb_key = k;
+    try{
+      var t = await sbAmbilTabel('projects');
+      pesan('Sambungan OK — tabel projects berisi ' + t.length + ' baris', 4000);
+    }catch(e){
+      cfg.sb_url = simpan.sb_url; cfg.sb_key = simpan.sb_key;
+      pesan('Gagal: ' + e.message + ' (sudah jalankan skema.sql?)', 7000);
+    }
+  };
+  $('#sSbIsi').onclick = async function(){
+    var u = $('#sSbUrl').value.trim().replace(/\/+$/, ''), k = $('#sSbKey').value.trim();
+    if(!u || !k){ pesan('Isi dulu URL dan kuncinya'); return; }
+    cfg.sb_url = u; cfg.sb_key = k; LS.taruh('mb_cfg', cfg);
+    if(!confirm('Kirim ' + (db.projects||[]).length + ' project, ' + (db.tim||[]).length
+      + ' orang, dan ' + (db.batches||[]).length + ' batch ke Supabase?')) return;
+    try{
+      var n = await isiAwalSupabase();
+      pesan(n + ' project terkirim ke Supabase', 5000);
+      tutupModal(); mulaiPolling(); muatData(true);
+    }catch(e){ pesan('Gagal mengisi: ' + e.message, 7000); }
+  };
   $('#sTambahTim').onclick = function(){
     var n = $('#sTimBaru').value.trim(); if(!n) return;
     db.tim.push({id:uid('t'), nama:n, warna:'', aktif:true, diperbarui:new Date().toISOString()});
@@ -2556,7 +2744,7 @@ $('#barBatal').onclick = function(){ terpilih = {}; render(); };
 $('#pilihBatch').addEventListener('change', function(){ LS.taruh('mb_batch', $('#pilihBatch').value); render(); });
 $('#pilihSaya').addEventListener('change', function(){ saya = $('#pilihSaya').value; LS.taruh('mb_saya', saya); render(); });
 
-$('#btnMuat').onclick = function(){ muatDariGitHub(false); };
+$('#btnMuat').onclick = function(){ capTerakhir = ''; muatData(false); };
 $('#btnSetel').onclick = function(){ bukaSetelan(); };
 $('#btnTambah').onclick = dialogTambah;
 $('#btnTempel').onclick = dialogTempel;
@@ -2566,7 +2754,16 @@ $('#btnHapus').onclick = function(){
   var p = pilihProject(laciId); if(!p) return;
   modal('Hapus project?', '<div class="peringatan">'+esc(p.kode)+' akan dihapus untuk semua orang. Tidak bisa dibatalkan.</div>',
     [{label:'Batal', klik:tutupModal},
-     {label:'Hapus', klik:function(){ db.projects = db.projects.filter(function(x){ return x.id !== p.id; });
+     {label:'Hapus', klik:function(){
+        if(pakaiSB()){
+          // Supabase menolak DELETE (aturan RLS): ditandai saja supaya masih bisa dikembalikan
+          p.dihapus = true; p.diperbarui = new Date().toISOString();
+          db.projects = db.projects.filter(function(x){ return x.id !== p.id; });
+          basis.projects = (basis.projects||[]).filter(function(x){ return x.id !== p.id; });
+          db.projects.push(p);
+        } else {
+          db.projects = db.projects.filter(function(x){ return x.id !== p.id; });
+        }
         tandaiKotor(); tutupModal(); tutupLaci(); render(); pesan(p.kode + ' dihapus'); }}]);
 };
 $('#btnTema').onclick = function(){
@@ -2576,7 +2773,7 @@ $('#btnTema').onclick = function(){
 $('#modal').addEventListener('click', function(e){ if(e.target === $('#modal')) tutupModal(); });
 document.addEventListener('keydown', function(e){
   if(e.key === 'Escape'){ tutupModal(); tutupLaci(); }
-  if((e.ctrlKey||e.metaKey) && e.key === 's'){ e.preventDefault(); simpanKeGitHub(false); }
+  if((e.ctrlKey||e.metaKey) && e.key === 's'){ e.preventDefault(); simpanData(false); }
 });
 window.addEventListener('beforeunload', function(e){ if(kotor && !token){ e.preventDefault(); e.returnValue=''; } });
 
@@ -2586,8 +2783,10 @@ window.addEventListener('beforeunload', function(e){ if(kotor && !token){ e.prev
   var cache = LS.ambil('mb_cache', null);
   if(cache && cache.projects && cache.projects.length){ db = cache; basis = JSON.parse(JSON.stringify(cache)); }
   else { db = bacaBenih() || db; basis = JSON.parse(JSON.stringify(db)); }
-  render(); setSink('lokal', token ? 'menyambung…' : 'hanya lihat (belum ada token)');
-  muatDariGitHub(true).then(mulaiPolling);
+  render();
+  setSink('lokal', pakaiSB() ? 'menyambung ke Supabase…'
+    : (token ? 'menyambung ke GitHub…' : 'hanya lihat (belum diatur di ⚙)'));
+  muatData(true).then(mulaiPolling);
   // Perubahan orang lain langsung tersusul begitu tab dibuka / komputer bangun
   document.addEventListener('visibilitychange', function(){ if(!document.hidden) segarkanSekarang(); });
   window.addEventListener('focus', segarkanSekarang);

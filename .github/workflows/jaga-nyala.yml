@@ -1,0 +1,74 @@
+# Supabase gratis MEMATIKAN project yang tidak dipakai selama seminggu.
+# Alur ini menyentuhnya tiap hari sekaligus menarik cadangan datanya ke
+# data/db.json, jadi sekali jalan dapat tiga hal:
+#   1. project Supabase tidak pernah tertidur,
+#   2. ada cadangan berversi (riwayat git) kalau data kacau,
+#   3. repo tetap "aktif" sehingga jadwal ini tidak dinonaktifkan GitHub
+#      (jadwal di repo publik dimatikan setelah 60 hari repo tidak ada
+#      kegiatan).
+name: Jaga Supabase tetap nyala
+
+on:
+  schedule:
+    - cron: '17 1 * * *'     # tiap hari 01:17 UTC = 08:17 WIB
+  workflow_dispatch:          # bisa juga dijalankan manual dari tab Actions
+
+permissions:
+  contents: write
+
+jobs:
+  jaga:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Baca alamat Supabase dari index.html
+        id: baca
+        run: |
+          URL=$(grep -o "sb_url: *'[^']*'" index.html | head -1 | sed "s/.*'\(.*\)'/\1/")
+          KEY=$(grep -o "sb_key: *'[^']*'" index.html | head -1 | sed "s/.*'\(.*\)'/\1/")
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "Supabase belum diisi di index.html — alur dilewati (aplikasi masih pakai data/db.json)."
+            echo "ada=0" >> "$GITHUB_OUTPUT"
+          else
+            echo "Supabase: $URL"
+            echo "ada=1" >> "$GITHUB_OUTPUT"
+            echo "URL=$URL" >> "$GITHUB_ENV"
+            echo "KEY=$KEY" >> "$GITHUB_ENV"
+          fi
+
+      - name: Sentuh Supabase + tarik cadangan
+        if: steps.baca.outputs.ada == '1'
+        run: |
+          set -e
+          amb () {
+            curl -sS --fail --max-time 45 \
+              -H "apikey: $KEY" -H "Authorization: Bearer $KEY" \
+              "$URL/rest/v1/$1?select=data&order=id"
+          }
+          P=$(amb projects); T=$(amb tim); B=$(amb batches)
+          jq -n --argjson p "$P" --argjson t "$T" --argjson b "$B" \
+            '{versi:1,
+              diperbarui:(now|todate),
+              sumber:"cadangan otomatis harian dari Supabase",
+              batches:[$b[].data],
+              tim:[$t[].data],
+              projects:[$p[].data]}' > data/db.json
+          echo "project: $(jq '.projects|length' data/db.json), tim: $(jq '.tim|length' data/db.json)"
+
+      - name: Samakan data awal di index.html
+        if: steps.baca.outputs.ada == '1'
+        run: node tools/benih.js
+
+      - name: Simpan cadangan bila ada perubahan
+        if: steps.baca.outputs.ada == '1'
+        run: |
+          if git diff --quiet -- data/db.json index.html; then
+            echo "Tidak ada perubahan data hari ini."
+          else
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/db.json index.html
+            git commit -m "Cadangan harian dari Supabase — $(date -u +%Y-%m-%d)"
+            git push
+          fi
