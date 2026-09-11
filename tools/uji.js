@@ -183,7 +183,10 @@ const wajib = ['isi', 'tabs', 'barAksi', 'barJml', 'barPic', 'barPri', 'barUrgen
   'fSelesai', 'fUrgent', 'fSaya', 'fHari', 'pilihBatch', 'pilihSaya', 'sink', 'btnMuat'];
 cek('elemen inti ada di HTML', wajib.every(id => idStatis.has(id)), wajib.filter(id => !idStatis.has(id)));
 cek("kolom tabel konsisten (colspan 6)", (src.match(/colspan="6"/g) || []).length >= 2);
-cek('sel PIC kosong berbunyi "Tetapkan PIC"', src.indexOf('Tetapkan PIC') >= 0);
+cek('sel assignee kosong berbunyi "Assign"', /\? '— kosongkan —' : 'Assign'/.test(src));
+cek('kolom memakai istilah Assigned', src.indexOf("<th>Assigned</th>") >= 0);
+cek('istilah lama PIC/tugaskan sudah bersih',
+  !/Tetapkan PIC|Penanggung jawab|Belum ditetapkan|Belum ada PIC|tugaskan/.test(src));
 cek('tugas massal per centang tersedia', src.indexOf('data-pilih=') >= 0 && src.indexOf('aksiMassal') >= 0);
 cek('tugaskan seluruh batch tersedia', src.indexOf('btnTugasSemua') >= 0);
 
@@ -278,6 +281,65 @@ cek('kata "tugaskan" sudah tidak ada di tampilan',
 cek('tombol aksi memakai kata baku',
   /Ajukan untuk persetujuan/.test(src) && /Setujui & selesaikan/.test(src)
   && /Kembalikan untuk penyempurnaan/.test(src));
+
+
+judul('Nomor slab: ditarik, bukan diketik');
+cek('deret jadi ringkas', L.ringkasNomor([36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]) === '36–50');
+cek('deret terpisah dipisah koma', L.ringkasNomor([36,37,38,55,56,70]) === '36–38, 55–56, 70',
+  L.ringkasNomor([36,37,38,55,56,70]));
+cek('satu angka tetap satu', L.ringkasNomor([20]) === '20');
+cek('kosong jadi kosong', L.ringkasNomor([]) === '');
+cek('urutan acak dirapikan', L.ringkasNomor([50,36,38,37]) === '36–38, 50');
+cek('ganda dibuang', L.ringkasNomor([5,5,6]) === '5–6');
+cek('teks ringkas dibaca balik', L.uraiNomor('36–50').length === 15);
+cek('campuran terbaca', L.uraiNomor('36–38, 55, 70').join(',') === '36,37,38,55,70');
+cek('tanda minus biasa ikut terbaca', L.uraiNomor('43-63').length === 21);
+cek('bolak-balik tetap sama', L.ringkasNomor(L.uraiNomor('43–63 , 1')) === '1, 43–63',
+  L.ringkasNomor(L.uraiNomor('43–63 , 1')));
+
+judul('Tanggal boleh ditulis bebas');
+const T = (t) => L.parseTanggalBebas(t, '2026-09-11');
+cek('nama bulan pendek', T('7 sep') === '2026-09-07');
+cek('nama bulan panjang', T('7 september') === '2026-09-07');
+cek('format nama folder 260907', T('260907') === '2026-09-07');
+cek('hari/bulan', T('7/9') === '2026-09-07');
+cek('hari-bulan-tahun', T('7-9-26') === '2026-09-07');
+cek('ISO tetap jalan', T('2026-09-07') === '2026-09-07');
+cek('angka polos = bulan berjalan', T('7') === '2026-09-07');
+cek('hari ini', T('hari ini') === '2026-09-11');
+cek('kemarin', T('kemarin') === '2026-09-10');
+cek('besok', T('besok') === '2026-09-12');
+cek('tanggal mustahil ditolak', T('31 feb') === '' && T('32/9') === '');
+cek('teks ngawur ditolak', T('omong kosong') === '' && T('') === '');
+cek('tampilan Indonesia bisa dibaca balik', T(L.tanggalIndo('2026-09-07')) === '2026-09-07');
+
+judul('Nama folder server terbaca sendiri');
+const F = (t) => L.uraiNamaFolder(t, '2026-09-11');
+cek('pola lengkap', JSON.stringify(F('260910__TURARG20H2235_12')) ===
+  JSON.stringify({ tanggal: '2026-09-10', kode: 'TURARG20H2235', jumlah: 12, keterangan: '' }),
+  F('260910__TURARG20H2235_12'));
+const f2 = F('260907_SOLBLA20H6004_39_keep the colour of the raw images');
+cek('keterangan ikut terbaca', f2.tanggal === '2026-09-07' && f2.kode === 'SOLBLA20H6004'
+  && f2.jumlah === 39 && f2.keterangan === 'keep the colour of the raw images', f2);
+cek('spasi sebelum garis bawah tetap aman',
+  F('260903_CLATRA20VCHF1680 _50').kode === 'CLATRA20VCHF1680', F('260903_CLATRA20VCHF1680 _50'));
+cek('kode polos tanpa tanggal', JSON.stringify(F('TURARG20H2235')) ===
+  JSON.stringify({ tanggal: '', kode: 'TURARG20H2235', jumlah: null, keterangan: '' }));
+cek('tanggal mustahil di depan tidak dianggap tanggal', F('269999_ABC_1').tanggal === '');
+const imp = L.parseTempel('260910_TURARG20H2235_12\n260907_SOLBLA20H6004_39_keep the colour', '2026-09-11');
+cek('impor daftar folder: dua baris', imp.length === 2, imp);
+cek('impor membawa tanggalnya', imp[0].diterima === '2026-09-10' && imp[1].diterima === '2026-09-07');
+cek('impor membawa jumlah slab', imp[0].jumlah === 12 && imp[1].jumlah === 39);
+cek('baris tabel Notion tetap terbaca',
+  L.parseTempel('P1\tTURARG20H2235\t—\tRemove tag\tTag\t\t10 Sep', '2026-09-11')[0].kode === 'TURARG20H2235');
+
+judul('Tampilan: kisi slab & isian tanggal terpasang');
+cek('kisi slab ada di dialog project baru', /pasangSlab\('n'/.test(src));
+cek('kisi slab ada di laci detail', /pasangSlab\('d'/.test(src));
+cek('kisi bisa ditarik (pointer event)', /pointerdown/.test(src) && /pointermove/.test(src));
+cek('isian tanggal cerdas dipakai', (src.match(/tgl-cerdas/g) || []).length >= 3);
+cek('tombol tanggal cepat tersedia', /data-tgl-set=/.test(src));
+cek('nama folder diurai saat mengetik', /uraiNamaFolder\(kodeEl\.value/.test(src));
 
 console.log('\n' + (gagal ? 'GAGAL: ' + gagal + ' dari ' + jumlah + ' uji' : 'LULUS semua ' + jumlah + ' uji'));
 process.exit(gagal ? 1 : 0);

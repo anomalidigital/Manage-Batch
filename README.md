@@ -69,16 +69,43 @@ Tombol di bar atas hanya melompat ke bagiannya, halamannya tetap satu.
 
 Tiga cara, tergantung banyaknya:
 
-- **Satu project** — di kolom PIC klik **"Tetapkan PIC"** lalu pilih nama.
+- **Satu project** — di kolom Assigned klik **"Assign"** lalu pilih nama.
 - **Beberapa project** — centang barisnya (atau centang judul harinya untuk sehari
   penuh), lalu di bar bawah pilih orangnya. Bar yang sama juga bisa mengubah
   prioritas dan menandai urgent sekaligus.
-- **Satu batch penuh** — di atas tabel: "Penanggung jawab batch ini" → pilih
-  nama → "Tetapkan untuk N project yang tampil". Yang ditugaskan adalah yang sedang
+- **Satu batch penuh** — di atas tabel: "Assign batch ini ke" → pilih
+  nama → "Assign ke N project yang tampil". Yang ditugaskan adalah yang sedang
   tampil, jadi saring dulu (misal batch tertentu) kalau tidak mau semuanya.
 
-**Menambah orang baru:** tombol **+ Orang** di bagian "Siapa mengerjakan apa",
+**Menambah orang baru:** tombol **+ Anggota** di bagian "Siapa mengerjakan apa",
 atau lewat ⚙. Centang *reviewer* kalau orang itu boleh menyetujui hasil.
+
+---
+
+## Menambah project dengan cepat
+
+**Tempel nama folder server.** Di dialog **+ Project**, kolom pertama menerima
+nama folder apa adanya:
+
+```
+260910_TURARG20H2235_12
+260907_SOLBLA20H6004_39_keep the colour of the raw images
+```
+
+Begitu diketik, tanggal (10 September 2026), kode project, jumlah slab, dan
+keterangannya terisi sendiri. Tombol **Impor dari daftar** menerima banyak baris
+sekaligus — nama folder maupun baris tabel dari Notion/Excel.
+
+**Nomor slab ditarik, bukan diketik.** Ada kisi angka: tekan angka awal lalu
+tarik sampai angka akhir untuk menandai 36–50 sekaligus. Tahan Ctrl/Shift untuk
+menambah kelompok kedua (misal 36–50 dan 70). Bisa juga isi kotak "dari/sampai"
+lalu tekan Pakai. Hasilnya tersimpan ringkas: `36–50, 70`.
+
+**Tanggal tidak perlu dd/mm/yyyy.** Kolom tanggal menerima tulisan bebas:
+`7 sep`, `7 september`, `260907`, `7/9`, `7-9-26`, `2026-09-07`, angka polos `7`
+(bulan berjalan), serta `hari ini`, `kemarin`, `besok`. Di bawahnya ada tombol
+cepat (Hari ini, Kemarin, +7 hari) dan tulisan kecil yang menunjukkan tanggal
+yang terbaca, jadi tidak ada salah tafsir.
 
 ---
 
@@ -197,7 +224,7 @@ dua orang mengubah bersamaan, dan apa yang terjadi kalau kuncinya salah).
 |---|---|
 | `index.html` | seluruh aplikasi: tampilan, logika, dan salinan data awal |
 | `data/db.json` | data hidup yang dipakai bersama (project, tim, batch) |
-| `tools/uji.js` | 130 uji tanpa browser: `node tools/uji.js` |
+| `tools/uji.js` | 170 uji tanpa browser: `node tools/uji.js` |
 | `tools/uji_supabase.js` | 34 uji lapisan Supabase lewat server tiruan |
 | `supabase/skema.sql` | tabel + aturan keamanan untuk Supabase |
 | `.github/workflows/jaga-nyala.yml` | jaga Supabase tetap nyala + cadangan harian |

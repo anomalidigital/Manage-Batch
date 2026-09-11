@@ -92,6 +92,25 @@ td.st{width:190px;white-space:nowrap}
 .pic-sel.kosong select{color:var(--tx3);border:1px dashed var(--line2);background:transparent;font-weight:500}
 .pic-sel.kosong:hover select{color:var(--ac);border-color:var(--ac)}
 .api{color:var(--err)}
+/* ---------- pemilih nomor slab ---------- */
+.kisi-slab{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;user-select:none;margin-top:8px}
+.kisi-slab button{background:var(--bg3);border:1px solid var(--line);border-radius:6px;padding:6px 0;
+  font-size:12px;font-variant-numeric:tabular-nums;color:var(--tx2)}
+.kisi-slab button:hover{border-color:var(--ac)}
+.kisi-slab button.pilih{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:700}
+.kisi-slab button.tepi{border-radius:6px}
+.slab-alat{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.slab-alat .inp{width:78px;text-align:center}
+.slab-hasil{font-weight:700;font-size:15px;letter-spacing:.3px}
+/* ---------- isian tanggal ---------- */
+.tgl-kotak{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tgl-kotak .inp{flex:1;min-width:120px}
+.tgl-cepat{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.tgl-cepat button{background:var(--bg3);border:1px solid var(--line);border-radius:20px;
+  padding:3px 10px;font-size:11.5px;color:var(--tx2)}
+.tgl-cepat button:hover{border-color:var(--ac);color:var(--tx)}
+.tgl-baca{font-size:12px;color:var(--tx2);margin-top:4px;display:block}
+.tgl-baca.salah{color:var(--err)}
 /* ---------- tanda menyala + kelompok hari yang bisa ditutup ---------- */
 .tag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.5px;padding:1px 6px;
   border-radius:5px;color:#fff;vertical-align:middle;margin-left:6px}
@@ -301,13 +320,13 @@ td.kodesel:hover{color:var(--ac)}
       <option value="">Semua prioritas</option><option>P1</option><option>P2</option><option>P3</option>
     </select>
     <select class="inp tipis" id="fStatus" style="width:auto"></select>
-    <label class="pil" style="cursor:pointer;border-color:var(--err);color:var(--err)"><input type="checkbox" id="fUrgent"> 🔥 urgent saja</label>
-    <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSaya"> punya saya</label>
-    <label class="pil" style="cursor:pointer"><input type="checkbox" id="fHari" checked> 📅 kelompok per hari</label>
+    <label class="pil" style="cursor:pointer;border-color:var(--err);color:var(--err)"><input type="checkbox" id="fUrgent"> 🔥 Hanya urgent</label>
+    <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSaya"> Milik saya</label>
+    <label class="pil" style="cursor:pointer"><input type="checkbox" id="fHari" checked> 📅 Kelompokkan per hari</label>
     <label class="pil" style="cursor:pointer" title="Brief berbahasa Inggris ditampilkan dalam Bahasa Indonesia"><input type="checkbox" id="fID" checked> 🌐 Bahasa Indonesia</label>
-    <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSelesai"> tampilkan yang selesai</label>
+    <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSelesai"> Tampilkan yang selesai</label>
     <div class="tumbuh"></div>
-    <button class="btn" id="btnTempel">Tempel dari tabel</button>
+    <button class="btn" id="btnTempel">Impor dari daftar</button>
     <button class="btn utama" id="btnTambah">+ Project</button>
   </div>
 
@@ -332,7 +351,7 @@ td.kodesel:hover{color:var(--ac)}
 
 <div id="barAksi">
   <b id="barJml">0 dipilih</b>
-  <span class="samar mini">tetapkan ke</span>
+  <span class="samar mini">assign ke</span>
   <select class="inp" id="barPic" style="width:auto"></select>
   <span class="samar mini">prioritas</span>
   <select class="inp" id="barPri" style="width:auto"><option value="">—</option><option>P1</option><option>P2</option><option>P3</option></select>
@@ -1236,6 +1255,99 @@ function hariAntara(dari, ke){
   if(isNaN(a) || isNaN(b)) return null;
   return Math.round((b-a)/86400000);
 }
+/* ---------- Nomor slab: "36, 37, ... 50" <-> "36–50" ----------
+   Operator memilih dengan menarik angka di kisi; yang disimpan tetap teks
+   ringkas supaya sama dengan kebiasaan menulis di catatan. */
+function ringkasNomor(arr){
+  var a = (arr || []).map(Number).filter(function(x){ return !isNaN(x); })
+            .sort(function(x, y){ return x - y; });
+  a = a.filter(function(x, i){ return i === 0 || x !== a[i-1]; });
+  var out = [], i = 0;
+  while(i < a.length){
+    var j = i;
+    while(j + 1 < a.length && a[j+1] === a[j] + 1) j++;
+    out.push(j > i ? (a[i] + '–' + a[j]) : String(a[i]));
+    i = j + 1;
+  }
+  return out.join(', ');
+}
+function uraiNomor(teks){
+  var out = [];
+  String(teks || '').split(/[,;]+/).forEach(function(bag){
+    var b = bag.trim(); if(!b) return;
+    var m = b.match(/^(\d+)\s*[–\-—]\s*(\d+)$/);
+    if(m){
+      var a1 = +m[1], a2 = +m[2];
+      if(a1 > a2){ var t = a1; a1 = a2; a2 = t; }
+      for(var k = a1; k <= a2 && k - a1 < 500; k++) out.push(k);
+      return;
+    }
+    var n = b.match(/\d+/);
+    if(n) out.push(+n[0]);
+  });
+  return out.filter(function(x, i, arr){ return arr.indexOf(x) === i; })
+            .sort(function(a, b){ return a - b; });
+}
+
+/* ---------- Tanggal boleh ditulis bebas ----------
+   Menerima: "7 sep", "7 september", "7/9", "7-9-26", "260907" (persis format
+   nama folder di server), "2026-09-07", angka polos "7" (bulan berjalan),
+   serta "hari ini" / "kemarin" / "besok". */
+var BULAN_PENDEK = {jan:1, feb:2, mar:3, apr:4, mei:5, may:5, jun:6, jul:7,
+                    agu:8, aug:8, sep:9, okt:10, oct:10, nov:11, des:12, dec:12};
+function _tgl(th, bl, hr){
+  th = +th; bl = +bl; hr = +hr;
+  if(!(th >= 2000 && th <= 2099) || !(bl >= 1 && bl <= 12) || !(hr >= 1 && hr <= 31)) return '';
+  var d = new Date(th, bl - 1, hr);
+  if(d.getFullYear() !== th || d.getMonth() !== bl - 1 || d.getDate() !== hr) return '';
+  return th + '-' + String(bl).padStart(2, '0') + '-' + String(hr).padStart(2, '0');
+}
+function parseTanggalBebas(teks, ini){
+  var t = String(teks || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  if(!t) return '';
+  if(!ini || !/^\d{4}-\d{2}-\d{2}$/.test(ini)) return '';
+  var thnIni = +ini.slice(0, 4), blnIni = +ini.slice(5, 7), m;
+  if(t === 'hari ini' || t === 'today') return ini;
+  if(t === 'kemarin') return tambahHari(ini, -1);
+  if(t === 'besok') return tambahHari(ini, 1);
+  if((m = t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) return _tgl(m[1], m[2], m[3]);
+  if((m = t.match(/^(\d{2})(\d{2})(\d{2})$/))) return _tgl('20' + m[1], m[2], m[3]);
+  if((m = t.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/))){
+    var th = m[3] ? (m[3].length === 2 ? '20' + m[3] : m[3]) : thnIni;
+    return _tgl(th, m[2], m[1]);
+  }
+  if((m = t.match(/^(\d{1,2}) ?([a-z]{3,9})\.? ?(\d{2,4})?$/))){
+    var b = BULAN_PENDEK[m[2].slice(0, 3)];
+    if(b){
+      var th2 = m[3] ? (m[3].length === 2 ? '20' + m[3] : m[3]) : thnIni;
+      return _tgl(th2, b, m[1]);
+    }
+  }
+  if((m = t.match(/^(\d{1,2})$/))) return _tgl(thnIni, blnIni, m[1]);
+  return '';
+}
+
+/* ---------- Nama folder di server = sumber data tercepat ----------
+   Pola yang dipakai tim: YYMMDD_KODE_JUMLAHSLAB_keterangan, misalnya
+   "260907_SOLBLA20H6004_39_keep the colour of the raw images".
+   Dari satu baris itu bisa langsung terisi tanggal, kode, dan jumlah slab. */
+function uraiNamaFolder(teks, ini){
+  var t = String(teks || '').trim().replace(/^[\\\/]+|[\\\/]+$/g, '');
+  var hasil = {tanggal:'', kode:'', jumlah:null, keterangan:''};
+  if(!t) return hasil;
+  var sisa = t, m = t.match(/^(\d{6})[_\s.\-]+(.*)$/);
+  if(m){
+    var tgl = parseTanggalBebas(m[1], ini);
+    if(tgl){ hasil.tanggal = tgl; sisa = m[2]; }
+  }
+  var bag = sisa.split(/_+/).map(function(x){ return x.trim(); }).filter(Boolean);
+  if(!bag.length) return hasil;
+  hasil.kode = bag[0].replace(/\s+/g, '');
+  if(bag.length > 1 && /^\d+$/.test(bag[1])){ hasil.jumlah = +bag[1]; bag.splice(1, 1); }
+  hasil.keterangan = bag.slice(1).join(' ').trim();
+  return hasil;
+}
+
 var HARI_TENGGAT = 7;      // tugas baru otomatis diberi waktu seminggu
 function tambahHari(iso, n){
   if(!iso) return '';
@@ -1427,10 +1539,19 @@ function urutProject(a, b){
   return (a.kode||'') < (b.kode||'') ? -1 : 1;
 }
 /* Tempel dari tabel (Notion/Excel): pisah tab, minimal Kode; urutan kolom bebas ditebak. */
-function parseTempel(teks){
+function parseTempel(teks, ini){
   var baris = String(teks||'').split(/\r?\n/).filter(function(b){ return b.trim(); });
   var out = [];
   baris.forEach(function(b){
+    // baris bergaya nama folder server -> langsung terbaca lengkap
+    if(/^\s*\d{6}[_\s.\-]/.test(b)){
+      var f = uraiNamaFolder(b, ini);
+      if(f.kode){
+        out.push({prioritas:'', kode:f.kode, slab:'', revisi:f.keterangan,
+                  jenis:[], pic:'', diterima:f.tanggal, jumlah:f.jumlah});
+        return;
+      }
+    }
     var s = b.split('\t').map(function(x){ return x.trim(); });
     if(s.length < 2) s = b.split(/\s{2,}/).map(function(x){ return x.trim(); });
     var o = {prioritas:'', kode:'', slab:'', revisi:'', jenis:[], pic:'', diterima:''};
@@ -1474,7 +1595,9 @@ if(typeof module !== 'undefined' && module.exports){
     TAHAP:TAHAP, opsiStatus:opsiStatus,
     sepertiInggris:sepertiInggris, terjemahOtomatis:terjemahOtomatis, briefTampil:briefTampil,
     HARI_TENGGAT:HARI_TENGGAT, tambahHari:tambahHari, tenggatOtomatis:tenggatOtomatis,
-    dariBarisSB:dariBarisSB, keBarisSB:keBarisSB, bedaKirim:bedaKirim, buangYangDihapus:buangYangDihapus};
+    dariBarisSB:dariBarisSB, keBarisSB:keBarisSB, bedaKirim:bedaKirim, buangYangDihapus:buangYangDihapus,
+    ringkasNomor:ringkasNomor, uraiNomor:uraiNomor, parseTanggalBebas:parseTanggalBebas,
+    uraiNamaFolder:uraiNamaFolder};
 }
 /* =================== LOGIKA MURNI: SELESAI =================== */
 
@@ -1524,7 +1647,7 @@ function warnaOrang(nama){
 }
 function inisial(n){ return String(n||'?').trim().split(/\s+/).map(function(x){return x[0];}).join('').slice(0,2).toUpperCase(); }
 function avaHTML(nama, besar){
-  if(!nama) return '<span class="ava'+(besar?' b':'')+'" style="background:var(--line2);color:var(--tx2)" title="Belum ada PIC">?</span>';
+  if(!nama) return '<span class="ava'+(besar?' b':'')+'" style="background:var(--line2);color:var(--tx2)" title="Belum di-assign">?</span>';
   return '<span class="ava'+(besar?' b':'')+'" style="background:'+warnaOrang(nama)+'" title="'+esc(nama)+'">'+esc(inisial(nama))+'</span>';
 }
 function pilihProject(id){ return (db.projects||[]).find(function(p){ return p.id === id; }); }
@@ -1882,7 +2005,7 @@ function pilOrang(){
   s1.innerHTML = '<option value="">Saya: —</option>' + opsi;
   s1.value = v1 || saya || '';
   var s2 = $('#fPic'), v2 = s2.value;
-  s2.innerHTML = '<option value="">Semua PIC</option><option value="__kosong">Belum ditetapkan</option>' + opsi;
+  s2.innerHTML = '<option value="">Semua assignee</option><option value="__kosong">Belum di-assign</option>' + opsi;
   s2.value = v2 || '';
   var s3 = $('#fStatus'), v3 = s3.value;
   s3.innerHTML = opsiStatus('', '<option value="">Semua status</option>');
@@ -2019,7 +2142,7 @@ function htmlDaftar(ps){
         + '<span class="kar">'+(tutup?'▶':'▼')+'</span>📅 '+esc(g.label)
         + '<span class="n">'+g.items.length+' project</span>'
         + (tutup ? '<span class="ringkas-hari">'
-            + (belumPic ? belumPic+' belum ada PIC · ' : '') + kelar+' selesai</span>' : '')
+            + (belumPic ? belumPic+' belum di-assign · ' : '') + kelar+' selesai</span>' : '')
         + '</span></td></tr>'
         + (tutup ? '' : g.items.map(barisTabel).join(''));
     }).join('');
@@ -2029,20 +2152,20 @@ function htmlDaftar(ps){
   var opsiOrang = '<option value="">— pilih orang —</option>' + (db.tim||[]).map(function(a){
     return '<option>'+esc(a.nama)+'</option>'; }).join('');
   return '<div class="baris-tugas">'
-    + '<b class="mini">Penanggung jawab batch ini</b>'
+    + '<b class="mini">Assign batch ini ke</b>'
     + '<select class="inp" id="tugasSemua" style="width:auto">'+opsiOrang+'</select>'
-    + '<button class="btn utama" id="btnTugasSemua">Tetapkan untuk '+ps.length+' project yang tampil</button>'
+    + '<button class="btn utama" id="btnTugasSemua">Assign ke '+ps.length+' project yang tampil</button>'
     + '<span class="samar2 mini">atau centang baris untuk sebagian saja</span>'
     + '</div>'
     + '<div class="bungkus-tabel"><table class="tbl-rapi"><thead><tr>'
     + '<th class="cek"></th><th>Pri</th><th>Project</th><th>Pekerjaan &amp; brief terbaru</th>'
-    + '<th>PIC</th><th>Status</th>'
+    + '<th>Assigned</th><th>Status</th>'
     + '</tr></thead><tbody>' + (baris || '<tr><td colspan="6" class="kosong">tidak ada project</td></tr>') + '</tbody></table></div>'
     + '<div class="samar2 mini" style="margin-top:8px">'+ps.length+' project. Klik baris untuk detail &amp; brief lengkap; prioritas, PIC, dan status bisa diubah langsung di sini.</div>';
 }
 /* Sel PIC: kalau belum ada yang pegang, tampil sebagai tombol "+ Tugaskan" biru. */
 function selPic(p){
-  var o = '<option value="">' + (p.pic ? '— kosongkan —' : 'Tetapkan PIC') + '</option>'
+  var o = '<option value="">' + (p.pic ? '— kosongkan —' : 'Assign') + '</option>'
     + (db.tim||[]).map(function(a){ return '<option'+(p.pic===a.nama?' selected':'')+'>'+esc(a.nama)+'</option>'; }).join('');
   return '<div class="pic-sel'+(p.pic?'':' kosong')+'">' + avaHTML(p.pic)
     + '<select class="tlg" data-set="pic" data-id="'+esc(p.id)+'">'+o+'</select></div>';
@@ -2054,19 +2177,19 @@ function htmlOrang(semua){
     + daftar.map(function(n){
         var r = ringkasOrang(semua, n);
         return '<option value="'+esc(n)+'"'+(n===nama?' selected':'')+'>'+esc(n)+'  ('+r.aktif+' aktif / '+r.total+' total)</option>'; }).join('')
-    + '<option value="__kosong"'+(nama==='__kosong'?' selected':'')+'>⚠ Belum ditetapkan ('
+    + '<option value="__kosong"'+(nama==='__kosong'?' selected':'')+'>⚠ Belum di-assign ('
     + semua.filter(function(p){ return !p.pic; }).length + ')</option>';
 
   var atas = '<div class="orang-top">'
     + '<div style="min-width:230px;flex:1"><label class="samar mini" style="display:block;margin-bottom:5px">Siapa yang mengerjakan?</label>'
     +   '<div style="display:flex;gap:7px"><select class="inp" id="pilihOrang" style="font-size:15px;padding:9px">'+opsi+'</select>'
-    +   '<button class="btn" id="btnOrangBaru" title="Tambah anggota tim">+ Orang</button></div></div>';
+    +   '<button class="btn" id="btnOrangBaru" title="Tambah anggota tim">+ Anggota</button></div></div>';
 
   var ps;
   if(nama === '__kosong'){
     ps = semua.filter(function(p){ return !p.pic; });
     atas += '<div style="display:flex;align-items:center;gap:11px">'+avaHTML('', true)
-      + '<div><b style="font-size:16px">Belum ditetapkan</b><div class="samar mini">'+ps.length+' project belum ada penanggung jawabnya</div></div></div>';
+      + '<div><b style="font-size:16px">Belum di-assign</b><div class="samar mini">'+ps.length+' project belum ada assignee-nya</div></div></div>';
   } else if(nama){
     ps = semua.filter(function(p){ return p.pic === nama; });
     var r = ringkasOrang(semua, nama);
@@ -2171,7 +2294,7 @@ function htmlRingkas(ps){
         + '</div>'
       : '<div class="samar2 mini">aman, tidak ada yang urgent atau telat</div>') + '</div>';
 
-  html += '<div class="kartu-b"><h4>⚠ Belum ada PIC</h4>'
+  html += '<div class="kartu-b"><h4>⚠ Belum di-assign</h4>'
     + (tanpaPic.length ? '<div class="lst">' + tanpaPic.map(function(p){
         return '<div><span class="titik" style="background:'+(PRIORITAS[p.prioritas]||'')+'"></span>'
           + '<a href="#" data-buka="'+esc(p.id)+'">'+esc(p.kode)+'</a><b>'+esc(p.prioritas||'')+'</b></div>'; }).join('') + '</div>'
@@ -2229,9 +2352,9 @@ function pasangBinding(){
     if(!n){ pesan('Pilih dulu orangnya di sebelah kiri tombol'); return; }
     var ps = terpakai();
     if(!ps.length){ pesan('Tidak ada project yang tampil'); return; }
-    if(!confirm('Tetapkan ' + n + ' sebagai PIC untuk ' + ps.length + ' project yang sedang tampil?')) return;
-    ps.forEach(function(p){ if(p.pic !== n) ubahDiam(p.id, {pic:n}, 'PIC → ' + n + ' (penetapan massal)'); });
-    tandaiKotor(); render(); pesan('PIC ' + n + ' ditetapkan untuk ' + ps.length + ' project');
+    if(!confirm('Assign ' + ps.length + ' project yang sedang tampil ke ' + n + '?')) return;
+    ps.forEach(function(p){ if(p.pic !== n) ubahDiam(p.id, {pic:n}, 'Assigned → ' + n + ' (assign massal)'); });
+    tandaiKotor(); render(); pesan(ps.length + ' project di-assign ke ' + n);
   };
   perbaruiBar();
 }
@@ -2272,13 +2395,13 @@ function renderLaci(){
   var p = pilihProject(laciId); if(!p){ tutupLaci(); return; }
   $('#laciJudul').innerHTML = '<span class="titik" style="background:'+(PRIORITAS[p.prioritas]||'')+'"></span> ' + esc(p.kode);
   var aksi = aksiBerikutnya(p, opsiAksi());
-  var opsiPic = '<option value="">— belum ditetapkan —</option>' + (db.tim||[]).map(function(a){
+  var opsiPic = '<option value="">— belum di-assign —</option>' + (db.tim||[]).map(function(a){
     return '<option'+(p.pic===a.nama?' selected':'')+'>'+esc(a.nama)+'</option>'; }).join('');
   var h = '';
   h += '<div class="aksi-kotak"><div class="jdl">Langkah berikutnya</div><div class="tbl">'
     + aksi.map(function(a){ return tombolAksi(p, a, false); }).join('')
     + (p.status !== 'hold' && p.status !== 'done' ? '<button class="btn" data-aksi="tahan" data-id="'+esc(p.id)+'">Tunda</button>' : '')
-    + (!p.pic && saya ? '<button class="btn" data-ambil="'+esc(p.id)+'">Saya yang kerjakan</button>' : '')
+    + (!p.pic && saya ? '<button class="btn" data-ambil="'+esc(p.id)+'">Assign ke saya</button>' : '')
     + '<button class="btn'+(p.urgent?' bahaya':'')+'" data-aksi="urgent" data-id="'+esc(p.id)+'">'
       + (p.urgent ? '🔥 Lepas urgent' : '🔥 Tandai urgent') + '</button>'
     + '</div><div class="mini samar" style="margin-top:8px">Status: '+badgeStatus(p)+' '+badgeUrgent(p)+' '+badgeTenggat(p)+' '+badgeTunggu(p)
@@ -2317,11 +2440,14 @@ function renderLaci(){
 
   h += '<div class="duo">'
     + '<div class="fld"><label>Kode project</label><input class="inp" data-set="kode" data-id="'+esc(p.id)+'" value="'+esc(p.kode)+'"></div>'
-    + '<div class="fld"><label>Slab</label><input class="inp" data-set="slab" data-id="'+esc(p.id)+'" value="'+esc(p.slab||'')+'"></div>'
-    + '</div>';
+    + '<div class="fld"><label>Nomor slab</label><input class="inp" data-set="slab" data-id="'+esc(p.id)+'" value="'+esc(p.slab||'')+'"></div>'
+    + '</div>'
+    + '<details class="fld"><summary class="samar mini" style="cursor:pointer;margin-bottom:6px">Pilih nomor slab dari kisi</summary>'
+    +   '<input type="hidden" id="dSlab" data-set="slab" data-id="'+esc(p.id)+'">' + blokSlab('d', p.slab || '')
+    + '</details>';
   h += '<div class="fld"><label>Revisi / permintaan</label><textarea class="inp" data-set="revisi" data-id="'+esc(p.id)+'">'+esc(p.revisi||'')+'</textarea></div>';
   h += '<div class="duo">'
-    + '<div class="fld"><label>Penanggung jawab (PIC)</label><select class="inp" data-set="pic" data-id="'+esc(p.id)+'">'+opsiPic+'</select></div>'
+    + '<div class="fld"><label>Assigned to</label><select class="inp" data-set="pic" data-id="'+esc(p.id)+'">'+opsiPic+'</select></div>'
     + '<div class="fld"><label>Prioritas</label><select class="inp" data-set="prioritas" data-id="'+esc(p.id)+'">'
       + ['P1','P2','P3'].map(function(x){ return '<option'+(p.prioritas===x?' selected':'')+'>'+x+'</option>'; }).join('') + '</select></div>'
     + '</div>';
@@ -2332,8 +2458,18 @@ function renderLaci(){
       + opsiStatus(p.status) + '</select></div>'
     + '</div>';
   h += '<div class="duo">'
-    + '<div class="fld"><label>Diterima</label><input class="inp" type="date" data-set="diterima" data-id="'+esc(p.id)+'" value="'+esc(p.diterima||'')+'"></div>'
-    + '<div class="fld"><label>Tenggat (otomatis '+HARI_TENGGAT+' hari sejak diterima)</label><input class="inp" type="date" data-set="tenggat" data-id="'+esc(p.id)+'" value="'+esc(p.tenggat||'')+'"></div>'
+    + '<div class="fld"><label>Tanggal diterima</label>'
+    +   inputTanggal('dTglTerima', p.diterima, [
+          {t:'Hari ini', v:hariIni()}, {t:'Kemarin', v:tambahHari(hariIni(),-1)},
+          {t:'2 hari lalu', v:tambahHari(hariIni(),-2)}],
+          'data-set="diterima" data-id="'+esc(p.id)+'"') + '</div>'
+    + '<div class="fld"><label>Tenggat (bawaan '+HARI_TENGGAT+' hari sejak diterima)</label>'
+    +   inputTanggal('dTglTenggat', p.tenggat, [
+          {t:'+3 hari', v:tambahHari(p.diterima||hariIni(),3)},
+          {t:'+7 hari', v:tambahHari(p.diterima||hariIni(),7)},
+          {t:'+14 hari', v:tambahHari(p.diterima||hariIni(),14)},
+          {t:'Hari ini', v:hariIni()}],
+          'data-set="tenggat" data-id="'+esc(p.id)+'"') + '</div>'
     + '</div><div class="duo">'
     + '<div class="fld"><label>Batch</label><select class="inp" data-set="batch" data-id="'+esc(p.id)+'">'
       + '<option value="">—</option>' + (db.batches||[]).map(function(b){ return '<option value="'+esc(b.id)+'"'+(p.batch===b.id?' selected':'')+'>'+esc(b.nama)+'</option>'; }).join('') + '</select></div>'
@@ -2367,7 +2503,137 @@ function renderLaci(){
       + '</div>';
   }
   $('#laciBadan').innerHTML = h;
+  pasangSlab('d', function(teks){
+    var el = $('#dSlab'); if(!el) return;
+    el.value = teks;
+    ubahProject(laciId, {slab:teks}, 'nomor slab → ' + (teks || 'kosong'));
+  });
+  ['dTglTerima','dTglTenggat'].forEach(function(x){ var el = $('#' + x); if(el) bacaTanggal(el); });
 }
+
+/* ================= KISI NOMOR SLAB (ditarik, bukan diketik) =================
+   awalan = awalan id supaya bisa dipakai di dua tempat sekaligus (dialog
+   project baru dan laci detail) tanpa bentrok. */
+function blokSlab(awalan, nilai){
+  var n = uraiNomor(nilai);
+  var maks = 60;
+  n.forEach(function(x){ if(x > maks) maks = Math.ceil(x / 12) * 12; });
+  var h = '<div class="slab-alat">'
+    + '<span class="slab-hasil" id="' + awalan + 'SlabHasil">' + (ringkasNomor(n) || '—') + '</span>'
+    + '<span class="samar2 mini" id="' + awalan + 'SlabJml">' + (n.length ? n.length + ' slab' : 'belum dipilih') + '</span>'
+    + '<div class="tumbuh" style="flex:1"></div>'
+    + '<input class="inp" type="number" min="1" id="' + awalan + 'SlabDari" placeholder="dari">'
+    + '<span class="samar">–</span>'
+    + '<input class="inp" type="number" min="1" id="' + awalan + 'SlabSampai" placeholder="sampai">'
+    + '<button class="btn kecil" type="button" id="' + awalan + 'SlabTerap">Pakai</button>'
+    + '<button class="btn kecil" type="button" id="' + awalan + 'SlabKosong">Kosongkan</button>'
+    + '</div>'
+    + '<div class="kisi-slab" id="' + awalan + 'SlabKisi" style="touch-action:none">';
+  for(var i = 1; i <= maks; i++)
+    h += '<button type="button" data-n="' + i + '"' + (n.indexOf(i) >= 0 ? ' class="pilih"' : '') + '>' + i + '</button>';
+  h += '</div>'
+    + '<div style="margin-top:6px"><button class="btn kecil" type="button" id="' + awalan + 'SlabLagi">+ 24 angka</button>'
+    + '<span class="samar2 mini" style="margin-left:8px">tarik dari angka awal ke angka akhir untuk menandai sekaligus</span></div>';
+  return h;
+}
+/* Pasang perilaku kisi. simpan(teksRingkas) dipanggil tiap pilihan berubah. */
+function pasangSlab(awalan, simpan){
+  var kisi = $('#' + awalan + 'SlabKisi');
+  if(!kisi) return;
+  var seret = false, awal = null, dasar = {};
+  function terpilih(){
+    return Array.prototype.filter.call(kisi.children, function(b){ return b.classList.contains('pilih'); })
+             .map(function(b){ return +b.dataset.n; });
+  }
+  function gambar(sampai){
+    var a = Math.min(awal, sampai), b = Math.max(awal, sampai);
+    Array.prototype.forEach.call(kisi.children, function(el){
+      var v = +el.dataset.n;
+      el.classList.toggle('pilih', !!dasar[v] || (v >= a && v <= b));
+    });
+    lapor();
+  }
+  function lapor(){
+    var t = terpilih();
+    $('#' + awalan + 'SlabHasil').textContent = ringkasNomor(t) || '—';
+    $('#' + awalan + 'SlabJml').textContent = t.length ? t.length + ' slab' : 'belum dipilih';
+    if(simpan) simpan(ringkasNomor(t));
+  }
+  kisi.addEventListener('pointerdown', function(e){
+    var b = e.target.closest('button[data-n]'); if(!b) return;
+    e.preventDefault();
+    seret = true; awal = +b.dataset.n;
+    dasar = {};
+    if(e.ctrlKey || e.metaKey || e.shiftKey)
+      terpilih().forEach(function(v){ dasar[v] = true; });
+    gambar(awal);
+    try{ kisi.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  kisi.addEventListener('pointermove', function(e){
+    if(!seret) return;
+    var el = document.elementFromPoint(e.clientX, e.clientY);
+    var b = el && el.closest ? el.closest('button[data-n]') : null;
+    if(b && kisi.contains(b)) gambar(+b.dataset.n);
+  });
+  var lepas = function(){ seret = false; };
+  kisi.addEventListener('pointerup', lepas);
+  kisi.addEventListener('pointercancel', lepas);
+  window.addEventListener('pointerup', lepas);
+  $('#' + awalan + 'SlabTerap').onclick = function(){
+    var a = parseInt($('#' + awalan + 'SlabDari').value, 10);
+    var b = parseInt($('#' + awalan + 'SlabSampai').value, 10);
+    if(isNaN(a)) return;
+    if(isNaN(b)) b = a;
+    awal = a; dasar = {}; gambar(b);
+  };
+  $('#' + awalan + 'SlabKosong').onclick = function(){
+    Array.prototype.forEach.call(kisi.children, function(el){ el.classList.remove('pilih'); });
+    lapor();
+  };
+  $('#' + awalan + 'SlabLagi').onclick = function(){
+    var mulai = kisi.children.length + 1;
+    for(var i = mulai; i < mulai + 24; i++){
+      var b = document.createElement('button');
+      b.type = 'button'; b.dataset.n = i; b.textContent = i;
+      kisi.appendChild(b);
+    }
+  };
+}
+/* ================= ISIAN TANGGAL YANG LEBIH MUDAH =================
+   Boleh diketik "7 sep", "260907", "7/9", "hari ini" — atau pakai tombol
+   cepat di bawahnya. */
+function inputTanggal(id, nilai, cepat, atribut){
+  var tampil = nilai ? tanggalIndo(nilai) : '';
+  return '<div class="tgl-kotak"><input class="inp tgl-cerdas" id="' + id + '" ' + (atribut || '')
+    + ' value="' + esc(tampil) + '" autocomplete="off" placeholder="7 sep · 260907 · 7/9 · hari ini"></div>'
+    + '<div class="tgl-cepat">'
+    + (cepat || []).map(function(o){
+        return '<button type="button" data-tgl-set="' + esc(o.v) + '" data-tgl-untuk="' + id + '">'
+          + esc(o.t) + '</button>'; }).join('')
+    + '</div><span class="tgl-baca" data-tgl-baca="' + id + '"></span>';
+}
+function bacaTanggal(el){
+  var iso = parseTanggalBebas(el.value, hariIni());
+  var lap = document.querySelector('[data-tgl-baca="' + el.id + '"]');
+  if(lap){
+    lap.className = 'tgl-baca' + (el.value && !iso ? ' salah' : '');
+    lap.textContent = !el.value ? '' : (iso ? tanggalIndo(iso) : 'tanggal belum terbaca — coba "7 sep" atau "260907"');
+  }
+  return iso;
+}
+document.addEventListener('input', function(e){
+  if(e.target.classList && e.target.classList.contains('tgl-cerdas')) bacaTanggal(e.target);
+});
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-tgl-set]');
+  if(!b) return;
+  e.preventDefault();
+  var el = document.getElementById(b.dataset.tglUntuk);
+  if(!el) return;
+  el.value = tanggalIndo(b.dataset.tglSet);
+  bacaTanggal(el);
+  el.dispatchEvent(new Event('change', {bubbles:true}));
+});
 
 /* ============================ MODAL ============================ */
 function modal(judul, badan, tombol){
@@ -2517,44 +2783,83 @@ function dialogBrief(id){
      }}]);
 }
 function dialogTambah(){
-  var opsiPic = '<option value="">— belum ditetapkan —</option>' + (db.tim||[]).map(function(a){ return '<option>'+esc(a.nama)+'</option>'; }).join('');
+  var opsiPic = '<option value="">— belum di-assign —</option>' + (db.tim||[]).map(function(a){ return '<option>'+esc(a.nama)+'</option>'; }).join('');
   var opsiBatch = (db.batches||[]).map(function(b){ return '<option value="'+esc(b.id)+'">'+esc(b.nama)+'</option>'; }).join('');
   modal('Project baru',
-    '<div class="duo"><div class="fld"><label>Kode project *</label><input class="inp" id="nKode" placeholder="TURARG20H2235"></div>'
-    + '<div class="fld"><label>Slab</label><input class="inp" id="nSlab" placeholder="43–63 / kosongkan"></div></div>'
+    '<div class="info">Tempel saja nama folder dari server — misal '
+    + '<b>260910_TURARG20H2235_12</b> — tanggal, kode, dan jumlah slabnya terisi sendiri.</div>'
+    + '<div class="fld"><label>Kode project *</label>'
+    + '<input class="inp" id="nKode" placeholder="260910_TURARG20H2235_12  atau  TURARG20H2235" autocomplete="off">'
+    + '<span class="samar2 mini" id="nUrai" style="display:block;margin-top:4px"></span></div>'
+    + '<div class="fld"><label>Nomor slab</label><input type="hidden" id="nSlab">' + blokSlab('n', '') + '</div>'
     + '<div class="fld"><label>Revisi / permintaan</label><textarea class="inp" id="nRev"></textarea></div>'
     + '<div class="duo"><div class="fld"><label>Prioritas</label><select class="inp" id="nPri"><option>P1</option><option selected>P2</option><option>P3</option></select></div>'
-    + '<div class="fld"><label>Penanggung jawab (PIC)</label><select class="inp" id="nPic">'+opsiPic+'</select></div></div>'
-    + '<div class="duo"><div class="fld"><label>Diterima</label><input class="inp" type="date" id="nTgl" value="'+hariIni()+'"></div>'
+    + '<div class="fld"><label>Assigned to</label><select class="inp" id="nPic">'+opsiPic+'</select></div></div>'
+    + '<div class="duo"><div class="fld"><label>Tanggal diterima</label>'
+    +   inputTanggal('nTgl', hariIni(), [
+          {t:'Hari ini', v:hariIni()}, {t:'Kemarin', v:tambahHari(hariIni(),-1)},
+          {t:'2 hari lalu', v:tambahHari(hariIni(),-2)}, {t:'3 hari lalu', v:tambahHari(hariIni(),-3)}]) + '</div>'
     + '<div class="fld"><label>Batch</label><select class="inp" id="nBatch">'+opsiBatch+'</select></div></div>'
-    + '<div class="fld"><label>Jenis (pisah koma)</label><input class="inp" id="nJenis" placeholder="Color Match, Tag"></div>',
+    + '<div class="fld"><label>Jenis (pisah koma)</label><input class="inp" id="nJenis" placeholder="Color Match, Tag"></div>'
+    + '<div class="fld"><label>Catatan</label><input class="inp" id="nCatat" placeholder="opsional"></div>',
     [{label:'Batal', klik:tutupModal},
-     {label:'Tambah', utama:true, klik:function(){
+     {label:'Tambah project', utama:true, klik:function(){
         var kode = $('#nKode').value.trim(); if(!kode){ pesan('Kode project wajib diisi'); return; }
+        var tgl = parseTanggalBebas($('#nTgl').value, hariIni());
+        if(!tgl){ pesan('Tanggal diterima belum terbaca — coba "7 sep" atau "260907"'); return; }
         db.projects.push({id:uid('p'), kode:kode, slab:$('#nSlab').value.trim(), revisi:$('#nRev').value.trim(),
           jenis:$('#nJenis').value.split(',').map(function(x){return x.trim();}).filter(Boolean),
-          prioritas:$('#nPri').value, pic:$('#nPic').value, diterima:$('#nTgl').value,
-          tenggat:tenggatOtomatis($('#nTgl').value),
-          batch:$('#nBatch').value, jalur:'belum', status:'todo', catatan:'', tautan:'', sampel:[],
+          prioritas:$('#nPri').value, pic:$('#nPic').value, diterima:tgl,
+          tenggat:tenggatOtomatis(tgl),
+          batch:$('#nBatch').value, jalur:'belum', status:'todo', catatan:$('#nCatat').value.trim(), tautan:'', sampel:[],
           riwayat:[{waktu:new Date().toISOString(), oleh:saya||'—', teks:'project dibuat'}],
           diperbarui:new Date().toISOString()});
         tandaiKotor(); render(); tutupModal(); pesan(kode + ' ditambahkan');
      }}]);
+  // kisi nomor slab
+  pasangSlab('n', function(t){ $('#nSlab').value = t; });
+  bacaTanggal($('#nTgl'));
+  // Ketik/tempel nama folder server -> tanggal, kode, dan jumlah slab terisi sendiri
+  var kodeEl = $('#nKode');
+  kodeEl.addEventListener('input', function(){
+    var f = uraiNamaFolder(kodeEl.value, hariIni());
+    var lap = $('#nUrai');
+    if(!f.tanggal && !f.jumlah && !f.keterangan){ lap.textContent = ''; return; }
+    var bagian = [];
+    if(f.tanggal) bagian.push('tanggal ' + tanggalIndo(f.tanggal));
+    if(f.kode) bagian.push('kode ' + f.kode);
+    if(f.jumlah) bagian.push(f.jumlah + ' slab');
+    if(f.keterangan) bagian.push('“' + f.keterangan + '”');
+    lap.textContent = 'terbaca: ' + bagian.join(' · ');
+    if(f.tanggal){ $('#nTgl').value = tanggalIndo(f.tanggal); bacaTanggal($('#nTgl')); }
+    if(f.keterangan && !$('#nRev').value.trim()) $('#nRev').value = f.keterangan;
+    if(f.jumlah && !$('#nCatat').value.trim()) $('#nCatat').value = f.jumlah + ' slab di folder';
+  });
+  kodeEl.addEventListener('blur', function(){
+    var f = uraiNamaFolder(kodeEl.value, hariIni());
+    if(f.kode && f.kode !== kodeEl.value.trim()) kodeEl.value = f.kode;
+  });
+  kodeEl.focus();
 }
 function dialogTempel(){
-  modal('Tempel dari tabel',
-    '<div class="info">Salin baris dari Notion/Excel lalu tempel di sini. Satu baris = satu project. Kolom dipisah TAB; kode project dikenali otomatis.</div>'
-    + '<textarea class="inp" id="mTempel" style="min-height:170px" placeholder="P1&#9;TURARG20H2235&#9;—&#9;Remove tag + color match&#9;Tag + Color&#9;&#9;10 Sep"></textarea>',
+  modal('Impor dari daftar',
+    '<div class="info">Satu baris = satu project. Bisa <b>nama folder server</b> '
+    + '(260910_TURARG20H2235_12 — tanggal &amp; jumlah slab ikut terbaca) atau baris tabel '
+    + 'dari Notion/Excel yang dipisah TAB.</div>'
+    + '<textarea class="inp" id="mTempel" style="min-height:170px" placeholder="260910_TURARG20H2235_12&#10;260907_SOLBLA20H6004_39_keep the colour of the raw images"></textarea>',
     [{label:'Batal', klik:tutupModal},
      {label:'Impor', utama:true, klik:function(){
-        var hasil = parseTempel($('#mTempel').value);
+        var hasil = parseTempel($('#mTempel').value, hariIni());
         if(!hasil.length){ pesan('Tidak ada baris yang bisa dibaca'); return; }
         var batch = $('#pilihBatch').value || ((db.batches[0]||{}).id || '');
         hasil.forEach(function(o){
           db.projects.push({id:uid('p'), kode:o.kode, slab:o.slab, revisi:o.revisi, jenis:o.jenis,
-            prioritas:o.prioritas||'P2', pic:o.pic||'', diterima:hariIni(),
-            tenggat:tenggatOtomatis(hariIni()), batch:batch,
-            jalur:'belum', status:'todo', catatan:o.diterima?('diterima: '+o.diterima):'', tautan:'', sampel:[],
+            prioritas:o.prioritas||'P2', pic:o.pic||'',
+            diterima:(o.diterima && /^\d{4}-/.test(o.diterima)) ? o.diterima : hariIni(),
+            tenggat:tenggatOtomatis((o.diterima && /^\d{4}-/.test(o.diterima)) ? o.diterima : hariIni()),
+            batch:batch, jalur:'belum', status:'todo',
+            catatan:o.jumlah ? (o.jumlah + ' slab di folder') : (o.diterima && !/^\d{4}-/.test(o.diterima) ? 'diterima: '+o.diterima : ''),
+            tautan:'', sampel:[],
             riwayat:[{waktu:new Date().toISOString(), oleh:saya||'—', teks:'diimpor dari tempel'}],
             diperbarui:new Date().toISOString()});
         });
@@ -2694,7 +2999,7 @@ document.addEventListener('click', function(e){
   var brf = e.target.closest('[data-brief]');
   if(brf){ e.stopPropagation(); dialogBrief(brf.dataset.brief); return; }
   var amb = e.target.closest('[data-ambil]');
-  if(amb){ ubahProject(amb.dataset.ambil, {pic:saya}, 'PIC → ' + saya); pesan('Kamu tercatat sebagai PIC project ini'); return; }
+  if(amb){ ubahProject(amb.dataset.ambil, {pic:saya}, 'Assigned → ' + saya); pesan('Project ini di-assign ke kamu'); return; }
   var org = e.target.closest('[data-orang]');
   if(org){ e.preventDefault(); orangPilih = org.dataset.orang; LS.taruh('mb_orang', orangPilih);
     tampilan = 'orang'; LS.taruh('mb_tampilan', tampilan); render(); return; }
@@ -2713,11 +3018,16 @@ document.addEventListener('change', function(e){
   var s = e.target.closest('[data-set]');
   if(!s) return;
   var id = s.dataset.id, k = s.dataset.set, v = s.value;
+  if(s.classList && s.classList.contains('tgl-cerdas')){
+    var iso = parseTanggalBebas(v, hariIni());
+    if(!iso){ pesan('Tanggal belum terbaca — contoh: 7 sep, 260907, 7/9'); return; }
+    v = iso;
+  }
   var tambalan = {};
   if(k === 'jenis') tambalan.jenis = v.split(',').map(function(x){ return x.trim(); }).filter(Boolean);
   else tambalan[k] = v;
   var p = pilihProject(id);
-  var catat = (k === 'pic') ? ('PIC → ' + (v || 'kosong'))
+  var catat = (k === 'pic') ? ('Assigned → ' + (v || 'kosong'))
             : (k === 'status') ? ('status → ' + ((STATUS[v]||{}).label || v))
             : (k === 'jalur') ? ('jalur → ' + (JALUR[v] || v)) : '';
   if(p && p[k] !== v) ubahProject(id, tambalan, catat);
@@ -2749,7 +3059,7 @@ function aksiMassal(fn, pesanTeks){
 }
 $('#barPic').addEventListener('change', function(){
   var n = $('#barPic').value; if(!n) return;
-  aksiMassal(function(id){ ubahDiam(id, {pic:n}, 'PIC → ' + n + ' (penetapan massal)'); }, 'ditetapkan ke ' + n);
+  aksiMassal(function(id){ ubahDiam(id, {pic:n}, 'Assigned → ' + n + ' (assign massal)'); }, 'di-assign ke ' + n);
   $('#barPic').value = '';
 });
 $('#barPri').addEventListener('change', function(){
