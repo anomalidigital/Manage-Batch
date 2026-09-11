@@ -335,6 +335,11 @@ cek('baris tabel Notion tetap terbaca',
 
 judul('Tampilan: kisi slab & isian tanggal terpasang');
 cek('kisi slab ada di dialog project baru', /pasangSlab\('n'/.test(src));
+cek('kode & slab kembali berdampingan satu baris',
+  /<div class="duo">'[\s\S]{0,400}id="nKode"[\s\S]{0,400}id="nSlab"/.test(src));
+cek('kotak slab tetap bisa diketik langsung', /id="nSlab" placeholder/.test(src));
+cek('kisi angka disembunyikan sampai dibuka', /id="nSlabWadah"/.test(src) && /<details/.test(src));
+cek('ketikan slab menyorot kisinya', /function sorotSlab\(/.test(src) && /sorotSlab\('n'/.test(src));
 cek('kisi slab ada di laci detail', /pasangSlab\('d'/.test(src));
 cek('kisi bisa ditarik (pointer event)', /pointerdown/.test(src) && /pointermove/.test(src));
 cek('isian tanggal cerdas dipakai', (src.match(/tgl-cerdas/g) || []).length >= 3);

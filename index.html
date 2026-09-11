@@ -2519,8 +2519,7 @@ function blokSlab(awalan, nilai){
   var maks = 60;
   n.forEach(function(x){ if(x > maks) maks = Math.ceil(x / 12) * 12; });
   var h = '<div class="slab-alat">'
-    + '<span class="slab-hasil" id="' + awalan + 'SlabHasil">' + (ringkasNomor(n) || '—') + '</span>'
-    + '<span class="samar2 mini" id="' + awalan + 'SlabJml">' + (n.length ? n.length + ' slab' : 'belum dipilih') + '</span>'
+    + '<span class="samar2 mini">tekan angka awal lalu tarik ke angka akhir</span>'
     + '<div class="tumbuh" style="flex:1"></div>'
     + '<input class="inp" type="number" min="1" id="' + awalan + 'SlabDari" placeholder="dari">'
     + '<span class="samar">–</span>'
@@ -2532,9 +2531,24 @@ function blokSlab(awalan, nilai){
   for(var i = 1; i <= maks; i++)
     h += '<button type="button" data-n="' + i + '"' + (n.indexOf(i) >= 0 ? ' class="pilih"' : '') + '>' + i + '</button>';
   h += '</div>'
-    + '<div style="margin-top:6px"><button class="btn kecil" type="button" id="' + awalan + 'SlabLagi">+ 24 angka</button>'
-    + '<span class="samar2 mini" style="margin-left:8px">tarik dari angka awal ke angka akhir untuk menandai sekaligus</span></div>';
+    + '<div style="margin-top:6px;display:flex;align-items:center;gap:9px">'
+    + '<button class="btn kecil" type="button" id="' + awalan + 'SlabLagi">+ 24 angka</button>'
+    + '<span class="slab-hasil" id="' + awalan + 'SlabHasil">' + (ringkasNomor(n) || '—') + '</span>'
+    + '<span class="samar2 mini" id="' + awalan + 'SlabJml">' + (n.length ? n.length + ' slab' : 'belum dipilih') + '</span>'
+    + '</div>';
   return h;
+}
+/* Sorot kisi mengikuti teks yang diketik operator ("36-50, 70"). */
+function sorotSlab(awalan, teks){
+  var kisi = $('#' + awalan + 'SlabKisi');
+  if(!kisi) return;
+  var n = uraiNomor(teks);
+  Array.prototype.forEach.call(kisi.children, function(el){
+    el.classList.toggle('pilih', n.indexOf(+el.dataset.n) >= 0);
+  });
+  var hasil = $('#' + awalan + 'SlabHasil'), jml = $('#' + awalan + 'SlabJml');
+  if(hasil) hasil.textContent = ringkasNomor(n) || '—';
+  if(jml) jml.textContent = n.length ? n.length + ' slab' : 'belum dipilih';
 }
 /* Pasang perilaku kisi. simpan(teksRingkas) dipanggil tiap pilihan berubah. */
 function pasangSlab(awalan, simpan){
@@ -2788,10 +2802,17 @@ function dialogTambah(){
   modal('Project baru',
     '<div class="info">Tempel saja nama folder dari server — misal '
     + '<b>260910_TURARG20H2235_12</b> — tanggal, kode, dan jumlah slabnya terisi sendiri.</div>'
-    + '<div class="fld"><label>Kode project *</label>'
-    + '<input class="inp" id="nKode" placeholder="260910_TURARG20H2235_12  atau  TURARG20H2235" autocomplete="off">'
-    + '<span class="samar2 mini" id="nUrai" style="display:block;margin-top:4px"></span></div>'
-    + '<div class="fld"><label>Nomor slab</label><input type="hidden" id="nSlab">' + blokSlab('n', '') + '</div>'
+    + '<div class="duo">'
+    +   '<div class="fld"><label>Kode project *</label>'
+    +     '<input class="inp" id="nKode" placeholder="260910_TURARG20H2235_12" autocomplete="off"></div>'
+    +   '<div class="fld"><label>Nomor slab</label><div style="display:flex;gap:6px">'
+    +     '<input class="inp" id="nSlab" placeholder="36–50" autocomplete="off">'
+    +     '<button class="btn" type="button" id="nSlabBuka" title="Pilih dari kisi angka">⊞</button>'
+    +   '</div></div>'
+    + '</div>'
+    + '<span class="samar2 mini" id="nUrai" style="display:block;margin:-6px 0 10px"></span>'
+    + '<details class="fld" id="nSlabWadah"><summary class="samar mini" style="cursor:pointer;margin-bottom:6px">'
+    +   'Pilih nomor slab dari kisi angka</summary>' + blokSlab('n', '') + '</details>'
     + '<div class="fld"><label>Revisi / permintaan</label><textarea class="inp" id="nRev"></textarea></div>'
     + '<div class="duo"><div class="fld"><label>Prioritas</label><select class="inp" id="nPri"><option>P1</option><option selected>P2</option><option>P3</option></select></div>'
     + '<div class="fld"><label>Assigned to</label><select class="inp" id="nPic">'+opsiPic+'</select></div></div>'
@@ -2816,8 +2837,14 @@ function dialogTambah(){
           diperbarui:new Date().toISOString()});
         tandaiKotor(); render(); tutupModal(); pesan(kode + ' ditambahkan');
      }}]);
-  // kisi nomor slab
+  // kisi nomor slab: dua arah dengan kotak teksnya
   pasangSlab('n', function(t){ $('#nSlab').value = t; });
+  $('#nSlab').addEventListener('input', function(){ sorotSlab('n', $('#nSlab').value); });
+  $('#nSlabBuka').onclick = function(){
+    var d = $('#nSlabWadah');
+    d.open = !d.open;
+    if(d.open) sorotSlab('n', $('#nSlab').value);
+  };
   bacaTanggal($('#nTgl'));
   // Ketik/tempel nama folder server -> tanggal, kode, dan jumlah slab terisi sendiri
   var kodeEl = $('#nKode');
