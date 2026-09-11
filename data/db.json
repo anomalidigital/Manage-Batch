@@ -59,7 +59,7 @@
    "tenggat": "2026-09-17",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -82,7 +82,8 @@
      "teks": "masuk list pending 10 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_ascot20h2769",
@@ -98,7 +99,7 @@
    "tenggat": "2026-09-17",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -121,7 +122,8 @@
      "teks": "masuk list pending 10 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_bevros20h5802",
@@ -137,7 +139,7 @@
    "tenggat": "2026-09-17",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -160,7 +162,8 @@
      "teks": "masuk list pending 10 Sep, PIC Indra"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_carpat20lf4769_37_48",
@@ -176,7 +179,7 @@
    "tenggat": "2026-09-16",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "Batch kedua CARPAT; batch slab 25–36 masuk 7 Sep (entri terpisah)",
    "tautan": "",
@@ -199,7 +202,8 @@
      "teks": "masuk list pending 9 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_solbla20h6004",
@@ -215,7 +219,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -238,7 +242,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_newsav20h2639",
@@ -255,7 +260,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -278,7 +283,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_borcry20h3083",
@@ -294,7 +300,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "sample",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "Klien mengirim sample pembanding (new sample 8 Sep)",
    "tautan": "Z:\\CDKStone_Slab_230308\\Baldy\\Task\\260724_BORCRY20H3083_8_revisiLessOrangeVeining\\newsample8sep",
@@ -317,7 +323,8 @@
      "teks": "masuk list pending 7 Sep; klien kirim sample baru 8 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_amewav20lf3446",
@@ -334,7 +341,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "Teks katalog harus: Amethyst Wave Quartzite  Block 3446  Slab #",
    "tautan": "",
@@ -357,7 +364,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_carpat20lf4769_25_36",
@@ -373,7 +381,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "Batch pertama CARPAT; slab 37–48 masuk 9 Sep (entri terpisah)",
    "tautan": "",
@@ -396,7 +404,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_turarg20h2508",
@@ -413,7 +422,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260901_TURARG20H2508_21",
@@ -436,7 +445,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_tajmah20h1865",
@@ -452,7 +462,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -475,7 +485,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_sentos20h8032",
@@ -491,7 +502,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -514,7 +525,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_clatra20vchf1680",
@@ -530,7 +542,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260903_CLATRA20VCHF1680 _50",
@@ -553,7 +565,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_turarg20h2411",
@@ -570,7 +583,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260903_TURARG20H2411_34",
@@ -593,7 +606,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_monter20h5577",
@@ -609,7 +623,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -632,7 +646,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_breper20h1579",
@@ -648,7 +663,7 @@
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -671,7 +686,8 @@
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   }
  ]
 }

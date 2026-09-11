@@ -22,52 +22,92 @@ function judul(t) { console.log('\n== ' + t + ' =='); }
 
 const TIM = [{ id: 't1', nama: 'Baldy', reviewer: true }, { id: 't2', nama: 'Vincent', reviewer: false }];
 const ctx = (oleh, data) => ({ oleh, tanggal: '2026-09-10', stempel: '2026-09-10T08:00:00.000Z', data: data || {} });
-const baru = () => ({ id: 'p1', kode: 'TURARG20H2235', status: 'todo', jalur: 'belum', prioritas: 'P1',
+const baru = () => ({ id: 'p1', kode: 'TURARG20H2235', status: 'antrean', rinci: '', jalur: 'belum', prioritas: 'P1',
   brief: [], sampel: [], riwayat: [], diperbarui: '2026-09-10T00:00:00.000Z' });
 
-judul('Alur TANPA sample: kerjakan -> review -> selesai');
+judul('Empat status saja');
+cek('tepat empat status', Object.keys(L.STATUS).length === 4, Object.keys(L.STATUS));
+cek('namanya Antrean/Proses/Revisi/Final',
+  Object.keys(L.STATUS).map(k => L.STATUS[k].label).join(' · ') === 'Antrean · Proses · Revisi · Final',
+  Object.keys(L.STATUS).map(k => L.STATUS[k].label));
+cek('papan juga empat kolom', L.KOLOM.length === 4);
+cek('tiap status punya kolomnya sendiri',
+  Object.keys(L.STATUS).every(k => L.KOLOM.some(c => c.id === L.STATUS[k].kolom)));
+cek('daftar pilihan tanpa pengelompokan',
+  L.opsiStatus('proses').indexOf('<optgroup') < 0 && /value="proses" selected/.test(L.opsiStatus('proses')));
+cek('keterangan rinci bukan pilihan status',
+  Object.keys(L.RINCI).every(k => !L.STATUS[k] || k === ''));
+
+judul('Alur TANPA sample: antrean -> proses -> persetujuan -> final');
 let p = baru();
 cek('aksi awal menawarkan dua jalur', L.aksiBerikutnya(p).length === 2);
 p = L.terapkanAksi(p, 'jalur_langsung', ctx('Vincent')).p;
-cek('jadi dikerjakan', p.status === 'dikerjakan' && p.jalur === 'langsung', p.status);
-cek('langkah berikutnya = minta review', L.aksiBerikutnya(p)[0].kode === 'ke_review');
+cek('jadi proses', p.status === 'proses' && p.jalur === 'langsung', p.status);
+cek('tanpa keterangan rinci', L.labelRinci(p) === '');
+cek('langkah berikutnya = ajukan persetujuan', L.aksiBerikutnya(p)[0].kode === 'ke_review');
 p = L.terapkanAksi(p, 'ke_review', ctx('Vincent')).p;
-cek('status jadi review (pending)', p.status === 'review', p.status);
+cek('status tetap Proses', p.status === 'proses', p.status);
+cek('rincinya menunggu persetujuan', L.labelRinci(p) === 'menunggu persetujuan', L.labelRinci(p));
 cek('tercatat siapa yang mengajukan', p.diajukan_oleh === 'Vincent' && p.diajukan_pada === '2026-09-10');
 cek('bukan reviewer: tidak ada tombol setuju', L.aksiBerikutnya(p, { reviewer: false })[0].mati === true);
-cek('reviewer: ada setuju + tolak', L.aksiBerikutnya(p, { reviewer: true }).map(x => x.kode).join(',') === 'setuju,tolak');
+cek('reviewer: ada setuju + kembalikan',
+  L.aksiBerikutnya(p, { reviewer: true }).map(x => x.kode).join(',') === 'setuju,tolak');
 const pTolak = L.terapkanAksi(p, 'tolak', ctx('Baldy', { catatan: 'tepi bawah slab 45 masih kemakan' })).p;
-cek('tolak -> perbaikan internal', pTolak.status === 'revisi_internal', pTolak.status);
+cek('dikembalikan -> Revisi', pTolak.status === 'revisi', pTolak.status);
+cek('rincinya perbaikan dari review', pTolak.rinci === 'perbaikan');
 cek('catatan review jadi brief terbaru', L.briefTerbaru(pTolak).sumber === 'review'
   && L.briefTerbaru(pTolak).teks.indexOf('slab 45') >= 0);
-cek('dari perbaikan bisa dikerjakan lagi', L.aksiBerikutnya(pTolak)[0].kode === 'perbaiki');
+cek('dari perbaikan bisa lanjut lagi', L.aksiBerikutnya(pTolak)[0].kode === 'perbaiki');
+cek('lanjut perbaikan balik ke Proses',
+  L.terapkanAksi(pTolak, 'perbaiki', ctx('Vincent')).p.status === 'proses');
 p = L.terapkanAksi(p, 'setuju', ctx('Baldy')).p;
-cek('setuju -> SELESAI', p.status === 'done' && p.direview_oleh === 'Baldy', p.status);
+cek('disetujui -> FINAL', p.status === 'final' && p.direview_oleh === 'Baldy', p.status);
 cek('tanggal selesai dicatat', p.selesai_pada === '2026-09-10');
 
-judul('Alur PAKAI sample: sample -> klien -> revisi -> final -> apply -> review');
+judul('Alur PAKAI sample: semuanya tetap di dalam empat status');
 let q = baru();
 q = L.terapkanAksi(q, 'jalur_sample', ctx('Kallysta')).p;
-cek('ronde 1 dibuat', q.status === 'sample_buat' && q.sampel.length === 1, q.status);
+cek('ronde 1 dibuat', q.status === 'proses' && q.sampel.length === 1, q.status);
+cek('rinci menyiapkan sample', L.labelRinci(q) === 'menyiapkan sample');
 q = L.terapkanAksi(q, 'kirim_sample', ctx('Kallysta', { tautan: 'drive/sample1.jpg' })).p;
-cek('terkirim, menunggu klien', q.status === 'sample_kirim' && q.sampel[0].dikirim === '2026-09-10');
+cek('terkirim, menunggu klien', q.status === 'proses' && L.menungguKlien(q) && q.sampel[0].dikirim === '2026-09-10');
 cek('tautan sample tersimpan', q.sampel[0].tautan === 'drive/sample1.jpg');
 q = L.terapkanAksi(q, 'jawaban', ctx('Kallysta', { hasil: 'revisi', brief: 'tone kurang biru', lampiran: 'sample klien.jpg' })).p;
-cek('jawaban revisi', q.status === 'revisi' && q.sampel[0].jawaban === 'revisi', q.status);
+cek('jawaban revisi -> status Revisi', q.status === 'revisi' && q.sampel[0].jawaban === 'revisi', q.status);
+cek('revisi klien tanpa rinci perbaikan', q.rinci === '');
 cek('brief klien masuk timeline', L.briefTerbaru(q).teks === 'tone kurang biru' && L.briefTerbaru(q).sumber === 'klien');
 cek('lampiran klien ikut', L.briefTerbaru(q).lampiran === 'sample klien.jpg');
 cek('tawaran ronde 2', L.aksiBerikutnya(q)[0].label.indexOf('ronde 2') >= 0, L.aksiBerikutnya(q)[0].label);
 q = L.terapkanAksi(q, 'sample_baru', ctx('Kallysta')).p;
 q = L.terapkanAksi(q, 'kirim_sample', ctx('Kallysta')).p;
 q = L.terapkanAksi(q, 'jawaban', ctx('Kallysta', { hasil: 'final', brief: 'sudah oke, lanjut semua' })).p;
-cek('klien setuju -> disetujui', q.status === 'disetujui', q.status);
+cek('klien setuju -> Proses/disetujui', q.status === 'proses' && q.rinci === 'disetujui', q.status + '/' + q.rinci);
 cek('dua ronde tersimpan', q.sampel.length === 2 && q.sampel[1].jawaban === 'final');
 cek('brief lama TETAP ada', q.brief.length === 2 && q.brief[0].teks === 'tone kurang biru');
 cek('brief terbaru yang final', L.briefTerbaru(q).teks === 'sudah oke, lanjut semua');
 q = L.terapkanAksi(q, 'apply', ctx('Kallysta')).p;
-cek('apply ke semua slab', q.status === 'apply');
+cek('penerapan ke seluruh slab', q.rinci === 'apply' && q.status === 'proses');
 q = L.terapkanAksi(q, 'ke_review', ctx('Kallysta')).p;
-cek('setelah apply masuk review', q.status === 'review', q.status);
+cek('lalu menunggu persetujuan', L.menungguPersetujuan(q) && q.status === 'proses');
+q = L.terapkanAksi(q, 'setuju', ctx('Baldy')).p;
+cek('akhirnya FINAL', q.status === 'final');
+
+judul('Data lama ikut naik sendiri ke empat status');
+const lamaBaru = {
+  todo: 'antrean/', hold: 'antrean/ditunda', dikerjakan: 'proses/',
+  sample_buat: 'proses/sample_buat', sample_kirim: 'proses/sample_kirim',
+  disetujui: 'proses/disetujui', apply: 'proses/apply', review: 'proses/review',
+  revisi: 'revisi/', revisi_internal: 'revisi/perbaikan', done: 'final/'
+};
+Object.keys(lamaBaru).forEach(st => {
+  const x = { status: st };
+  L.naikkanProject(x);
+  cek('status lama "' + st + '" jadi ' + lamaBaru[st], x.status + '/' + (x.rinci || '') === lamaBaru[st],
+    x.status + '/' + (x.rinci || ''));
+});
+const sudahBaru = { status: 'proses', rinci: 'apply' };
+cek('data yang sudah baru tidak diubah lagi',
+  L.naikkanProject(sudahBaru) === false && sudahBaru.rinci === 'apply');
 
 judul('Aturan lain');
 const asli = baru(); const salinan = JSON.stringify(asli);
@@ -80,9 +120,9 @@ cek('tandai urgent', pu.urgent === true);
 cek('lepas urgent', L.terapkanAksi(pu, 'urgent', ctx('Baldy')).p.urgent === false);
 cek('urgent diurutkan paling atas',
   [{ prioritas: 'P3', urgent: true, kode: 'B' }, { prioritas: 'P1', kode: 'A' }].sort(L.urutProject)[0].kode === 'B');
-cek('tenggat lewat terdeteksi', L.telatHari({ tenggat: '2026-09-08', status: 'todo' }, '2026-09-10') === 2);
-cek('tenggat belum lewat negatif', L.telatHari({ tenggat: '2026-09-12', status: 'todo' }, '2026-09-10') === -2);
-cek('project selesai tidak dihitung telat', L.telatHari({ tenggat: '2026-09-01', status: 'done' }, '2026-09-10') === null);
+cek('tenggat lewat terdeteksi', L.telatHari({ tenggat: '2026-09-08', status: 'antrean' }, '2026-09-10') === 2);
+cek('tenggat belum lewat negatif', L.telatHari({ tenggat: '2026-09-12', status: 'antrean' }, '2026-09-10') === -2);
+cek('project selesai tidak dihitung telat', L.telatHari({ tenggat: '2026-09-01', status: 'final' }, '2026-09-10') === null);
 cek('hari menunggu klien', L.hariAntara('2026-09-07', '2026-09-10') === 3);
 
 judul('Tempel dari tabel Notion');
@@ -223,64 +263,34 @@ let r = baru();
 r = L.terapkanAksi(r, 'jalur_langsung', ctx('Vincent')).p;
 r = L.terapkanAksi(r, 'ke_review', ctx('Vincent')).p;
 r = L.terapkanAksi(r, 'setuju', ctx('Baldy')).p;
-cek('sudah selesai', r.status === 'done');
+cek('sudah final', r.status === 'final');
 cek('ada tawaran revisi baru', L.aksiBerikutnya(r)[0].kode === 'revisi_baru');
 r = L.terapkanAksi(r, 'revisi_baru', ctx('Baldy', { teks: 'slab 45 masih terlalu hangat' })).p;
-cek('balik ke antrean', r.status === 'todo', r.status);
+cek('balik ke antrean', r.status === 'antrean', r.status);
 cek('hitungan revisi naik', r.dibuka_ulang === 1);
 cek('tanggal selesai dihapus', !r.selesai_pada);
 cek('brief baru dari klien masuk', L.briefTerbaru(r).teks === 'slab 45 masih terlalu hangat');
 cek('bertanda REVISI KE-1', L.tandaBaris(r, '2026-09-10').some(x => x.teks === 'REVISI KE-1'));
-let rs = baru(); rs.jalur = 'sample'; rs.status = 'done'; rs.selesai_pada = '2026-09-09';
+let rs = baru(); rs.jalur = 'sample'; rs.status = 'final'; rs.selesai_pada = '2026-09-09';
 rs = L.terapkanAksi(rs, 'revisi_baru', ctx('Baldy', { teks: 'kurang biru' })).p;
 cek('yang pakai sample balik ke jalur sample', rs.status === 'revisi', rs.status);
 
 judul('Tanda menyala di daftar');
 cek('tugas baru bertanda BARU',
-  L.tandaBaris({ status: 'todo', diterima: '2026-09-10' }, '2026-09-10').some(x => x.teks === 'BARU'));
+  L.tandaBaris({ status: 'antrean', diterima: '2026-09-10' }, '2026-09-10').some(x => x.teks === 'BARU'));
 cek('tugas lama tidak bertanda BARU',
-  !L.tandaBaris({ status: 'todo', diterima: '2026-09-01' }, '2026-09-10').some(x => x.teks === 'BARU'));
+  !L.tandaBaris({ status: 'antrean', diterima: '2026-09-01' }, '2026-09-10').some(x => x.teks === 'BARU'));
 cek('baru selesai bertanda',
-  L.tandaBaris({ status: 'done', selesai_pada: '2026-09-09' }, '2026-09-10').some(x => x.teks === 'BARU SELESAI'));
+  L.tandaBaris({ status: 'final', selesai_pada: '2026-09-09' }, '2026-09-10').some(x => x.teks === 'BARU SELESAI'));
 cek('selesai lama tidak bertanda',
-  L.tandaBaris({ status: 'done', selesai_pada: '2026-09-01' }, '2026-09-10').length === 0);
-cek('urgent bertanda', L.tandaBaris({ status: 'todo', urgent: true }, '2026-09-10')[0].teks === 'URGENT');
+  L.tandaBaris({ status: 'final', selesai_pada: '2026-09-01' }, '2026-09-10').length === 0);
+cek('urgent bertanda', L.tandaBaris({ status: 'antrean', urgent: true }, '2026-09-10')[0].teks === 'URGENT');
 
 judul('Simpan otomatis (tanpa tombol Simpan)');
 cek('tombol Simpan sudah tidak ada', src.indexOf('id="btnSimpan"') < 0);
 cek('perubahan dijadwalkan terkirim sendiri', /function simpanNanti\(\)/.test(src) && /1200/.test(src));
 cek('gagal kirim dicoba ulang otomatis', /jamSimpan = setTimeout\(function\(\)\{ simpanKeGitHub\(true\); \}, 20000\)/.test(src));
 cek('kelompok hari bisa ditutup', src.indexOf('data-tutup=') >= 0 && src.indexOf('mb_tutup') >= 0);
-
-
-judul('Kata-kata: empat tahap, istilah profesional');
-cek('tepat empat tahap', L.TAHAP.length === 4, L.TAHAP.map(t => t.label));
-cek('urutan tahap masuk akal',
-  L.TAHAP.map(t => t.id).join(',') === 'antrean,kerja,klien,tutup');
-cek('semua status punya tahap yang dikenal',
-  Object.keys(L.STATUS).every(k => L.TAHAP.some(t => t.id === L.STATUS[k].tahap)),
-  Object.keys(L.STATUS).filter(k => !L.TAHAP.some(t => t.id === L.STATUS[k].tahap)));
-cek('tiap tahap ada isinya',
-  L.TAHAP.every(t => Object.keys(L.STATUS).some(k => L.STATUS[k].tahap === t.id)));
-const opsi = L.opsiStatus('review');
-cek('daftar pilihan dikelompokkan empat', (opsi.match(/<optgroup/g) || []).length === 4);
-cek('status terpilih ikut ditandai', /value="review" selected/.test(opsi), opsi.slice(0, 80));
-cek('semua status muncul di daftar',
-  Object.keys(L.STATUS).every(k => opsi.indexOf('value="' + k + '"') >= 0));
-cek('kepala tambahan ditaruh paling depan',
-  L.opsiStatus('', '<option value="">Semua status</option>')
-    .indexOf('<option value="">Semua status</option>') === 0);
-const kasar = ['Belum mulai', 'Pending review', 'Apply ke semua', 'Ditahan', 'Perbaikan (review)'];
-cek('istilah lama yang kaku sudah tidak dipakai',
-  !Object.keys(L.STATUS).some(k => kasar.includes(L.STATUS[k].label)),
-  Object.keys(L.STATUS).map(k => L.STATUS[k].label));
-cek('antrean tidak lagi berbunyi "belum mulai"', L.STATUS.todo.label === 'Dalam antrean', L.STATUS.todo.label);
-cek('review berbunyi menunggu persetujuan', L.STATUS.review.label === 'Menunggu persetujuan');
-cek('kata "tugaskan" sudah tidak ada di tampilan',
-  !/\+ tugaskan|Tugaskan '/.test(src), (src.match(/[Tt]ugaskan[^<']{0,20}/g) || []).slice(0, 4));
-cek('tombol aksi memakai kata baku',
-  /Ajukan untuk persetujuan/.test(src) && /Setujui & selesaikan/.test(src)
-  && /Kembalikan untuk penyempurnaan/.test(src));
 
 
 judul('Nomor slab: ditarik, bukan diketik');
@@ -348,6 +358,15 @@ cek('kisi bisa ditarik (pointer event)', /pointerdown/.test(src) && /pointermove
 cek('isian tanggal cerdas dipakai', (src.match(/tgl-cerdas/g) || []).length >= 3);
 cek('tombol tanggal cepat tersedia', /data-tgl-set=/.test(src));
 cek('nama folder diurai saat mengetik', /uraiNamaFolder\(kodeEl\.value/.test(src));
+
+
+judul('Tata letak bar atas');
+cek('tombol aksi dikelompokkan agar tetap di kanan', /class="bar2-aksi"/.test(src));
+cek('kelompok itu didorong ke kanan', /\.bar2-aksi\{[^}]*margin-left:auto/.test(src));
+cek('tidak ada lagi pengganjal yang patah saat melipat',
+  !/<div class="tumbuh"><\/div>\s*<button class="btn" id="btnTempel"/.test(src));
+cek('+ Project ada di dalam kelompok kanan',
+  /class="bar2-aksi">[\s\S]{0,200}id="btnTambah"/.test(src));
 
 console.log('\n' + (gagal ? 'GAGAL: ' + gagal + ' dari ' + jumlah + ' uji' : 'LULUS semua ' + jumlah + ' uji'));
 process.exit(gagal ? 1 : 0);

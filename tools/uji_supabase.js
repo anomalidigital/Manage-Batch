@@ -80,6 +80,7 @@ function bangun(alamat) {
     function pesan(t){ pesanTerakhir = t; }
     function renderAman(){}
     function lengkapiTenggat(){ return 0; }
+    function naikkanData(){ return 0; }
     function simpanNanti(){}
     var LS = {ambil:function(k,b){ return b; }, taruh:function(){}};
     function gabungDB(basis, lokal, remote){
@@ -208,7 +209,10 @@ function bangun(alamat) {
   cek('semua project dikirim', n === 1 && tabel.projects.some(x => x.id === 'z1'));
   cek('tim ikut dikirim', tabel.tim.some(x => x.id === 'z2'));
 
-  server.close();
   console.log('\n' + (gagal ? 'GAGAL: ' + gagal + ' dari ' + jumlah + ' uji' : 'LULUS semua ' + jumlah + ' uji Supabase'));
-  process.exit(gagal ? 1 : 0);
+  // Tutup rapi: process.exit() ketika server masih menutup membuat Node di
+  // Windows melempar "Assertion failed". Biarkan loop kejadian habis sendiri.
+  if (server.closeAllConnections) server.closeAllConnections();
+  server.close();
+  process.exitCode = gagal ? 1 : 0;
 })();

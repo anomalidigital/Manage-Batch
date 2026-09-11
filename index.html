@@ -40,6 +40,10 @@ a{color:var(--ac)}
 .tumbuh{flex:1}
 .bar2{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--bg);
   border-bottom:1px solid var(--line);flex-wrap:wrap}
+/* Tombol aksi selalu di ujung kanan — juga ketika bar melipat ke baris baru,
+   karena margin kiri otomatis mendorongnya ke tepi kanan barisnya sendiri. */
+.bar2-aksi{display:flex;gap:8px;align-items:center;margin-left:auto;flex:none}
+@media(max-width:640px){ .bar2-aksi{width:100%;justify-content:flex-end} }
 .isi{flex:1;overflow:auto;padding:14px;scroll-behavior:smooth}
 .sesi{margin-bottom:22px;scroll-margin-top:8px}
 .sesi > h2{margin:0 0 10px;font-size:14px;letter-spacing:.3px;display:flex;align-items:center;gap:9px;
@@ -334,9 +338,10 @@ td.kodesel:hover{color:var(--ac)}
     <label class="pil" style="cursor:pointer"><input type="checkbox" id="fHari" checked> 📅 Kelompokkan per hari</label>
     <label class="pil" style="cursor:pointer" title="Brief berbahasa Inggris ditampilkan dalam Bahasa Indonesia"><input type="checkbox" id="fID" checked> 🌐 Bahasa Indonesia</label>
     <label class="pil" style="cursor:pointer"><input type="checkbox" id="fSelesai"> Tampilkan yang selesai</label>
-    <div class="tumbuh"></div>
-    <button class="btn" id="btnTempel">Impor dari daftar</button>
-    <button class="btn utama" id="btnTambah">+ Project</button>
+    <div class="bar2-aksi">
+      <button class="btn" id="btnTempel">Impor dari daftar</button>
+      <button class="btn utama" id="btnTambah">+ Project</button>
+    </div>
   </div>
 
   <div class="isi" id="isi"></div>
@@ -431,7 +436,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-17",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -454,7 +459,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 10 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_ascot20h2769",
@@ -470,7 +476,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-17",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -493,7 +499,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 10 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_bevros20h5802",
@@ -509,7 +516,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-17",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -532,7 +539,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 10 Sep, PIC Indra"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_carpat20lf4769_37_48",
@@ -548,7 +556,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-16",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "Batch kedua CARPAT; batch slab 25–36 masuk 7 Sep (entri terpisah)",
    "tautan": "",
@@ -571,7 +579,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 9 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_solbla20h6004",
@@ -587,7 +596,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -610,7 +619,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_newsav20h2639",
@@ -627,7 +637,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -650,7 +660,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_borcry20h3083",
@@ -666,7 +677,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "sample",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "Klien mengirim sample pembanding (new sample 8 Sep)",
    "tautan": "Z:\\CDKStone_Slab_230308\\Baldy\\Task\\260724_BORCRY20H3083_8_revisiLessOrangeVeining\\newsample8sep",
@@ -689,7 +700,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep; klien kirim sample baru 8 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_amewav20lf3446",
@@ -706,7 +718,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "Teks katalog harus: Amethyst Wave Quartzite  Block 3446  Slab #",
    "tautan": "",
@@ -729,7 +741,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_carpat20lf4769_25_36",
@@ -745,7 +758,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "Batch pertama CARPAT; slab 37–48 masuk 9 Sep (entri terpisah)",
    "tautan": "",
@@ -768,7 +781,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_turarg20h2508",
@@ -785,7 +799,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260901_TURARG20H2508_21",
@@ -808,7 +822,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_tajmah20h1865",
@@ -824,7 +839,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -847,7 +862,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_sentos20h8032",
@@ -863,7 +879,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -886,7 +902,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_clatra20vchf1680",
@@ -902,7 +919,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260903_CLATRA20VCHF1680 _50",
@@ -925,7 +942,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_turarg20h2411",
@@ -942,7 +960,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "U:\\CDKStone_Slab_230308\\Baldy\\Task\\September\\260903_TURARG20H2411_34",
@@ -965,7 +983,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_monter20h5577",
@@ -981,7 +1000,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -1004,7 +1023,8 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   },
   {
    "id": "p_breper20h1579",
@@ -1020,7 +1040,7 @@ td.kodesel:hover{color:var(--ac)}
    "tenggat": "2026-09-14",
    "batch": "b_20260910",
    "jalur": "belum",
-   "status": "todo",
+   "status": "antrean",
    "urgent": false,
    "catatan": "",
    "tautan": "",
@@ -1043,62 +1063,76 @@ td.kodesel:hover{color:var(--ac)}
      "teks": "masuk list pending 7 Sep"
     }
    ],
-   "diperbarui": "2026-09-10T05:00:00.000Z"
+   "diperbarui": "2026-09-10T05:00:00.000Z",
+   "rinci": ""
   }
  ]
 }
 </script>
 <script>
 /* =================== LOGIKA MURNI: MULAI (diuji lewat node) =================== */
-/* Empat TAHAP besar; status rinci di dalamnya. Daftar pilihan status
-   dikelompokkan per tahap supaya yang terlihat cuma empat kepala, bukan
-   sebelas baris sekaligus. Istilahnya sengaja netral: pekerjaan yang belum
-   disentuh berbunyi "Dalam antrean", bukan "Belum mulai". */
-var TAHAP = [
-  {id:'antrean', label:'Antrean'},
-  {id:'kerja',   label:'Pengerjaan'},
-  {id:'klien',   label:'Dengan klien'},
-  {id:'tutup',   label:'Penyelesaian'}
-];
+/* ================== EMPAT STATUS ==================
+   Yang dipilih operator hanya empat. Nuansanya disimpan terpisah di `rinci`
+   (menyiapkan sample, menunggu klien, menunggu persetujuan, penerapan,
+   perbaikan) — tetap terlihat sebagai keterangan kecil di sebelah status,
+   dan tetap menentukan tombol langkah berikutnya. */
 var STATUS = {
-  todo:           {label:'Dalam antrean',            warna:'#64748b', kolom:'todo',   tahap:'antrean'},
-  hold:           {label:'Ditunda',                  warna:'#6b7280', kolom:'todo',   tahap:'antrean'},
-  dikerjakan:     {label:'Sedang dikerjakan',        warna:'#3b82f6', kolom:'kerja',  tahap:'kerja'},
-  sample_buat:    {label:'Penyiapan sample',         warna:'#8b5cf6', kolom:'kerja',  tahap:'kerja'},
-  revisi_internal:{label:'Penyempurnaan',            warna:'#f97316', kolom:'revisi', tahap:'kerja'},
-  sample_kirim:   {label:'Menunggu tanggapan klien', warna:'#f59e0b', kolom:'klien',  tahap:'klien'},
-  revisi:         {label:'Permintaan revisi klien',  warna:'#ef4444', kolom:'revisi', tahap:'klien'},
-  disetujui:      {label:'Disetujui klien',          warna:'#10b981', kolom:'final',  tahap:'klien'},
-  apply:          {label:'Penerapan ke seluruh slab',warna:'#14b8a6', kolom:'final',  tahap:'klien'},
-  review:         {label:'Menunggu persetujuan',     warna:'#0ea5e9', kolom:'review', tahap:'tutup'},
-  done:           {label:'Selesai',                  warna:'#22c55e', kolom:'done',   tahap:'tutup'}
+  antrean: {label:'Antrean', warna:'#64748b', kolom:'antrean'},
+  proses:  {label:'Proses',  warna:'#3b82f6', kolom:'proses'},
+  revisi:  {label:'Revisi',  warna:'#ef4444', kolom:'revisi'},
+  final:   {label:'Final',   warna:'#22c55e', kolom:'final'}
 };
 var KOLOM = [
-  {id:'todo',   label:'Antrean'},
-  {id:'kerja',  label:'Pengerjaan'},
-  {id:'klien',  label:'Menunggu klien'},
-  {id:'revisi', label:'Perlu revisi'},
-  {id:'final',  label:'Disetujui & diterapkan'},
-  {id:'review', label:'Menunggu persetujuan'},
-  {id:'done',   label:'Selesai'}
+  {id:'antrean', label:'Antrean'},
+  {id:'proses',  label:'Proses'},
+  {id:'revisi',  label:'Revisi'},
+  {id:'final',   label:'Final'}
 ];
-/* Daftar pilihan status, dikelompokkan jadi empat tahap. */
+/* Keterangan rinci: bukan pilihan, melainkan hasil dari langkah yang diambil. */
+var RINCI = {
+  '':             '',
+  ditunda:        'ditunda',
+  sample_buat:    'menyiapkan sample',
+  sample_kirim:   'menunggu tanggapan klien',
+  disetujui:      'disetujui klien',
+  apply:          'penerapan ke seluruh slab',
+  review:         'menunggu persetujuan',
+  perbaikan:      'perbaikan dari review'
+};
+function labelRinci(p){ return RINCI[(p && p.rinci) || ''] || ''; }
+function sudahFinal(p){ return !!p && p.status === 'final'; }
+function menungguKlien(p){ return !!p && (p.rinci || '') === 'sample_kirim'; }
+function menungguPersetujuan(p){ return !!p && (p.rinci || '') === 'review'; }
+/* Daftar pilihan status: empat, tanpa pengelompokan. */
 function opsiStatus(terpilih, kepala){
-  var h = kepala || '';
-  TAHAP.forEach(function(t){
-    var isi = Object.keys(STATUS).filter(function(k){ return STATUS[k].tahap === t.id; });
-    if(!isi.length) return;
-    h += '<optgroup label="' + t.label + '">'
-      + isi.map(function(k){
-          return '<option value="' + k + '"' + (terpilih === k ? ' selected' : '') + '>'
-            + STATUS[k].label + '</option>'; }).join('')
-      + '</optgroup>';
-  });
-  return h;
+  return (kepala || '') + Object.keys(STATUS).map(function(k){
+    return '<option value="' + k + '"' + (terpilih === k ? ' selected' : '') + '>'
+      + STATUS[k].label + '</option>'; }).join('');
+}
+/* Data lama (sebelas status) dinaikkan ke bentuk empat status + rinci. */
+var PETA_LAMA = {
+  todo:            ['antrean', ''],
+  hold:            ['antrean', 'ditunda'],
+  dikerjakan:      ['proses',  ''],
+  sample_buat:     ['proses',  'sample_buat'],
+  sample_kirim:    ['proses',  'sample_kirim'],
+  disetujui:       ['proses',  'disetujui'],
+  apply:           ['proses',  'apply'],
+  review:          ['proses',  'review'],
+  revisi:          ['revisi',  ''],
+  revisi_internal: ['revisi',  'perbaikan'],
+  done:            ['final',   ''],
+  edited:          ['proses',  'review']
+};
+function naikkanProject(p){
+  if(!p || STATUS[p.status]) { if(p && p.rinci === undefined) p.rinci = ''; return false; }
+  var m = PETA_LAMA[p.status] || ['antrean', ''];
+  p.status = m[0]; p.rinci = m[1];
+  return true;
 }
 var PRIORITAS = {P1:'#ef4444', P2:'#f59e0b', P3:'#22c55e'};
 var JALUR = {belum:'Belum ditentukan', langsung:'Langsung, tanpa sample', sample:'Dengan sample klien'};
-var SELESAI = ['done'];
+var SELESAI = ['final'];
 
 function apakahReviewer(tim, nama){
   if(!nama) return false;
@@ -1244,17 +1278,17 @@ function briefTampil(b, mauID){
    klien minta revisi setelah selesai), BARU SELESAI (baru saja kelar). */
 function tandaBaris(p, ini){
   var t = [];
-  if(p.urgent && p.status !== 'done') t.push({teks:'URGENT', warna:'var(--err)'});
-  if(p.dibuka_ulang && p.status !== 'done') t.push({teks:'REVISI KE-' + p.dibuka_ulang, warna:'var(--warn)'});
+  if(p.urgent && !sudahFinal(p)) t.push({teks:'URGENT', warna:'var(--err)'});
+  if(p.dibuka_ulang && !sudahFinal(p)) t.push({teks:'REVISI KE-' + p.dibuka_ulang, warna:'var(--warn)'});
   var hb = hariAntara(p.diterima, ini);
-  if(p.status === 'todo' && !p.dibuka_ulang && hb !== null && hb >= 0 && hb <= 1) t.push({teks:'BARU', warna:'var(--ac)'});
+  if(p.status === 'antrean' && !p.dibuka_ulang && hb !== null && hb >= 0 && hb <= 1) t.push({teks:'BARU', warna:'var(--ac)'});
   var hs = hariAntara(p.selesai_pada, ini);
-  if(p.status === 'done' && hs !== null && hs >= 0 && hs <= 2) t.push({teks:'BARU SELESAI', warna:'var(--ok)'});
+  if(sudahFinal(p) && hs !== null && hs >= 0 && hs <= 2) t.push({teks:'BARU SELESAI', warna:'var(--ok)'});
   return t;
 }
 /* Sudah lewat tenggat? >0 = telat sekian hari, <=0 = masih ada waktu, null = tanpa tenggat */
 function telatHari(p, ini){
-  if(!p || !p.tenggat || p.status === 'done') return null;
+  if(!p || !p.tenggat || sudahFinal(p)) return null;
   return hariAntara(p.tenggat, ini);
 }
 
@@ -1371,41 +1405,43 @@ function rondeTerakhir(p){
   var s = p.sampel || [];
   return s.length ? s[s.length-1] : null;
 }
-/* Apa langkah berikutnya untuk project ini? Inti dari alur kerja CDK.
-   opsi.reviewer = true bila yang membuka aplikasi berhak me-review (Baldy / Indra). */
+/* Apa langkah berikutnya untuk project ini? Ditentukan status (empat) dan
+   keterangan rinci di dalamnya.
+   opsi.reviewer = true bila yang membuka aplikasi berhak menyetujui hasil. */
 function aksiBerikutnya(p, opsi){
   opsi = opsi || {};
-  var st = p.status, jl = p.jalur || 'belum';
-  if(st === 'hold') return [{kode:'lanjut', label:'Lanjutkan pengerjaan', utama:true}];
-  if(st === 'done') return [
+  var st = p.status, rc = p.rinci || '', jl = p.jalur || 'belum';
+  if(st === 'final') return [
     {kode:'revisi_baru', label:'Catat permintaan revisi baru', utama:true},
     {kode:'buka', label:'Buka kembali tanpa brief'}
   ];
-  if(st === 'review'){
+  if(rc === 'ditunda') return [{kode:'lanjut', label:'Lanjutkan pengerjaan', utama:true}];
+  if(rc === 'review'){
     if(opsi.reviewer) return [
       {kode:'setuju', label:'Setujui & selesaikan', utama:true},
-      {kode:'tolak',  label:'Kembalikan untuk penyempurnaan'}
+      {kode:'tolak',  label:'Kembalikan untuk perbaikan'}
     ];
     return [{kode:'', label:'Menunggu persetujuan ' + ((opsi.reviewer_nama||[]).join(' / ') || 'atasan'), mati:true}];
   }
-  if(st === 'todo' && jl === 'belum') return [
-    {kode:'jalur_langsung', label:'Kerjakan langsung (tanpa sample)', utama:true},
-    {kode:'jalur_sample',   label:'Perlu sample untuk klien', utama:true}
-  ];
-  if(st === 'todo') return jl === 'sample'
-    ? [{kode:'mulai_sample', label:'Mulai siapkan sample', utama:true}]
-    : [{kode:'mulai', label:'Mulai kerjakan', utama:true}];
-  if(st === 'dikerjakan') return [{kode:'ke_review', label:'Ajukan untuk persetujuan', utama:true}];
-  if(st === 'revisi_internal') return [{kode:'perbaiki', label:'Lanjutkan penyempurnaan', utama:true}];
-  if(st === 'sample_buat') return [{kode:'kirim_sample', label:'Kirim sample ke klien', utama:true}];
-  if(st === 'sample_kirim') return [{kode:'jawaban', label:'Catat tanggapan klien', utama:true}];
+  if(st === 'antrean'){
+    if(jl === 'belum') return [
+      {kode:'jalur_langsung', label:'Kerjakan langsung (tanpa sample)', utama:true},
+      {kode:'jalur_sample',   label:'Perlu sample untuk klien', utama:true}
+    ];
+    return jl === 'sample'
+      ? [{kode:'mulai_sample', label:'Mulai siapkan sample', utama:true}]
+      : [{kode:'mulai', label:'Mulai kerjakan', utama:true}];
+  }
   if(st === 'revisi'){
+    if(rc === 'perbaikan') return [{kode:'perbaiki', label:'Lanjutkan perbaikan', utama:true}];
     var n = (p.sampel||[]).length + 1;
     return [{kode:'sample_baru', label:'Siapkan sample ronde ' + n, utama:true}];
   }
-  if(st === 'disetujui') return [{kode:'apply', label:'Terapkan warna ke seluruh slab', utama:true}];
-  if(st === 'apply') return [{kode:'ke_review', label:'Ajukan untuk persetujuan', utama:true}];
-  return [];
+  if(rc === 'sample_buat')  return [{kode:'kirim_sample', label:'Kirim sample ke klien', utama:true}];
+  if(rc === 'sample_kirim') return [{kode:'jawaban', label:'Catat tanggapan klien', utama:true}];
+  if(rc === 'disetujui')    return [{kode:'apply', label:'Terapkan warna ke seluruh slab', utama:true}];
+  if(rc === 'apply')        return [{kode:'ke_review', label:'Ajukan untuk persetujuan', utama:true}];
+  return [{kode:'ke_review', label:'Ajukan untuk persetujuan', utama:true}];
 }
 /* Terapkan satu aksi. Mengembalikan project BARU + baris riwayat. Tidak mengubah masukan. */
 function terapkanAksi(pAsli, kode, ctx){
@@ -1413,18 +1449,20 @@ function terapkanAksi(pAsli, kode, ctx){
   var p = JSON.parse(JSON.stringify(pAsli));
   p.sampel = p.sampel || []; p.riwayat = p.riwayat || [];
   var catat = '';
+  function set(st, rc){ p.status = st; p.rinci = rc || ''; }
+  var catat = '';
   function ronde(){
     p.sampel.push({ronde:p.sampel.length+1, dibuat:tgl, oleh:oleh, tautan:d.tautan||'',
       dikirim:'', jawaban:'menunggu', tanggal_jawaban:'', brief:'', lampiran:''});
   }
   switch(kode){
-    case 'jalur_langsung': p.jalur='langsung'; p.status='dikerjakan'; catat='jalur: tanpa sample, mulai dikerjakan'; break;
-    case 'jalur_sample':   p.jalur='sample'; p.status='sample_buat'; ronde(); catat='jalur: pakai sample, mulai sample ronde 1'; break;
-    case 'mulai':          p.status='dikerjakan'; catat='mulai dikerjakan'; break;
-    case 'mulai_sample':   p.status='sample_buat'; if(!p.sampel.length) ronde(); catat='mulai buat sample ronde '+p.sampel.length; break;
-    case 'sample_baru':    p.status='sample_buat'; ronde(); catat='buat sample ronde '+p.sampel.length; break;
+    case 'jalur_langsung': p.jalur='langsung'; set('proses',''); catat='jalur: tanpa sample, mulai dikerjakan'; break;
+    case 'jalur_sample':   p.jalur='sample'; set('proses','sample_buat'); ronde(); catat='jalur: pakai sample, mulai sample ronde 1'; break;
+    case 'mulai':          set('proses',''); catat='mulai dikerjakan'; break;
+    case 'mulai_sample':   set('proses','sample_buat'); if(!p.sampel.length) ronde(); catat='mulai menyiapkan sample ronde '+p.sampel.length; break;
+    case 'sample_baru':    set('proses','sample_buat'); ronde(); catat='menyiapkan sample ronde '+p.sampel.length; break;
     case 'kirim_sample': {
-      p.status='sample_kirim';
+      set('proses','sample_kirim');
       var r = p.sampel.length ? p.sampel[p.sampel.length-1] : null;
       if(!r){ ronde(); r = p.sampel[p.sampel.length-1]; }
       r.dikirim = tgl; r.jawaban='menunggu'; if(d.tautan) r.tautan = d.tautan;
@@ -1434,38 +1472,37 @@ function terapkanAksi(pAsli, kode, ctx){
       var r2 = p.sampel.length ? p.sampel[p.sampel.length-1] : null;
       if(!r2){ ronde(); r2 = p.sampel[p.sampel.length-1]; r2.dikirim = tgl; }
       r2.tanggal_jawaban = tgl; r2.brief = d.brief || ''; r2.lampiran = d.lampiran || '';
-      if(d.hasil === 'final'){ r2.jawaban='final'; p.status='disetujui'; catat='klien SETUJU (ronde '+r2.ronde+')'; }
-      else { r2.jawaban='revisi'; p.status='revisi'; catat='klien minta REVISI (ronde '+r2.ronde+')' + (d.brief? ': '+d.brief : ''); }
+      if(d.hasil === 'final'){ r2.jawaban='final'; set('proses','disetujui'); catat='klien SETUJU (ronde '+r2.ronde+')'; }
+      else { r2.jawaban='revisi'; set('revisi',''); catat='klien minta REVISI (ronde '+r2.ronde+')' + (d.brief? ': '+d.brief : ''); }
       if(d.brief) tambahBriefKe(p, {waktu:(ctx.stempel||tgl), oleh:'Klien', sumber:(d.hasil==='final'?'klien-final':'klien'),
         teks:d.brief, lampiran:d.lampiran||'', ronde:r2.ronde});
       break;
     }
-    case 'apply':     p.status='apply';  catat='menerapkan warna final ke semua slab'; break;
-    case 'ke_review': p.status='review'; p.diajukan_pada=tgl; p.diajukan_oleh=oleh;
-                      catat='hasil ditaruh di Edited, diajukan untuk review'; break;
-    case 'setuju':    p.status='done';   p.selesai_pada=tgl; p.direview_oleh=oleh;
-                      catat='review OK oleh '+oleh+' → SELESAI'; break;
-    case 'tolak':     p.status='revisi_internal'; p.direview_oleh=oleh;
-                      catat='review: minta perbaikan' + (d.catatan? ' — '+d.catatan : '');
+    case 'apply':     set('proses','apply'); catat='menerapkan warna final ke seluruh slab'; break;
+    case 'ke_review': set('proses','review'); p.diajukan_pada=tgl; p.diajukan_oleh=oleh;
+                      catat='diajukan untuk persetujuan'; break;
+    case 'setuju':    set('final',''); p.selesai_pada=tgl; p.direview_oleh=oleh;
+                      catat='disetujui '+oleh+' → FINAL'; break;
+    case 'tolak':     set('revisi','perbaikan'); p.direview_oleh=oleh;
+                      catat='dikembalikan untuk perbaikan' + (d.catatan? ' — '+d.catatan : '');
                       if(d.catatan) tambahBriefKe(p, {waktu:(ctx.stempel||tgl), oleh:oleh, sumber:'review',
                         teks:d.catatan, lampiran:'', ronde:0});
                       break;
-    case 'perbaiki':  p.status='dikerjakan'; catat='mulai perbaikan dari catatan review'; break;
-    case 'ke_edited': p.status='review'; catat='hasil ditaruh di folder Edited, menunggu review'; break;
-    case 'selesai':   p.status='done';   p.selesai_pada=tgl; catat='ditandai SELESAI'; break;
-    case 'buka':      p.status='todo';   p.selesai_pada=''; catat='dibuka lagi'; break;
+    case 'perbaiki':  set('proses',''); catat='mulai perbaikan dari catatan review'; break;
+    case 'ke_edited': set('proses','review'); catat='diajukan untuk persetujuan'; break;
+    case 'selesai':   set('final',''); p.selesai_pada=tgl; catat='ditandai FINAL'; break;
+    case 'buka':      set('antrean',''); p.selesai_pada=''; catat='dibuka lagi'; break;
     case 'revisi_baru': {
       p.dibuka_ulang = (p.dibuka_ulang || 0) + 1;
       p.selesai_pada = '';
-      // batu yang dulu pakai sample balik ke jalur sample; sisanya masuk antrean lagi
-      p.status = (p.jalur === 'sample') ? 'revisi' : 'todo';
+      if(p.jalur === 'sample') set('revisi',''); else set('antrean','');
       if(d.teks) tambahBriefKe(p, {waktu:(ctx.stempel||tgl), oleh:(d.oleh||'Klien'), sumber:'klien',
         teks:d.teks, lampiran:d.lampiran||'', ronde:(p.sampel||[]).length});
       catat = 'DIBUKA LAGI — revisi ke-' + p.dibuka_ulang + (d.teks ? ': ' + d.teks : '');
       break;
     }
-    case 'tahan':     p.status='hold';   catat='ditahan'; break;
-    case 'lanjut':    p.status='dikerjakan'; catat='dilanjutkan lagi'; break;
+    case 'tahan':     set('antrean','ditunda'); catat='ditunda'; break;
+    case 'lanjut':    set('proses',''); catat='dilanjutkan lagi'; break;
     case 'brief':     tambahBriefKe(p, {waktu:(ctx.stempel||tgl), oleh:(d.oleh||oleh), sumber:(d.sumber||'internal'),
                         teks:d.teks||'', lampiran:d.lampiran||'', ronde:(p.sampel||[]).length});
                       catat='brief baru dicatat' + (d.sumber==='klien'?' (dari klien)':''); break;
@@ -1583,12 +1620,12 @@ function ringkasOrang(projects, nama){
   (projects||[]).forEach(function(p){
     if((p.pic||'') !== nama) return;
     r.total++;
-    if(p.urgent && p.status !== 'done') r.urgent++;
-    if(p.status === 'done') r.selesai++;
-    else if(p.status === 'sample_kirim') { r.tunggu++; r.aktif++; }
-    else if(p.status === 'revisi' || p.status === 'revisi_internal') { r.revisi++; r.aktif++; }
-    else if(p.status === 'review') { r.review++; r.aktif++; }
-    else if(p.status === 'todo') { r.belum++; }
+    if(p.urgent && !sudahFinal(p)) r.urgent++;
+    if(sudahFinal(p)) r.selesai++;
+    else if(menungguKlien(p)) { r.tunggu++; r.aktif++; }
+    else if(p.status === 'revisi') { r.revisi++; r.aktif++; }
+    else if(menungguPersetujuan(p)) { r.review++; r.aktif++; }
+    else if(p.status === 'antrean') { r.belum++; }
     else r.aktif++;
   });
   return r;
@@ -1601,7 +1638,9 @@ if(typeof module !== 'undefined' && module.exports){
     apakahReviewer:apakahReviewer, daftarReviewer:daftarReviewer, briefTerbaru:briefTerbaru,
     tambahBriefKe:tambahBriefKe, telatHari:telatHari,
     tanggalIndo:tanggalIndo, kelompokPerHari:kelompokPerHari, tandaBaris:tandaBaris,
-    TAHAP:TAHAP, opsiStatus:opsiStatus,
+    RINCI:RINCI, labelRinci:labelRinci, opsiStatus:opsiStatus,
+    sudahFinal:sudahFinal, menungguKlien:menungguKlien, menungguPersetujuan:menungguPersetujuan,
+    naikkanProject:naikkanProject, PETA_LAMA:PETA_LAMA,
     sepertiInggris:sepertiInggris, terjemahOtomatis:terjemahOtomatis, briefTampil:briefTampil,
     HARI_TENGGAT:HARI_TENGGAT, tambahHari:tambahHari, tenggatOtomatis:tenggatOtomatis,
     dariBarisSB:dariBarisSB, keBarisSB:keBarisSB, bedaKirim:bedaKirim, buangYangDihapus:buangYangDihapus,
@@ -1739,7 +1778,7 @@ async function muatDariSupabase(diam){
   }
   basis = JSON.parse(JSON.stringify(mentah));
   pertamaKali = false;
-  if(lengkapiTenggat()) simpanNanti();
+  if(naikkanData() + lengkapiTenggat()) simpanNanti();
   LS.taruh('mb_cache', db);
   renderAman();
   return true;
@@ -1856,7 +1895,7 @@ async function muatDariGitHub(diam){
       if(berubah && !pertamaKali) pesan('Data diperbarui' + (isi.diperbarui_oleh ? ' oleh ' + isi.diperbarui_oleh : ''));
     }
     pertamaKali = false;
-    if(lengkapiTenggat()) simpanNanti();
+    if(naikkanData() + lengkapiTenggat()) simpanNanti();
     LS.taruh('mb_cache', db);
     renderAman();
     return true;
@@ -1866,12 +1905,21 @@ async function muatDariGitHub(diam){
     return false;
   }
 }
+/* Data yang masih memakai sebelas status lama dinaikkan ke empat status. */
+function naikkanData(){
+  var n = 0;
+  (db.projects||[]).forEach(function(p){
+    if(naikkanProject(p)){ p.diperbarui = new Date().toISOString(); n++; }
+  });
+  if(n) kotor = true;
+  return n;
+}
 /* Tugas lama yang belum punya target selesai diberi tenggat otomatis
    (7 hari sejak diterima) begitu datanya dimuat. */
 function lengkapiTenggat(){
   var n = 0;
   (db.projects||[]).forEach(function(p){
-    if(!p.tenggat && p.diterima && p.status !== 'done'){
+    if(!p.tenggat && p.diterima && !sudahFinal(p)){
       var t = tenggatOtomatis(p.diterima);
       if(t){ p.tenggat = t; p.diperbarui = new Date().toISOString(); n++; }
     }
@@ -1991,7 +2039,7 @@ function terpakai(){
     if(fp === '__kosong'){ if(p.pic) return false; } else if(fp && p.pic !== fp) return false;
     if(fpr && p.prioritas !== fpr) return false;
     if(fs && p.status !== fs) return false;
-    if(!tampilSelesai && SELESAI.indexOf(p.status) >= 0 && fs !== 'done') return false;
+    if(!tampilSelesai && SELESAI.indexOf(p.status) >= 0 && fs !== 'final') return false;
     if(q){
       var teks = [p.kode, p.revisi, p.slab, p.catatan, (p.jenis||[]).join(' '), p.pic].join(' ').toLowerCase();
       if(teks.indexOf(q) < 0) return false;
@@ -2021,11 +2069,12 @@ function pilOrang(){
   s3.value = v3 || '';
 }
 function badgeStatus(p){
-  var s = STATUS[p.status] || STATUS.todo;
-  return '<span class="pil"><span class="titik" style="background:'+s.warna+'"></span>'+esc(s.label)+'</span>';
+  var s = STATUS[p.status] || STATUS.antrean;
+  return '<span class="pil"><span class="titik" style="background:'+s.warna+'"></span>'+esc(s.label)
+    + (labelRinci(p) ? ' <span class="samar2">· '+esc(labelRinci(p))+'</span>' : '') + '</span>';
 }
 function badgeTunggu(p){
-  if(p.status !== 'sample_kirim') return '';
+  if(!menungguKlien(p)) return '';
   var r = rondeTerakhir(p); if(!r || !r.dikirim) return '';
   var n = hariAntara(r.dikirim, hariIni());
   if(n === null) return '';
@@ -2033,7 +2082,7 @@ function badgeTunggu(p){
   return '<span class="pil" style="border-color:'+w+';color:'+w+'">⏱ '+n+' hari</span>';
 }
 function badgeUrgent(p){
-  return p.urgent && p.status !== 'done'
+  return p.urgent && !sudahFinal(p)
     ? '<span class="pil mini" style="background:var(--err);border-color:var(--err);color:#fff">🔥 URGENT</span>' : '';
 }
 function badgeTenggat(p){
@@ -2055,7 +2104,7 @@ function kartuHTML(p){
   var t = aksiBerikutnya(p, opsiAksi())[0];
   var br = briefTerbaru(p);
   var briefBaru = br && (br.sumber === 'klien' || br.sumber === 'review');
-  return '<div class="kartu" data-buka="'+esc(p.id)+'"'+(p.urgent&&p.status!=='done'?' style="border-color:var(--err)"':'')+'>'
+  return '<div class="kartu" data-buka="'+esc(p.id)+'"'+(p.urgent&&!sudahFinal(p)?' style="border-color:var(--err)"':'')+'>'
     + '<div style="display:flex;align-items:center;gap:7px">'
     +   '<span class="titik" style="background:'+(PRIORITAS[p.prioritas]||'var(--tx3)')+'" title="'+esc(p.prioritas||'')+'"></span>'
     +   '<span class="kode">'+esc(p.kode)+'</span>'
@@ -2080,7 +2129,7 @@ function barisHTML(p){
   var a = aksiBerikutnya(p, opsiAksi())[0];
   var br = briefTerbaru(p);
   var baru = br && (br.sumber === 'klien' || br.sumber === 'review');
-  return '<div class="baris" data-buka="'+esc(p.id)+'"'+(p.urgent&&p.status!=='done'?' style="border-color:var(--err)"':'')+'>'
+  return '<div class="baris" data-buka="'+esc(p.id)+'"'+(p.urgent&&!sudahFinal(p)?' style="border-color:var(--err)"':'')+'>'
     + '<span class="titik" style="background:'+(PRIORITAS[p.prioritas]||'var(--tx3)')+'" title="'+esc(p.prioritas||'')+'"></span>'
     + badgeUrgent(p)
     + '<span class="kode">'+esc(p.kode)+'</span>'
@@ -2094,7 +2143,7 @@ function barisHTML(p){
 function htmlPapan(ps){
   var html = '<div class="papan">';
   KOLOM.forEach(function(k){
-    var isi = ps.filter(function(p){ return (STATUS[p.status]||STATUS.todo).kolom === k.id; });
+    var isi = ps.filter(function(p){ return (STATUS[p.status]||STATUS.antrean).kolom === k.id; });
     html += '<section class="kol"><h3>'+esc(k.label)+'<span class="n">'+isi.length+'</span></h3><div class="isikol">'
       + (isi.length ? isi.map(kartuHTML).join('') : '<div class="kosong mini">kosong</div>')
       + '</div></section>';
@@ -2112,12 +2161,12 @@ function htmlDaftar(ps){
     if(!$('#fHari').checked && p.diterima) sub.push(tanggalIndo(p.diterima).replace(/ \d{4}$/,''));
     var tanda = tandaBaris(p, hariIni());
     var kelas = 'brs' + (terpilih[p.id] ? ' pilih' : '')
-      + (p.dibuka_ulang && p.status !== 'done' ? ' t-ulang' : '')
+      + (p.dibuka_ulang && !sudahFinal(p) ? ' t-ulang' : '')
       + (tanda.some(function(x){ return x.teks === 'BARU'; }) ? ' t-baru' : '')
       + (tanda.some(function(x){ return x.teks === 'BARU SELESAI'; }) ? ' t-kelar' : '');
     return '<tr class="'+kelas+'">'
       + '<td class="cek"><input type="checkbox" data-pilih="'+esc(p.id)+'"'+(terpilih[p.id]?' checked':'')+'></td>'
-      + '<td class="pri">' + (p.urgent && p.status!=='done' ? '<span class="api" title="urgent">🔥</span> ' : '')
+      + '<td class="pri">' + (p.urgent && !sudahFinal(p) ? '<span class="api" title="urgent">🔥</span> ' : '')
         + '<select class="tlg pri-'+esc(p.prioritas||'P3')+'" data-set="prioritas" data-id="'+esc(p.id)+'" title="prioritas">'
         + ['P1','P2','P3'].map(function(x){ return '<option'+(p.prioritas===x?' selected':'')+'>'+x+'</option>'; }).join('')
         + '</select></td>'
@@ -2131,9 +2180,10 @@ function htmlDaftar(ps){
                  return (v.jenis !== 'asli' ? '<span class="lbl-id" title="terjemahan '+v.jenis+'">ID</span> ' : '') + esc(v.teks); })()
             + '</div>' : '') + '</td>'
       + '<td class="pic">'+selPic(p)+'</td>'
-      + '<td class="st"><span class="stat"><i class="titik" style="background:'+((STATUS[p.status]||STATUS.todo).warna)+'"></i>'
+      + '<td class="st"><span class="stat"><i class="titik" style="background:'+((STATUS[p.status]||STATUS.antrean).warna)+'"></i>'
         + '<select class="tlg" data-set="status" data-id="'+esc(p.id)+'">'
         + opsiStatus(p.status) + '</select></span>'
+        + (labelRinci(p) ? '<div class="samar2 mini" style="margin-top:2px">'+esc(labelRinci(p))+'</div>' : '')
         + (badgeTenggat(p) || badgeTunggu(p) ? '<div style="margin-top:4px">'+badgeTenggat(p)+' '+badgeTunggu(p)+'</div>' : '')
         + '</td>'
       + '</tr>';
@@ -2143,7 +2193,7 @@ function htmlDaftar(ps){
     baris = kelompokPerHari(ps).map(function(g){
       var tutup = !!tutupHari[g.tanggal];
       var belumPic = g.items.filter(function(x){ return !x.pic; }).length;
-      var kelar = g.items.filter(function(x){ return x.status === 'done'; }).length;
+      var kelar = g.items.filter(sudahFinal).length;
       return '<tr class="hari'+(tutup?' tertutup':'')+'"><td colspan="6">'
         + '<input type="checkbox" class="cekhari" data-pilih-hari="'+esc(g.tanggal)+'"'
         + (g.items.every(function(x){ return terpilih[x.id]; }) ? ' checked' : '') + '>'
@@ -2219,7 +2269,7 @@ function htmlOrang(semua){
   var badan = '';
   /* Kotak khusus reviewer: yang menunggu keputusan Baldy / Indra */
   if(apakahReviewer(db.tim, saya)){
-    var perluReview = semua.filter(function(p){ return p.status === 'review'; });
+    var perluReview = semua.filter(menungguPersetujuan);
     badan += '<div class="grup"><h4 style="color:var(--ac)">📋 Menunggu review kamu'
       + '<span class="pil mini" style="border-color:var(--ac);color:var(--ac)">'+perluReview.length+'</span></h4>'
       + (perluReview.length ? perluReview.map(barisHTML).join('')
@@ -2228,7 +2278,7 @@ function htmlOrang(semua){
   if(ps === null){
     badan += '<div class="kisi" style="margin-top:14px">' + daftar.map(function(n){
       var r = ringkasOrang(semua, n);
-      var tugas = semua.filter(function(p){ return p.pic === n && p.status !== 'done'; }).slice(0,4);
+      var tugas = semua.filter(function(p){ return p.pic === n && !sudahFinal(p); }).slice(0,4);
       return '<div class="kartu-b" data-orang="'+esc(n)+'" style="cursor:pointer'+(r.urgent?';border-color:var(--err)':'')+'">'
         + '<h4>'+avaHTML(n)+' '+esc(n)
         + (apakahReviewer(db.tim, n) ? '<span class="pil mini">reviewer</span>' : '')
@@ -2242,15 +2292,15 @@ function htmlOrang(semua){
     + '<div class="kosong" style="margin-top:14px">Pilih nama di atas untuk melihat rincian pekerjaannya.</div>';
   } else {
     var grup = [
-      {t:'🔥 Urgent', f:function(p){ return p.urgent && p.status!=='done'; }},
-      {t:'Perlu penyempurnaan', f:function(p){ return p.status==='revisi_internal'; }},
+      {t:'🔥 Urgent', f:function(p){ return p.urgent && !sudahFinal(p); }},
+      {t:'Perlu perbaikan', f:function(p){ return p.status==='revisi' && p.rinci==='perbaikan'; }},
       {t:'Permintaan revisi klien', f:function(p){ return p.status==='revisi'; }},
-      {t:'Menunggu tanggapan klien', f:function(p){ return p.status==='sample_kirim'; }},
-      {t:'Sedang dikerjakan', f:function(p){ return ['dikerjakan','sample_buat','disetujui','apply'].indexOf(p.status)>=0; }},
-      {t:'Dalam antrean', f:function(p){ return p.status==='todo'; }},
-      {t:'Menunggu persetujuan', f:function(p){ return p.status==='review'; }},
-      {t:'Ditunda', f:function(p){ return p.status==='hold'; }},
-      {t:'Selesai', f:function(p){ return p.status==='done'; }}
+      {t:'Menunggu tanggapan klien', f:function(p){ return menungguKlien(p); }},
+      {t:'Menunggu persetujuan', f:function(p){ return menungguPersetujuan(p); }},
+      {t:'Sedang dikerjakan', f:function(p){ return p.status==='proses'; }},
+      {t:'Antrean', f:function(p){ return p.status==='antrean' && p.rinci!=='ditunda'; }},
+      {t:'Ditunda', f:function(p){ return p.rinci==='ditunda'; }},
+      {t:'Final', f:function(p){ return sudahFinal(p); }}
     ];
     var sudah = {};
     grup.forEach(function(g){
@@ -2266,10 +2316,10 @@ function htmlOrang(semua){
 }
 function htmlRingkas(ps){
   var perStatus = {}; ps.forEach(function(p){ perStatus[p.status] = (perStatus[p.status]||0)+1; });
-  var tunggu = ps.filter(function(p){ return p.status==='sample_kirim'; })
+  var tunggu = ps.filter(menungguKlien)
     .map(function(p){ var r = rondeTerakhir(p); return {p:p, n:(r&&r.dikirim)?hariAntara(r.dikirim, hariIni()):null}; })
     .sort(function(a,b){ return (b.n||0)-(a.n||0); });
-  var tanpaPic = ps.filter(function(p){ return !p.pic && p.status!=='done'; });
+  var tanpaPic = ps.filter(function(p){ return !p.pic && !sudahFinal(p); });
   var perPri = {P1:0,P2:0,P3:0}; ps.forEach(function(p){ if(perPri[p.prioritas]!==undefined) perPri[p.prioritas]++; });
 
   var html = '<div class="kisi">';
@@ -2281,7 +2331,7 @@ function htmlRingkas(ps){
         return '<div><span class="titik" style="background:'+STATUS[k].warna+'"></span>'+esc(STATUS[k].label)+'<b>'+perStatus[k]+'</b></div>'; }).join('')
     + '</div></div>';
 
-  var perluReview = ps.filter(function(p){ return p.status === 'review'; });
+  var perluReview = ps.filter(menungguPersetujuan);
   html += '<div class="kartu-b" style="'+(perluReview.length?'border-color:var(--ac)':'')+'"><h4>📋 Pending review (Baldy / Indra)</h4>'
     + (perluReview.length ? '<div class="lst">' + perluReview.map(function(p){
         return '<div><a href="#" data-buka="'+esc(p.id)+'">'+esc(p.kode)+'</a>'
@@ -2289,7 +2339,7 @@ function htmlRingkas(ps){
           + '<b>'+esc(p.diajukan_pada||'')+'</b></div>'; }).join('') + '</div>'
       : '<div class="samar2 mini">tidak ada yang menunggu review</div>') + '</div>';
 
-  var urgen = ps.filter(function(p){ return p.urgent && p.status !== 'done'; });
+  var urgen = ps.filter(function(p){ return p.urgent && !sudahFinal(p); });
   var telat = ps.filter(function(p){ var n = telatHari(p, hariIni()); return n !== null && n > 0; });
   html += '<div class="kartu-b" style="'+((urgen.length||telat.length)?'border-color:var(--err)':'')+'"><h4>🔥 Urgent & lewat tenggat</h4>'
     + ((urgen.length||telat.length) ? '<div class="lst">'
@@ -2409,12 +2459,12 @@ function renderLaci(){
   var h = '';
   h += '<div class="aksi-kotak"><div class="jdl">Langkah berikutnya</div><div class="tbl">'
     + aksi.map(function(a){ return tombolAksi(p, a, false); }).join('')
-    + (p.status !== 'hold' && p.status !== 'done' ? '<button class="btn" data-aksi="tahan" data-id="'+esc(p.id)+'">Tunda</button>' : '')
+    + (p.rinci !== 'ditunda' && !sudahFinal(p) ? '<button class="btn" data-aksi="tahan" data-id="'+esc(p.id)+'">Tunda</button>' : '')
     + (!p.pic && saya ? '<button class="btn" data-ambil="'+esc(p.id)+'">Assign ke saya</button>' : '')
     + '<button class="btn'+(p.urgent?' bahaya':'')+'" data-aksi="urgent" data-id="'+esc(p.id)+'">'
       + (p.urgent ? '🔥 Lepas urgent' : '🔥 Tandai urgent') + '</button>'
     + '</div><div class="mini samar" style="margin-top:8px">Status: '+badgeStatus(p)+' '+badgeUrgent(p)+' '+badgeTenggat(p)+' '+badgeTunggu(p)
-    + (p.status==='review' && p.diajukan_oleh ? '<div style="margin-top:5px">Diajukan '+esc(p.diajukan_oleh)+' pada '+esc(p.diajukan_pada||'')+'</div>' : '')
+    + (menungguPersetujuan(p) && p.diajukan_oleh ? '<div style="margin-top:5px">Diajukan '+esc(p.diajukan_oleh)+' pada '+esc(p.diajukan_pada||'')+'</div>' : '')
     + '</div></div>';
 
   /* ---- brief: yang terbaru menonjol, yang lama tetap kelihatan ---- */
@@ -2844,7 +2894,7 @@ function dialogTambah(){
           jenis:$('#nJenis').value.split(',').map(function(x){return x.trim();}).filter(Boolean),
           prioritas:$('#nPri').value, pic:$('#nPic').value, diterima:tgl,
           tenggat:tenggatOtomatis(tgl),
-          batch:$('#nBatch').value, jalur:'belum', status:'todo', catatan:$('#nCatat').value.trim(), tautan:'', sampel:[],
+          batch:$('#nBatch').value, jalur:'belum', status:'antrean', rinci:'', catatan:$('#nCatat').value.trim(), tautan:'', sampel:[],
           riwayat:[{waktu:new Date().toISOString(), oleh:saya||'—', teks:'project dibuat'}],
           diperbarui:new Date().toISOString()});
         tandaiKotor(); render(); tutupModal(); pesan(kode + ' ditambahkan');
@@ -2896,7 +2946,7 @@ function dialogTempel(){
             prioritas:o.prioritas||'P2', pic:o.pic||'',
             diterima:(o.diterima && /^\d{4}-/.test(o.diterima)) ? o.diterima : hariIni(),
             tenggat:tenggatOtomatis((o.diterima && /^\d{4}-/.test(o.diterima)) ? o.diterima : hariIni()),
-            batch:batch, jalur:'belum', status:'todo',
+            batch:batch, jalur:'belum', status:'antrean', rinci:'',
             catatan:o.jumlah ? (o.jumlah + ' slab di folder') : (o.diterima && !/^\d{4}-/.test(o.diterima) ? 'diterima: '+o.diterima : ''),
             tautan:'', sampel:[],
             riwayat:[{waktu:new Date().toISOString(), oleh:saya||'—', teks:'diimpor dari tempel'}],
