@@ -339,6 +339,9 @@ cek('kode & slab kembali berdampingan satu baris',
   /<div class="duo">'[\s\S]{0,400}id="nKode"[\s\S]{0,400}id="nSlab"/.test(src));
 cek('kotak slab tetap bisa diketik langsung', /id="nSlab" placeholder/.test(src));
 cek('kisi angka disembunyikan sampai dibuka', /id="nSlabWadah"/.test(src) && /<details/.test(src));
+cek('formulir project baru terbuka di sisi kanan', /\}\}\], \{sisi:true\}\);/.test(src));
+cek('panel kanan punya gayanya sendiri', /\.modal\.samping \.kotak-m/.test(src));
+cek('kelas panel dilepas saat ditutup', /classList\.remove\('samping'\)/.test(src));
 cek('ketikan slab menyorot kisinya', /function sorotSlab\(/.test(src) && /sorotSlab\('n'/.test(src));
 cek('kisi slab ada di laci detail', /pasangSlab\('d'/.test(src));
 cek('kisi bisa ditarik (pointer event)', /pointerdown/.test(src) && /pointermove/.test(src));

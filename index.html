@@ -277,6 +277,15 @@ td.kodesel:hover{color:var(--ac)}
 .modal.on{display:grid}
 .modal .kotak-m{background:var(--bg2);border:1px solid var(--line);border-radius:14px;width:min(560px,100%);
   max-height:88vh;overflow:auto;box-shadow:var(--sh)}
+/* varian panel kanan: dipakai "Project baru" supaya sejajar dengan panel detail */
+.modal.samping{padding:0;place-items:stretch;justify-items:end}
+.modal.samping .kotak-m{width:min(560px,100vw);max-height:100vh;height:100vh;border-radius:0;
+  border:0;border-left:1px solid var(--line);display:flex;flex-direction:column;
+  animation:geserMasuk .18s ease-out}
+.modal.samping .badan-m{flex:1;overflow:auto}
+.modal.samping header{flex:none}
+.modal.samping footer{flex:none}
+@keyframes geserMasuk{from{transform:translateX(100%)}to{transform:none}}
 .modal header{padding:14px 16px;border-bottom:1px solid var(--line);font-weight:700;display:flex;align-items:center;gap:9px}
 .modal .badan-m{padding:16px}
 .modal footer{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end}
@@ -2650,7 +2659,10 @@ document.addEventListener('click', function(e){
 });
 
 /* ============================ MODAL ============================ */
-function modal(judul, badan, tombol){
+/* opsi.sisi = true -> tampil sebagai panel di SISI KANAN (sejajar dengan
+   panel detail), bukan kotak melayang di tengah. */
+function modal(judul, badan, tombol, opsi){
+  $('#modal').classList.toggle('samping', !!(opsi && opsi.sisi));
   $('#modalJudul').textContent = judul;
   $('#modalBadan').innerHTML = badan;
   $('#modalKaki').innerHTML = '';
@@ -2661,7 +2673,7 @@ function modal(judul, badan, tombol){
   });
   $('#modal').classList.add('on');
 }
-function tutupModal(){ $('#modal').classList.remove('on'); }
+function tutupModal(){ $('#modal').classList.remove('on'); $('#modal').classList.remove('samping'); }
 
 function dialogJawaban(id){
   var p = pilihProject(id); if(!p) return;
@@ -2836,7 +2848,7 @@ function dialogTambah(){
           riwayat:[{waktu:new Date().toISOString(), oleh:saya||'—', teks:'project dibuat'}],
           diperbarui:new Date().toISOString()});
         tandaiKotor(); render(); tutupModal(); pesan(kode + ' ditambahkan');
-     }}]);
+     }}], {sisi:true});
   // kisi nomor slab: dua arah dengan kotak teksnya
   pasangSlab('n', function(t){ $('#nSlab').value = t; });
   $('#nSlab').addEventListener('input', function(){ sorotSlab('n', $('#nSlab').value); });
