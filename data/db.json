@@ -1,6 +1,6 @@
 {
   "versi": 1,
-  "diperbarui": "2026-09-11T05:56:39Z",
+  "diperbarui": "2026-09-12T05:45:25Z",
   "sumber": "cadangan otomatis harian dari Supabase",
   "batches": [
     {
@@ -67,10 +67,10 @@
         "Color",
         "Detail"
       ],
-      "rinci": "",
+      "rinci": "sample_kirim",
       "revisi": "Versi sedikit lebih blue + koreksi stone details",
       "sampel": [],
-      "status": "antrean",
+      "status": "revisi",
       "tautan": "",
       "urgent": false,
       "catatan": "Teks katalog harus: Amethyst Wave Quartzite  Block 3446  Slab #",
@@ -79,12 +79,22 @@
           "oleh": "Baldy",
           "teks": "masuk list pending 7 Sep",
           "waktu": "2026-09-07T04:00:00.000Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Menunggu tanggapan klien",
+          "waktu": "2026-09-11T06:17:50.461Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Revisi",
+          "waktu": "2026-09-11T07:54:24.343Z"
         }
       ],
       "tenggat": "2026-09-14",
       "diterima": "2026-09-07",
       "prioritas": "P2",
-      "diperbarui": "2026-09-10T05:00:00.000Z"
+      "diperbarui": "2026-09-11T07:54:24.340Z"
     },
     {
       "id": "p_ascot20h2769",
@@ -110,7 +120,7 @@
       "rinci": "",
       "revisi": "Adjust slab 20",
       "sampel": [],
-      "status": "antrean",
+      "status": "final",
       "tautan": "",
       "urgent": false,
       "catatan": "",
@@ -119,12 +129,17 @@
           "oleh": "Baldy",
           "teks": "masuk list pending 10 Sep",
           "waktu": "2026-09-10T04:00:00.000Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Final",
+          "waktu": "2026-09-11T06:45:36.302Z"
         }
       ],
       "tenggat": "2026-09-17",
       "diterima": "2026-09-10",
       "prioritas": "P1",
-      "diperbarui": "2026-09-10T05:00:00.000Z"
+      "diperbarui": "2026-09-11T06:45:36.302Z"
     },
     {
       "id": "p_bevros20h5802",
@@ -390,7 +405,7 @@
       "rinci": "",
       "revisi": "Ikuti color brief",
       "sampel": [],
-      "status": "antrean",
+      "status": "revisi",
       "tautan": "",
       "urgent": false,
       "catatan": "",
@@ -399,12 +414,17 @@
           "oleh": "Baldy",
           "teks": "masuk list pending 7 Sep",
           "waktu": "2026-09-07T04:00:00.000Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Revisi",
+          "waktu": "2026-09-11T08:01:25.398Z"
         }
       ],
       "tenggat": "2026-09-14",
       "diterima": "2026-09-07",
       "prioritas": "P3",
-      "diperbarui": "2026-09-10T05:00:00.000Z"
+      "diperbarui": "2026-09-11T08:01:25.398Z"
     },
     {
       "id": "p_mtv7dakd32gy",
@@ -496,7 +516,7 @@
       "rinci": "",
       "revisi": "",
       "sampel": [],
-      "status": "proses",
+      "status": "revisi",
       "tautan": "",
       "catatan": "",
       "riwayat": [
@@ -509,12 +529,17 @@
           "oleh": "—",
           "teks": "status → Dikerjakan",
           "waktu": "2026-09-11T04:15:15.138Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Revisi",
+          "waktu": "2026-09-11T06:44:35.423Z"
         }
       ],
       "tenggat": "2026-09-10",
       "diterima": "2026-09-03",
       "prioritas": "P2",
-      "diperbarui": "2026-09-11T04:41:46.340Z"
+      "diperbarui": "2026-09-11T06:44:35.423Z"
     },
     {
       "id": "p_mtwg6j99mj3w",
@@ -541,6 +566,169 @@
       "diterima": "2026-09-10",
       "prioritas": "P2",
       "diperbarui": "2026-09-11T04:41:46.342Z"
+    },
+    {
+      "id": "p_mtwnj99zacfw",
+      "pic": "Baldy",
+      "kode": "ASCOT20H2769",
+      "slab": "45-55",
+      "batch": "b_20260910",
+      "jalur": "belum",
+      "jenis": [
+        "match color"
+      ],
+      "rinci": "",
+      "revisi": "sampling",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "11 slab di folder",
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-11T07:45:45.143Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Proses",
+          "waktu": "2026-09-11T07:46:52.055Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Antrean",
+          "waktu": "2026-09-11T07:47:42.655Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Proses",
+          "waktu": "2026-09-11T07:48:06.207Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Revisi",
+          "waktu": "2026-09-11T07:48:07.719Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Antrean",
+          "waktu": "2026-09-11T07:48:10.695Z"
+        }
+      ],
+      "tenggat": "2026-09-18",
+      "diterima": "2026-09-11",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-11T07:48:18.087Z"
+    },
+    {
+      "id": "p_mtwnjxviy8ro",
+      "pic": "Baldy",
+      "kode": "CALVER20H8090",
+      "slab": "",
+      "batch": "b_20260910",
+      "brief": [
+        {
+          "id": "br_1_2026-09-11T08:04:02.305Z",
+          "oleh": "Klien",
+          "teks": "Hi Indra and Stefanto,\n\nCould you please edit the following batch.\nYou can download the raw files HERE.\n\nThe name for this particular slab needs to be recorded as the following:\n\nNAME TYPE Calacatta Verde Marble Block #8090 Slab #\n\nThis is the same process as the others. The layers need to be decreased to 45%, and each of the images need to be saved to sizes anywhere between 10-15MB.\n\nPlease see the attached images for colour reference 🙂\n\nLet me know if you need any more information.\n\nThank you!\n\nOriginal email (Studio archive): https://mail.google.com/mail/#all/1a08f27e57d489a9\nFind in your Gmail: https://mail.google.com/mail/u/0/#search/rfc822msgid%3A%3CSY1P282MB6598EE9EAA99C751D300C5DAA4BE2%40SY1P282MB6598.AUSP282.PROD.OUTLOOK.COM%3E",
+          "ronde": 0,
+          "waktu": "2026-09-11T08:04:02.305Z",
+          "sumber": "klien",
+          "lampiran": ""
+        }
+      ],
+      "jalur": "belum",
+      "jenis": [],
+      "rinci": "",
+      "revisi": "Sampling",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "12 slab di folder",
+      "dihapus": true,
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-11T07:46:17.022Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "Assigned → Baldy",
+          "waktu": "2026-09-11T07:46:35.480Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "brief baru dicatat (dari klien)",
+          "waktu": "2026-09-11T08:04:02.305Z"
+        }
+      ],
+      "tenggat": "2026-09-18",
+      "diterima": "2026-09-11",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-11T08:04:40.800Z"
+    },
+    {
+      "id": "p_mtwnk9w6a1b0",
+      "pic": "Baldy",
+      "kode": "MONTER20H5577",
+      "slab": "",
+      "batch": "b_20260910",
+      "jalur": "belum",
+      "jenis": [],
+      "rinci": "",
+      "revisi": "sampling",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "14 slab di folder",
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-11T07:46:32.598Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "Assigned → Baldy",
+          "waktu": "2026-09-11T07:46:36.927Z"
+        }
+      ],
+      "tenggat": "2026-09-18",
+      "diterima": "2026-09-11",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-11T07:46:36.927Z"
+    },
+    {
+      "id": "p_mtwo8lm8ilbl",
+      "pic": "Baldy",
+      "kode": "CALVER20H8090",
+      "slab": "",
+      "batch": "b_20260910",
+      "jalur": "belum",
+      "jenis": [],
+      "rinci": "",
+      "revisi": "sampling",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "12 slab di folder",
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-11T08:05:27.536Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "Assigned → Baldy",
+          "waktu": "2026-09-11T08:05:37.824Z"
+        }
+      ],
+      "tenggat": "2026-09-18",
+      "diterima": "2026-09-11",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-11T08:05:37.824Z"
     },
     {
       "id": "p_newsav20h2639",
@@ -600,14 +788,26 @@
           "lampiran": ""
         }
       ],
-      "jalur": "belum",
+      "jalur": "sample",
       "jenis": [
         "Color Match"
       ],
-      "rinci": "",
+      "rinci": "sample_buat",
       "revisi": "Color match",
-      "sampel": [],
-      "status": "antrean",
+      "sampel": [
+        {
+          "oleh": "—",
+          "brief": "",
+          "ronde": 1,
+          "dibuat": "2026-09-11",
+          "tautan": "",
+          "dikirim": "",
+          "jawaban": "menunggu",
+          "lampiran": "",
+          "tanggal_jawaban": ""
+        }
+      ],
+      "status": "proses",
       "tautan": "",
       "urgent": false,
       "catatan": "",
@@ -616,12 +816,17 @@
           "oleh": "Baldy",
           "teks": "masuk list pending 7 Sep",
           "waktu": "2026-09-07T04:00:00.000Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "jalur: pakai sample, mulai sample ronde 1",
+          "waktu": "2026-09-11T08:45:52.405Z"
         }
       ],
       "tenggat": "2026-09-14",
       "diterima": "2026-09-07",
       "prioritas": "P3",
-      "diperbarui": "2026-09-10T05:00:00.000Z"
+      "diperbarui": "2026-09-11T08:45:52.405Z"
     },
     {
       "id": "p_solbla20h6004",
