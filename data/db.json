@@ -1,6 +1,6 @@
 {
   "versi": 1,
-  "diperbarui": "2026-09-14T06:14:59Z",
+  "diperbarui": "2026-09-15T06:09:23Z",
   "sumber": "cadangan otomatis harian dari Supabase",
   "batches": [
     {
@@ -797,6 +797,100 @@
       "diperbarui": "2026-09-14T02:07:39.917Z"
     },
     {
+      "id": "p_mu0vjghhwzw2",
+      "pic": "",
+      "kode": "SENTOS20H8032",
+      "slab": "",
+      "batch": "b_20260910",
+      "jalur": "belum",
+      "jenis": [],
+      "rinci": "",
+      "revisi": "sampling",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "32 slab di folder",
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-14T06:40:56.118Z"
+        }
+      ],
+      "tenggat": "2026-09-14",
+      "diterima": "2026-09-07",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-14T06:40:56.118Z"
+    },
+    {
+      "id": "p_mu0vvx41sakv",
+      "pic": "",
+      "kode": "TURARG20H5853",
+      "slab": "",
+      "batch": "b_20260910",
+      "brief": [
+        {
+          "id": "br_1_2026-09-14T06:50:57.233Z",
+          "oleh": "Klien",
+          "teks": "For colour correction, this one doesn't have any green tinge as it is more of a grey/beige and may need to be slightly darker please",
+          "ronde": 0,
+          "waktu": "2026-09-14T06:50:57.233Z",
+          "sumber": "klien",
+          "lampiran": ""
+        }
+      ],
+      "jalur": "belum",
+      "jenis": [],
+      "rinci": "",
+      "revisi": "ColorGrading",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "15 slab di folder",
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-14T06:50:37.539Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "brief baru dicatat (dari klien)",
+          "waktu": "2026-09-14T06:50:57.233Z"
+        }
+      ],
+      "tenggat": "2026-09-21",
+      "diterima": "2026-09-14",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-14T06:50:57.233Z"
+    },
+    {
+      "id": "p_mu118owxdxhl",
+      "pic": "",
+      "kode": "SANBLU20H1513",
+      "slab": "",
+      "batch": "b_20260910",
+      "jalur": "belum",
+      "jenis": [],
+      "rinci": "",
+      "revisi": "keepRawFile",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "46 slab di folder",
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-14T09:20:31.521Z"
+        }
+      ],
+      "tenggat": "2026-09-21",
+      "diterima": "2026-09-14",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-14T09:20:31.521Z"
+    },
+    {
       "id": "p_newsav20h2639",
       "pic": "",
       "kode": "NEWSAV20H2639",
@@ -873,7 +967,7 @@
           "tanggal_jawaban": ""
         }
       ],
-      "status": "proses",
+      "status": "revisi",
       "tautan": "",
       "urgent": false,
       "catatan": "",
@@ -887,12 +981,17 @@
           "oleh": "—",
           "teks": "jalur: pakai sample, mulai sample ronde 1",
           "waktu": "2026-09-11T08:45:52.405Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "status → Revisi",
+          "waktu": "2026-09-14T09:17:50.270Z"
         }
       ],
       "tenggat": "2026-09-14",
       "diterima": "2026-09-07",
-      "prioritas": "P3",
-      "diperbarui": "2026-09-11T08:45:52.405Z"
+      "prioritas": "P1",
+      "diperbarui": "2026-09-14T09:17:52.402Z"
     },
     {
       "id": "p_solbla20h6004",
@@ -971,8 +1070,8 @@
       ],
       "tenggat": "2026-09-14",
       "diterima": "2026-09-07",
-      "prioritas": "P3",
-      "diperbarui": "2026-09-10T05:00:00.000Z"
+      "prioritas": "P1",
+      "diperbarui": "2026-09-14T09:18:01.970Z"
     },
     {
       "id": "p_turarg20h2235",
