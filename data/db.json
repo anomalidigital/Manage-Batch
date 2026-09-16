@@ -1,6 +1,6 @@
 {
   "versi": 1,
-  "diperbarui": "2026-09-15T06:09:23Z",
+  "diperbarui": "2026-09-16T05:59:00Z",
   "sumber": "cadangan otomatis harian dari Supabase",
   "batches": [
     {
@@ -889,6 +889,100 @@
       "diterima": "2026-09-14",
       "prioritas": "P2",
       "diperbarui": "2026-09-14T09:20:31.521Z"
+    },
+    {
+      "id": "p_mu2ahl80sj4e",
+      "pic": "",
+      "kode": "CHIFFO20H6113",
+      "slab": "",
+      "batch": "b_20260910",
+      "jalur": "belum",
+      "jenis": [],
+      "rinci": "",
+      "revisi": "sampling",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "11 slab di folder",
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-15T06:27:09.360Z"
+        }
+      ],
+      "tenggat": "2026-09-21",
+      "diterima": "2026-09-14",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-15T06:27:09.360Z"
+    },
+    {
+      "id": "p_mu2ai9l4u2va",
+      "pic": "Kallysta",
+      "kode": "FASCIN20H5183",
+      "slab": "",
+      "batch": "b_20260910",
+      "brief": [
+        {
+          "id": "br_1_2026-09-15T09:16:28.547Z",
+          "oleh": "Klien",
+          "teks": "FASCIN20H5183 - Are you able to allow a bit more depth to show - like the circled areas in the attached image. The stone feels a bit flat in comparison.",
+          "ronde": 0,
+          "waktu": "2026-09-15T09:16:28.547Z",
+          "sumber": "klien",
+          "lampiran": ""
+        }
+      ],
+      "jalur": "belum",
+      "jenis": [],
+      "rinci": "",
+      "revisi": "sampling",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "23 slab di folder",
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-15T06:27:40.936Z"
+        },
+        {
+          "oleh": "—",
+          "teks": "brief baru dicatat (dari klien)",
+          "waktu": "2026-09-15T09:16:28.547Z"
+        }
+      ],
+      "tenggat": "2026-09-21",
+      "diterima": "2026-09-14",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-15T09:16:28.547Z"
+    },
+    {
+      "id": "p_mu2aiq7kdige",
+      "pic": "",
+      "kode": "OSTUNI20H9029",
+      "slab": "",
+      "batch": "b_20260910",
+      "jalur": "belum",
+      "jenis": [],
+      "rinci": "",
+      "revisi": "keepRawFiles",
+      "sampel": [],
+      "status": "antrean",
+      "tautan": "",
+      "catatan": "21 slab di folder",
+      "riwayat": [
+        {
+          "oleh": "—",
+          "teks": "project dibuat",
+          "waktu": "2026-09-15T06:28:02.480Z"
+        }
+      ],
+      "tenggat": "2026-09-21",
+      "diterima": "2026-09-14",
+      "prioritas": "P2",
+      "diperbarui": "2026-09-15T06:28:02.480Z"
     },
     {
       "id": "p_newsav20h2639",
